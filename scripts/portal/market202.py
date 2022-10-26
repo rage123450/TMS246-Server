@@ -1,0 +1,7 @@
+# Portal to FM from Yu Garden (701100000)
+
+FREE_MARKET = 910000000
+FREE_MARKET_PORTAL = 7
+
+sm.setReturnField()
+sm.warp(FREE_MARKET, FREE_MARKET_PORTAL)

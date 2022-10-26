@@ -1,0 +1,1 @@
+sm.sendSayOkay("Unhandled shop script ID: " + str(parentID))

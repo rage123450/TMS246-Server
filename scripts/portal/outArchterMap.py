@@ -1,0 +1,6 @@
+# Bowman Instructional School (100000201)
+
+HENESYS = 100000000
+HENESYS_PORTAL = 17
+
+sm.warp(HENESYS, HENESYS_PORTAL)
