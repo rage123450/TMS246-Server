@@ -33,15 +33,16 @@ public class Friend {
 
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(getFriendID());
-        outPacket.encodeString(getName(), 13);
+        outPacket.encodeString(getName(), 15);
         outPacket.encodeByte(getFlag());
         outPacket.encodeInt(getChannelID());
         outPacket.encodeString(getGroup(), 17);
         outPacket.encodeByte(getMobile());
         outPacket.encodeInt(getFriendAccountID());
-        outPacket.encodeString(getNickname(), 13);
+        outPacket.encodeString(getNickname(), 15);
         outPacket.encodeString(getMemo(), 256);
         outPacket.encodeInt(isInShop() ? 1 : 0);
+        outPacket.encodeFT(System.currentTimeMillis());//248++?
     }
 
     public int getFriendID() {

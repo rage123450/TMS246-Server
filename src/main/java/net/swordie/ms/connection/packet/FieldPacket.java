@@ -1,5 +1,7 @@
 package net.swordie.ms.connection.packet;
 
+import jnr.ffi.annotations.In;
+import jnr.ffi.annotations.Out;
 import net.swordie.ms.client.character.Char;
 import net.swordie.ms.client.character.CharacterStat;
 import net.swordie.ms.client.character.MarriageRecord;
@@ -61,6 +63,24 @@ public class FieldPacket {
         return outPacket;
     }
 
+    public static OutPacket petAutoHP(int itemId) {
+        OutPacket outPacket = new OutPacket(OutHeader.PET_CONSUME_ITEM_INIT);
+        outPacket.encodeInt(itemId);
+        return outPacket;
+    }
+
+    public static OutPacket petAutoMP(int itemId) {
+        OutPacket outPacket = new OutPacket(OutHeader.PET_CONSUME_MP_ITEM);
+        outPacket.encodeInt(itemId);
+        return outPacket;
+    }
+
+    public static OutPacket petAutoUNK(int itemId) {
+        OutPacket outPacket = new OutPacket(OutHeader.PET_CONSUME_UNK);
+        outPacket.encodeInt(itemId);
+        return outPacket;
+    }
+
     public static OutPacket beastTamerFuncKeyMappedManInit(List<FuncKeyMap> funcKeyMaps) {
         OutPacket outPacket = new OutPacket(OutHeader.FUNC_KEY_MAPPED_MAN_INIT);
         outPacket.encodeByte(false);
@@ -75,7 +95,7 @@ public class FieldPacket {
         OutPacket outPacket = new OutPacket(OutHeader.ADMIN_RESULT);
         outPacket.encodeInt(26);
         outPacket.encodeByte(hide);
-        outPacket.encodeByte(hide);
+        //outPacket.encodeByte(hide);
         return outPacket;
     }
 
@@ -663,7 +683,20 @@ public class FieldPacket {
         return outPacket;
     }
 
-    public static OutPacket redCubeResult(int charID, boolean upgrade, int cubeID, int ePos, Equip equip) {
+    public static OutPacket blackCubeResult(int charID, boolean upgrade, int cubeID, int ePos, int equipid) {
+        OutPacket outPacket = new OutPacket(OutHeader.SHOW_ITEM_OPTION_CHANGE_EFFECT);
+
+        outPacket.encodeInt(charID);
+
+        outPacket.encodeByte(upgrade);
+        outPacket.encodeInt(cubeID);
+        outPacket.encodeInt(ePos);//2460000?
+        outPacket.encodeInt(equipid);
+
+        return outPacket;
+    }
+
+    public static OutPacket redCubeResult(int charID, boolean upgrade, int cubeID, int ePos, int count, Equip equip) {
         OutPacket outPacket = new OutPacket(OutHeader.RED_CUBE_RESULT);
 
         outPacket.encodeInt(charID);
@@ -671,12 +704,13 @@ public class FieldPacket {
         outPacket.encodeByte(upgrade);
         outPacket.encodeInt(cubeID);
         outPacket.encodeInt(ePos);
+        outPacket.encodeInt(count);//248+
         equip.encode(outPacket);
 
         return outPacket;
     }
 
-    public static OutPacket bonusCubeResult(int charID, boolean upgrade, int cubeID, int ePos, Equip equip) {
+    public static OutPacket bonusCubeResult(int charID, boolean upgrade, int cubeID, int ePos, int count, Equip equip) {
         OutPacket outPacket = new OutPacket(OutHeader.BONUS_CUBE_RESULT);
 
         outPacket.encodeInt(charID);
@@ -684,6 +718,7 @@ public class FieldPacket {
         outPacket.encodeByte(upgrade);
         outPacket.encodeInt(cubeID);
         outPacket.encodeInt(ePos);
+        outPacket.encodeInt(count);//248+
         equip.encode(outPacket);
 
         return outPacket;
@@ -759,6 +794,18 @@ public class FieldPacket {
         return outPacket;
     }
 
+    public static OutPacket environmentMove(String env, int mode) {
+        OutPacket outPacket = new OutPacket(OutHeader.SET_OBJECT_STATE);
+        outPacket.encodeString(env);
+        outPacket.encodeInt(mode);
+        return outPacket;
+    }
+
+    public static OutPacket stopClock() {
+        OutPacket outPacket = new OutPacket(OutHeader.STOP_CLOCK);
+        return outPacket;
+    }
+
     public static OutPacket addWreckage(Wreckage wreckage, int wreckageCount) {
         OutPacket outPacket = new OutPacket(OutHeader.ADD_WRECKAGE);
 
@@ -779,7 +826,8 @@ public class FieldPacket {
 
         outPacket.encodeInt(chr.getId()); // Owner Id
         outPacket.encodeInt(wreckageList.size()); //Count
-        outPacket.encodeByte(true); //Unk Boolean
+        outPacket.encodeByte(0); //Unk Boolean
+        outPacket.encodeByte(0); //
         for (Wreckage wreckage : wreckageList) {
             outPacket.encodeInt(wreckage.getObjectId()); // Wreckage Id
         }
@@ -843,7 +891,7 @@ public class FieldPacket {
     public static OutPacket teleport(Position position, Char chr) {
         OutPacket outPacket = new OutPacket(OutHeader.TELEPORT);
         outPacket.encodeByte(false);
-        outPacket.encodeByte(6);
+        outPacket.encodeByte(3);// 原本6? 抓到的封包是3
 
         outPacket.encodeInt(chr.getId());
         outPacket.encodePosition(position);
@@ -874,13 +922,14 @@ public class FieldPacket {
     public static OutPacket blowWeather(int itemID, String message, int seconds, byte[] packedAvatarLook) {
         OutPacket outPacket = new OutPacket(OutHeader.BLOW_WEATHER);
 
+        outPacket.encodeByte(0);//248+
         outPacket.encodeInt(itemID);
         if (itemID > 0) {
             outPacket.encodeString(message);
             outPacket.encodeInt(seconds); // seconds
             outPacket.encodeByte(packedAvatarLook != null);// boolean if true send PackedCharacterLook
             if (packedAvatarLook != null) {
-                outPacket.encodeArr(packedAvatarLook);
+                outPacket.encodeArr(packedAvatarLook);//arr[120]
             }
         }
         return outPacket;
@@ -914,6 +963,18 @@ public class FieldPacket {
     public static OutPacket closeUI(int uiID) {
         OutPacket outpacket = new OutPacket(OutHeader.CLOSE_UI);
         outpacket.encodeInt(uiID);
+        return outpacket;
+    }
+
+    public static OutPacket openUIOption(int type, int option) {
+        return openUIOption(type, option, 0);
+    }
+
+    public static OutPacket openUIOption(int type, int option, int option2) {
+        OutPacket outpacket = new OutPacket(OutHeader.CLOSE_UI);
+        outpacket.encodeInt(type);
+        outpacket.encodeInt(option);
+        outpacket.encodeInt(option2);
         return outpacket;
     }
 
@@ -1133,7 +1194,7 @@ public class FieldPacket {
 
     public static OutPacket itemLinkedGroupMessage(GroupMessageType gmt, Char from, String msg, Item item) {
 
-        OutPacket outPacket = new OutPacket(OutHeader.GROUP_MESSAGE.getValue());
+        OutPacket outPacket = new OutPacket(OutHeader.ITEM_LINKED_GROUP_MESSAGE.getValue());
 
         outPacket.encodeByte(gmt.ordinal());
 
@@ -1297,6 +1358,18 @@ public class FieldPacket {
         return outPacket;
     }
 
+    public static OutPacket footholdOnOff(List<Integer> str, boolean show) {
+        OutPacket outPacket = new OutPacket(OutHeader.FOOT_HOLD_APPEAR);
+
+        outPacket.encodeInt(str.size());
+        for (Integer foothold : str) {
+            outPacket.encodeInt(foothold.intValue());
+            outPacket.encodeByte(show ? 0 : 1);
+        }
+
+        return outPacket;
+    }
+
     public static OutPacket golluxMiniMap(Map<String, GolluxMiniMapFieldClearType> gFieldMap) {
         OutPacket outPacket = new OutPacket(OutHeader.GOLLUX_MINI_MAP);
 
@@ -1311,6 +1384,26 @@ public class FieldPacket {
         }
 
         return outPacket;
+    }
+
+    public static OutPacket DebuffObjON(int[] list, boolean hard) {
+        OutPacket outPacket = new OutPacket(OutHeader.DEBUFF_OBJ_ON);
+
+        int arrayOfInt[], i;
+        byte b;
+        for (arrayOfInt = list, i = arrayOfInt.length, b = 0; b < i;) {
+            Integer a = Integer.valueOf(arrayOfInt[b]);
+            outPacket.encodeByte(1);
+            outPacket.encodeInt(a.intValue());
+            outPacket.encodeInt(1);
+            outPacket.encodeString("sleepGas" + (hard ? a.intValue() : (a.intValue() * 10)));
+            outPacket.encodeString("sleepGas");
+            b++;
+        }
+        outPacket.encodeByte(0);
+
+        return outPacket;
+
     }
 
     public static OutPacket createFallingCatcher(FallingCatcher fallingCatcher) {
@@ -1542,6 +1635,19 @@ public class FieldPacket {
                 break;
         }
 
+        return outPacket;
+    }
+
+    public static OutPacket useADboard(int charid, String msg) {
+        OutPacket outPacket = new OutPacket(OutHeader.AD_BOARD);
+
+        outPacket.encodeInt(charid);
+        if (msg == null || msg.length() <= 0) {
+            outPacket.encodeByte(0);
+        } else {
+            outPacket.encodeByte(1);
+            outPacket.encodeString(msg);
+        }
         return outPacket;
     }
 }

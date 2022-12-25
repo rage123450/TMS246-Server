@@ -59,5 +59,6 @@ public class MiniGameRecord {
         outPacket.encodeInt(getRewardGradeQ());
         outPacket.encodeInt(getRewardGradeQHead());
         outPacket.encodeInt(getRewardGradeQSize());
+        outPacket.encodeByte(0);
     }
 }

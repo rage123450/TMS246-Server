@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 import static net.swordie.ms.enums.ChatType.SystemNotice;
+import static net.swordie.ms.enums.ChatType.values;
 
 public class UserHandler {
 
@@ -150,6 +151,17 @@ public class UserHandler {
                 }
                 break;
             case 1: // HP potion
+                int data1 = inPacket.decodeInt();
+                /*
+                if (data1 <= 0) {
+                    chr.getQuestManager().removeQuest(122221);
+                } else {
+                    chr.getQuestManager().addQuest(122221);
+                }
+                */
+                break;
+            case 2: // MP potion
+                int data2 = inPacket.decodeInt();
                 break;
         }
     }

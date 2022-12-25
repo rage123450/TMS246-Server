@@ -1,10 +1,13 @@
 package net.swordie.ms.connection.packet;
 
 import net.swordie.ms.client.character.Char;
+import net.swordie.ms.client.character.union.Union;
 import net.swordie.ms.client.character.union.UnionBoard;
 import net.swordie.ms.client.character.union.UnionMember;
 import net.swordie.ms.connection.OutPacket;
+import net.swordie.ms.constants.GameConstants;
 import net.swordie.ms.handlers.header.OutHeader;
+import net.swordie.ms.util.container.Tuple;
 
 import java.util.Set;
 
@@ -43,6 +46,14 @@ public class CUIHandler {
             labEnhancedMember.encode(outPacket);
         }
         return outPacket;
+    }
+
+    public static OutPacket unionAssignResult(Char chr) {
+        Union union = chr.getUnion();
+        Set<Char> eligibleChars = union.getEligibleUnionChars();
+        UnionBoard activeBoard = union.getBoardByPreset(chr.getActiveUnionPreset());
+        //unionAssignResult(0, null, null, null, null, null);
+        return unionAssignResult(union.getUnionRank(), eligibleChars, activeBoard, null, null, null);
     }
     
     public static OutPacket unionAssignResult(int rank, Set<Char> eligibleChars, UnionBoard activeBoard,
@@ -110,6 +121,19 @@ public class CUIHandler {
         outPacket.encodeInt(template2);
         outPacket.encodeLong(curHP2);
         outPacket.encodeLong(maxHP2);
+
+        return outPacket;
+    }
+
+    public static OutPacket OnSetMirrorDungeonInfo(boolean clear) {
+        OutPacket outPacket = new OutPacket(OutHeader.SET_MIRROR_DUNGEON_INFO);
+
+        outPacket.encodeInt(clear ? 0 : GameConstants.dList.size());
+        for (Tuple<String, String> d : GameConstants.dList) {
+            outPacket.encodeString(d.getLeft());
+            outPacket.encodeInt(0);
+            outPacket.encodeString(d.getRight());
+        }
 
         return outPacket;
     }

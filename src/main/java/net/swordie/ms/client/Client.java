@@ -1,5 +1,6 @@
 package net.swordie.ms.client;
 
+import jline.internal.Log;
 import net.swordie.ms.Server;
 import net.swordie.ms.client.character.Char;
 import net.swordie.ms.connection.InPacket;
@@ -7,6 +8,7 @@ import net.swordie.ms.connection.OutPacket;
 import net.swordie.ms.connection.crypto.TripleDESCipher;
 import net.swordie.ms.connection.netty.NettyClient;
 import net.swordie.ms.connection.packet.Login;
+import net.swordie.ms.connection.packet.TestPacket;
 import net.swordie.ms.enums.AccountType;
 import net.swordie.ms.handlers.ClientSocket;
 import net.swordie.ms.handlers.header.InHeader;
@@ -69,6 +71,16 @@ public class Client extends NettyClient {
         lastPingTime = System.currentTimeMillis();
         waitingForAliveAck = true;
         write(Login.sendChannelAliveReq());
+        //write(TestPacket.test517());//246++?
+        write(Login.sendChannelAliveResponse(0x11));
+        write(Login.sendChannelAliveResponse(0x24));
+        write(Login.sendChannelAliveResponse(0x15));
+        write(Login.sendChannelAliveResponse(0x0C));
+        write(Login.sendChannelAliveResponse(0x0D));
+        write(Login.sendChannelAliveResponse(0x0F));
+        write(Login.sendChannelAliveResponse(0x10));
+
+        //write(TestPacket.test1248());
     }
 
     public void setPing(long ping) {

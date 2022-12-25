@@ -26,6 +26,7 @@ public class MovementOffsetX extends MovementBase {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(getCommand());
         outPacket.encodeShort(getElapse());
+
         outPacket.encodeByte(getMoveAction());
         outPacket.encodeShort(getDuration());
         outPacket.encodeByte(getForcedStop());

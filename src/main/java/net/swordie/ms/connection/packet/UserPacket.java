@@ -12,6 +12,9 @@ import net.swordie.ms.util.Position;
 
 import java.util.List;
 
+import static net.swordie.ms.loaders.StringData.getItemStringById;
+import static net.swordie.ms.loaders.StringData.getItemStrings;
+
 /**
  * Created on 2/3/2018.
  */
@@ -41,6 +44,8 @@ public class UserPacket {
         //    CInPacket::DecodeBuffer(a2, (__int64)&v20, 4);
         if (remote) {
             outPacket.encodeString(tag + " " + chr.getName());
+        }else {
+            outPacket.encodeInt(0); //idk?
         }
         return outPacket;
     }
@@ -63,7 +68,7 @@ public class UserPacket {
             outPacket.encode(item);
         }
 //        if (remote) {
-            outPacket.encodeString("等於等於"/*chr.getName()*/); // 道具名字
+            outPacket.encodeString(getItemStringById(item.getItemId())); // 道具名字
 //        }
 
         return outPacket;

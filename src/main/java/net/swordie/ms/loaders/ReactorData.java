@@ -26,6 +26,9 @@ public class ReactorData {
         File dir = new File(wzDir);
         File[] files = dir.listFiles();
         for (File file : files) {
+            if (file.getName().contains("ReactorEvent.img")) {
+                continue;
+            }
             int id = Integer.parseInt(file.getName().replace(".img.xml", ""));
             ReactorInfo ri = new ReactorInfo();
             ri.setId(id);

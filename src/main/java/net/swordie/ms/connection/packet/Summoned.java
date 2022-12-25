@@ -1,6 +1,7 @@
 package net.swordie.ms.connection.packet;
 
 import net.swordie.ms.client.character.avatar.AvatarLook;
+import net.swordie.ms.client.character.skills.MatrixRecord;
 import net.swordie.ms.client.character.skills.info.AttackInfo;
 import net.swordie.ms.client.character.skills.info.MobAttackInfo;
 import net.swordie.ms.client.jobs.adventurer.pirate.Jett;
@@ -15,6 +16,8 @@ import net.swordie.ms.life.Summon;
 import net.swordie.ms.life.movement.MovementInfo;
 import net.swordie.ms.util.Position;
 
+import java.awt.*;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,6 +65,42 @@ public class Summoned {
         outPacket.encodeInt(summon.getObjectId());
         outPacket.encodeByte(summonSkillType);
         outPacket.encodeInt(summonSkillID);
+
+        return outPacket;
+    }
+
+    public static OutPacket summonSkillAttackEffect(Summon summon, byte summonSkillType, int summonSkillID, int level, int unk1, int unk2, int bullet, Position position1, Position position2, Position position3, int unk3, int unk4, byte unk5, List<MatrixRecord> skills) {
+        OutPacket outPacket = new OutPacket(OutHeader.SUMMONED_SKILL);
+        outPacket.encodeInt(summon.getChr().getId());
+        outPacket.encodeInt(summon.getObjectId());
+        outPacket.encodeByte(summonSkillType);
+        outPacket.encodeInt(summonSkillID);
+
+        outPacket.encodeInt(summonSkillID);
+        outPacket.encodeInt(level);
+        outPacket.encodeInt(unk1);
+        outPacket.encodeInt(unk2);
+        outPacket.encodeInt(bullet);
+        outPacket.encodePosition(position1);
+        outPacket.encodePositionInt(position2);
+        outPacket.encodePositionInt(position3);
+        outPacket.encodeInt(unk3);
+        outPacket.encodeByte(unk5);
+        outPacket.encodeInt(unk4);
+
+        outPacket.encodeInt(skills.size());
+        for (MatrixRecord skill : skills) {
+            /*
+            outPacket.encodeInt(skill.getSkill());
+            outPacket.encodeInt(skill.getMaxLevel());
+            outPacket.encodeInt(skill.ge);
+            outPacket.encodeShort();
+            outPacket.encodePosition(skill.get());
+            outPacket.encodeInt();
+            outPacket.encodeByte();
+            outPacket.encodeByte();
+             */
+        }
 
         return outPacket;
     }
@@ -121,9 +160,11 @@ public class Summoned {
 /*        if (skillID == Jett.GRAVITY_CRUSH) {
             outPacket.encodeLong(summon.getGravityCrushDmg());
         }*/
+        /*
         if (SkillConstants.isSuborbitalStrike(skillID)) {
             outPacket.encodeByte(!summon.isHide()); // show
         }
+        *///248--?
         outPacket.encodeByte(summon.isJaguarActive());
         outPacket.encodeInt(summon.getSummonTerm());
         outPacket.encodeByte(summon.isAttackActive());
@@ -140,6 +181,7 @@ public class Summoned {
         if (isStateUsing) {
             outPacket.encodeInt(summon.getCount());
             outPacket.encodeInt(summon.getState());
+            /*
             if (JobConstants.isIllium((short) (skillID / 10000))) {
                 outPacket.encodeInt(((Illium) summon.getChr().getJobHandler()).crystalSkillMap.size());
                 for (Map.Entry<Integer, Boolean> entry : ((Illium) summon.getChr().getJobHandler()).crystalSkillMap.entrySet()) {
@@ -147,6 +189,7 @@ public class Summoned {
                     outPacket.encodeInt(entry.getValue() ? 1 : 0);
                 }
             }
+            *///248--?
         }
         // ~199
         outPacket.encodeInt(summon.getLinkedSummonSkillIds().size());

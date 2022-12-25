@@ -461,7 +461,7 @@ public class UserRemote {
         outPacket.encodeInt(chr.getId());
 
         outPacket.encodeInt(skillId);
-        outPacket.encodeInt(slv);
+        outPacket.encodeInt(slv); // idk is byte?
 
         outPacket.encodeShort(0); // unknown
 

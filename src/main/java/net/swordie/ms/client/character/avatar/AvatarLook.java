@@ -252,23 +252,23 @@ public class AvatarLook {
             outPacket.encodeByte(entry.getKey());
             outPacket.encodeInt(entry.getValue());
         }
-        outPacket.encodeByte(-1);
+        outPacket.encodeByte(-1);//1
         for (Map.Entry<Byte, Integer> entry : getUnseenEquips().entrySet()) {
             outPacket.encodeByte(entry.getKey());
             outPacket.encodeInt(entry.getValue());
         }
-        outPacket.encodeByte(-1);
+        outPacket.encodeByte(-1);//2
         // v199 - new item loop, ignores bodypart restrictions
         for (int itemId : new int[]{}) {
             outPacket.encodeByte(ItemConstants.getBodyPartFromItem(itemId, getGender()));
             outPacket.encodeInt(itemId);
         }
-        outPacket.encodeByte(-1);
+        outPacket.encodeByte(-1);//3
         for (int itemId : getTotems()) {
             outPacket.encodeByte(ItemConstants.getBodyPartFromItem(itemId, getGender()));
             outPacket.encodeInt(itemId);
         }
-        outPacket.encodeByte(-1);
+        outPacket.encodeByte(-1);//4
 
         outPacket.encodeInt(getWeaponStickerId());
         outPacket.encodeInt(getWeaponId());

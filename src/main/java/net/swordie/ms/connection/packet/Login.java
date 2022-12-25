@@ -4,8 +4,10 @@ import net.swordie.ms.Server;
 import net.swordie.ms.ServerConstants;
 import net.swordie.ms.ServerStatus;
 import net.swordie.ms.client.Account;
+import net.swordie.ms.client.Client;
 import net.swordie.ms.client.User;
 import net.swordie.ms.client.character.Char;
+import net.swordie.ms.connection.InPacket;
 import net.swordie.ms.connection.OutPacket;
 import net.swordie.ms.constants.JobConstants;
 import net.swordie.ms.enums.LoginType;
@@ -54,7 +56,6 @@ public class Login {
         oPacket.encodeArr(riv);
         oPacket.encodeByte(ServerConstants.LOCALE);
         oPacket.encodeByte(0);
-//        oPacket.encodeByte(0);
 
         return oPacket;
     }
@@ -66,8 +67,10 @@ public class Login {
     public static OutPacket sendChannelAliveReq() {
         OutPacket outPacket = new OutPacket(OutHeader.CHANNEL_ALIVE_REQ.getValue());
 
-        outPacket.encodeArr("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 F2 C1 83 00 00 00 00 00 00 00 00 00 00 00 00 00");
-
+        outPacket.encodeArr("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 AF F9 08 00 00 00 00 00 00 00 00 00 00 00 00 00");//01 F2 C1 83
+                           //00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                           //00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 AF F9 08 00 00 00 00 00 00 00 00 00 00 00 00 00
+                           //00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 4B 5F 18 00 00 00 00 00 CB EA 02 00 00 00 00 00
         return outPacket;
     }
 
@@ -140,7 +143,9 @@ public class Login {
             outPacket.encodeInt(0);
             outPacket.encodeByte(0); // nReason
             outPacket.encodeFT(user.getBanExpireDate());
-        } else {
+        } else if (msg == LoginType.WaitOTP){
+            outPacket.encodeByte(1);
+        }else {
 //            outPacket.encodeByte(msg.getValue());
 //            outPacket.encodeString("");
             outPacket.encodeInt(0);
@@ -439,10 +444,28 @@ public class Login {
     }
 
 
-    public static OutPacket secondPasswordWindows(User user) {
+    public static OutPacket secondPasswordWindows() {
         OutPacket outPacket = new OutPacket(OutHeader.CHECK_SPW_EXIST_RESPONSE);
-        outPacket.encodeByte(3/*user.getPicStatus().getVal()*/); // bLoginOpt
-        outPacket.encodeByte(false); // bQuerySSNOnCreateNewCharacter
+        outPacket.encodeByte(3);
+        outPacket.encodeByte(0);
+        return outPacket;
+    }
+
+    public static OutPacket RequestSpw() {
+        OutPacket outPacket = new OutPacket(OutHeader.REQUEST_SPW);
+        outPacket.encodeByte(0);
+        return outPacket;
+    }
+
+    public static OutPacket ChooseGender() {
+        OutPacket outPacket = new OutPacket(OutHeader.CHOOSE_GENDER);
+        outPacket.encodeByte(1);
+        return outPacket;
+    }
+
+    public static OutPacket SetGender(boolean success) {
+        OutPacket outPacket = new OutPacket(OutHeader.GENDER_SET);
+        outPacket.encodeByte(success);
         return outPacket;
     }
 }

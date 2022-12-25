@@ -30,10 +30,10 @@ public enum FriendType {
     FriendReq_AcceptEventBestFriend(22),
     FriendReq_RefuseEventBestFriend(23),
 
-    FriendRes_LoadFriend_Done(23),
-    FriendRes_LoadAccountIDOfCharacterFriend_Done(24),
-    FriendRes_NotifyChange_FriendInfo(25),
-    FriendRes_Invite(26),
+    FriendRes_LoadFriend_Done(20),//23-> 20
+    FriendRes_LoadAccountIDOfCharacterFriend_Done(22),//21 ? 22 ?
+    FriendRes_NotifyChange_FriendInfo(23),
+    FriendRes_Invite(24),
     FriendRes_SetFriend_Done(27),
     FriendRes_SetFriend_FullMe(28),
     FriendRes_SetFriend_FullOther(29),

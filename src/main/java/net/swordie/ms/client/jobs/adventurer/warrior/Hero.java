@@ -69,6 +69,7 @@ public class Hero extends Warrior {
     public static final int COMBO_INSTINCT_SLASH_STRAIGHT = 400011076;
     public static final int COMBO_INSTINCT_SLASH_DOWN = 400011075;
     public static final int COMBO_INSTINCT_SLASH_UP = 400011074;
+    public static final int 雷神戰槌 = 400001012;
 
 
     private static final List<Integer> comboInstinctAttack = Arrays.asList(

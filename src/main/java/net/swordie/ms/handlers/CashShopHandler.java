@@ -53,8 +53,8 @@ public class CashShopHandler {
         switch (cit) {
             case Req_Buy:
                 byte idk1 = inPacket.decodeByte();
-                byte paymentMethod = inPacket.decodeByte();
-                int idk2 = inPacket.decodeInt();
+                int paymentMethod = inPacket.decodeByte() +1;
+                int sn = inPacket.decodeInt();
                 int itemPos = inPacket.decodeInt();
                 int cost = inPacket.decodeInt();
                 CashShopItem csi = cs.getItemByPosition(itemPos - 1); // client's pos starts at 1

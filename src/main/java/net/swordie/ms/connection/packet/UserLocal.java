@@ -45,6 +45,23 @@ public class UserLocal {
         return outPacket;
     }
 
+    public static OutPacket harvestMessage(int old, int msg) {//物品收藏?
+        OutPacket outPacket = new OutPacket(OutHeader.GATHER_REQUEST_RESULT);
+        outPacket.encodeInt(old);
+        outPacket.encodeInt(msg);
+
+        return outPacket;
+    }
+
+    public static OutPacket openBag(int index, int itemid, boolean firstTime) {
+        OutPacket outPacket = new OutPacket(OutHeader.BAG_ITEM_USE_RESULT);
+        outPacket.encodeInt(index);
+        outPacket.encodeInt(itemid);
+        outPacket.encodeByte(firstTime);
+        outPacket.encodeByte(0);
+        return outPacket;
+    }
+
     public static OutPacket videoByScript(String videoPath, boolean isMuted) {
         OutPacket outPacket = new OutPacket(OutHeader.VIDEO_BY_SCRIPT);
 
@@ -193,9 +210,6 @@ public class UserLocal {
 
     public static OutPacket resetStateForOffSkill() {
         OutPacket outPacket = new OutPacket(OutHeader.RESET_STATE_FOR_OFF_SKILL);
-
-        outPacket.encodeInt(0);
-
         return outPacket;
     }
 
@@ -210,6 +224,7 @@ public class UserLocal {
     public static OutPacket incJudgementStack(byte amount) {
         OutPacket outPacket = new OutPacket(OutHeader.INC_JUDGEMENT_STACK_RESPONSE);
 
+        outPacket.encodeByte(0);//? 或上下相反
         outPacket.encodeByte(amount);
 
         return outPacket;
@@ -466,10 +481,11 @@ public class UserLocal {
         return outPacket;
     }
 
-    public static OutPacket setDead(boolean tremble) {
+    public static OutPacket setDead() {
         OutPacket outPacket = new OutPacket(OutHeader.SET_DEAD);
 
-        outPacket.encodeByte(tremble);
+        outPacket.encodeByte(1);
+        outPacket.encodeInt(0);
 
         return outPacket;
     }
@@ -542,9 +558,14 @@ public class UserLocal {
 
     public static OutPacket deathCountInfo(int deathCount) {
         OutPacket outPacket = new OutPacket(OutHeader.DEATH_COUNT_INFO);
-
         outPacket.encodeInt(deathCount);
+        return outPacket;
+    }
 
+    public static OutPacket setdeathCountInfo(Char chr, int deathCount) {
+        OutPacket outPacket = new OutPacket(OutHeader.SET_DEATH_COUNT_INFO);
+        outPacket.encodeInt(chr.getId());
+        outPacket.encodeInt(deathCount);
         return outPacket;
     }
 
@@ -624,6 +645,13 @@ public class UserLocal {
             outPacket.encodeByte(forceMouseOver);
             outPacket.encodeByte(!lockUI); // showUI
         }
+
+        return outPacket;
+    }
+
+    public static OutPacket SetStandAloneMode(boolean lockUI) {
+        OutPacket outPacket = new OutPacket(OutHeader.SET_STAND_ALONE_MODE);
+        outPacket.encodeByte(lockUI);
 
         return outPacket;
     }
@@ -730,6 +758,23 @@ public class UserLocal {
         return outPacket;
     }
 
+    public static OutPacket petExceptionList(Char chr, Pet pet) {
+        OutPacket outPacket = new OutPacket(OutHeader.PET_EXCEPTION_LIST);
+/*
+        outPacket.encodeInt(chr.getId());
+        outPacket.encodeInt(pet.getIdx());
+        String[] sb = pet.getExceptionList().split(",");
+        if (sb.length <= 0) {
+            outPacket.encodeByte(0);
+        } else {
+            outPacket.encodeByte(sb.length);
+            for (int i = 0; i < sb.length; i++)
+                outPacket.encodeInt(Integer.parseInt(sb[i]));
+        }
+*/
+        return outPacket;
+    }
+
     public static OutPacket balloonMsg(String message, int width, int timeOut, Position position) {
         OutPacket outPacket = new OutPacket(OutHeader.BALLOON_MSG);
 
@@ -738,8 +783,14 @@ public class UserLocal {
         outPacket.encodeShort(timeOut);// 3
         outPacket.encodeByte(position == null);
         if (position != null) {
-            outPacket.encodePosition(position);
+            outPacket.encodePositionInt(position);
         }
+        return outPacket;
+    }
+
+    public static OutPacket PlayerEventSound(String SE, int width, int timeOut, Position position) {
+        OutPacket outPacket = new OutPacket(OutHeader.PLAY_EVENT_SOUND);
+        outPacket.encodeString(SE);
         return outPacket;
     }
 
@@ -946,6 +997,15 @@ public class UserLocal {
             outPacket.encodeInt(entry.getKey());    // skill Id
             outPacket.encodeInt(entry.getValue());  // delay
         }
+
+        return outPacket;
+    }
+
+    public static OutPacket getTpAdd(int type, int count) {//戰鬥恢復
+        OutPacket outPacket = new OutPacket(OutHeader.ZERO_COMBAT_RECOVERY);
+
+        outPacket.encodeByte(type);
+        outPacket.encodeInt(count);
 
         return outPacket;
     }

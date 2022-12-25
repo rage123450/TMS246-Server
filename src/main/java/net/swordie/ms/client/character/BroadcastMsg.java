@@ -49,6 +49,7 @@ public class BroadcastMsg {
                 break;
             case Megaphone:
             case MegaphoneNoMessage:
+                //chatPacket
                 outPacket.encodeByte(getArg1()); // Channel
                 outPacket.encodeByte(getArg2()); // Mega Ear
                 break;

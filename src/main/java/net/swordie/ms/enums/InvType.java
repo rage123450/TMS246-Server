@@ -1,16 +1,20 @@
 package net.swordie.ms.enums;
 
+import net.swordie.ms.loaders.ItemData;
+import net.swordie.ms.loaders.containerclasses.ItemInfo;
+
 import java.util.Arrays;
 
 /**
  * Created on 11/23/2017.
  */
 public enum InvType {
+    UNDEFINED(0),
     EQUIPPED(-1),
     EQUIP(1),
     CONSUME(2),
-    ETC(4),
     INSTALL(3),
+    ETC(4),
     CASH(5),
     CASH_EQUIP(6),
     HAIR(7),
@@ -68,6 +72,27 @@ public enum InvType {
                 break;
         }
         return res;
+    }
+
+    public static InvType getInvTypeByItemID(int itemid) {
+        byte type = (byte) (itemid / 1000000);
+        ItemInfo item = ItemData.getItemInfoByID(itemid);
+        if (type == 1 && item.isCash()) {
+            return InvType.CASH_EQUIP;
+        }
+        if (type < 1 || type > 5) {
+            return InvType.UNDEFINED;
+        }
+        return InvType.getByType(type);
+    }
+
+    public static InvType getByType(byte type) {
+        for (InvType l : values()) {
+            if (l.getVal() == type) {
+                return l;
+            }
+        }
+        return null;
     }
 
     public boolean isStackable() {

@@ -88,7 +88,7 @@ public class Effect {
                 outPacket.encodeInt(getArg1()); // skill id
                 outPacket.encodeByte(getArg2());// slv
                 break;
-            case Quest:
+            case Quest://GoldAPPLe
                 outPacket.encodeByte(getList().size());
                 for (Tuple<Integer, Integer> item : getList()) {
                     outPacket.encodeInt(item.getLeft()); // Item ID

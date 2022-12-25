@@ -35,6 +35,8 @@ public class MiniRoom {
         outPacket.encodeByte(getCurUsers());
         outPacket.encodeByte(getMaxUsers());
         outPacket.encodeByte(isGameOn());
+
+        //chatpacket
 //        outPacket.encodeByte(isADBoardRemote()); // removed 188?
     }
 

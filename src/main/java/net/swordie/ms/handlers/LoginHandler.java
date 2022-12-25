@@ -17,6 +17,7 @@ import net.swordie.ms.connection.OutPacket;
 import net.swordie.ms.connection.db.DatabaseManager;
 import net.swordie.ms.connection.packet.Login;
 import net.swordie.ms.connection.packet.MapLoadable;
+import net.swordie.ms.connection.packet.TestPacket;
 import net.swordie.ms.connection.packet.WvsContext;
 import net.swordie.ms.constants.GameConstants;
 import net.swordie.ms.constants.ItemConstants;
@@ -35,6 +36,8 @@ import net.swordie.ms.world.World;
 import net.swordie.ms.world.field.MapTaggedObject;
 import org.apache.log4j.LogManager;
 import org.mindrot.jbcrypt.BCrypt;
+import org.python.antlr.ast.Str;
+import org.python.jline.internal.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,6 +70,25 @@ public class LoginHandler {
         client.write(Login.sendAuthServer(false));
     }
 
+    @Handler(op = InHeader.SET_GENDER)
+    public static void handleSetGender(Client client, InPacket inPacket) {
+        String name = inPacket.decodeString();
+        String secpwd = inPacket.decodeString();
+        byte gender = inPacket.decodeByte();
+        User user = User.getFromDBByName(name);
+        if (!user.getName().equals(name) || user.getPic() != null || gender < 0 || gender > 1) {
+            client.write(Login.SetGender(false));
+            return;
+        }
+        if (secpwd.length() >= 5) {
+            user.setPic(secpwd);
+            user.setGender(gender);
+            DatabaseManager.saveToDB(user);
+            client.write(Login.SetGender(true));
+        } else {
+            client.write(Login.SetGender(false));
+        }
+    }
 
     @Handler(op = InHeader.APPLY_HOTFIX)
     public static void handleApplyHotfix(Client c, InPacket inPacket) {
@@ -90,14 +112,16 @@ public class LoginHandler {
     public static void handleCheckLoginAuthInfo(Client c, InPacket inPacket) {
         byte[] machineID = inPacket.decodeArr(16); // AF 6F 58 97 8C 5F E5 D2 84 09 00 00 00 00 23 BE
         inPacket.decodeArr(6); // 00 00 00 00 02 00
-        String password = inPacket.decodeString();
         String username = inPacket.decodeString();
+        String password = inPacket.decodeString();
         boolean success;
         LoginType result;
         User user = User.getFromDBByName(username);
         if (user != null) {
             String dbPassword = user.getPassword();
+            String dbSecpwd = user.getPic();
             boolean hashed = Util.isStringBCrypt(dbPassword);
+            boolean hashedsec = Util.isStringBCrypt(dbSecpwd);
             if (hashed) {
                 try {
                     success = BCrypt.checkpw(password, dbPassword);
@@ -119,10 +143,14 @@ public class LoginHandler {
                     String banMsg = String.format("You have been banned. \nReason: %s. \nExpire date: %s",
                             user.getBanReason(), user.getBanExpireDate().toLocalDateTime());
                     c.write(WvsContext.broadcastMsg(BroadcastMsg.popUpMessage(banMsg)));
+                } else if (user.getPic() == null || user.getGender() == 10) {
+                    success = false;
+                    result = LoginType.WaitOTP;
                 } else {
                     if (!hashed) {
                         user.setHashedPassword(user.getPassword());
-                        // if a user has an assigned pic, hash it
+                    }
+                    if (!hashedsec) {
                         if (user.getPic() != null && user.getPic().length() >= 6 && !Util.isStringBCrypt(user.getPic())) {
                             user.setPic(BCrypt.hashpw(user.getPic(), BCrypt.gensalt(ServerConstants.BCRYPT_ITERATIONS)));
                         }
@@ -140,9 +168,11 @@ public class LoginHandler {
             result = LoginType.NotRegistered;
             success = false;
         }
-
-        c.write(Login.checkPasswordResult(success, result, user));
-
+        if (result == LoginType.WaitOTP) {
+            c.write(Login.ChooseGender());
+        } else {
+            c.write(Login.checkPasswordResult(success, result, user));
+        }
         if (result == LoginType.Success) {
             handleWorldListRequest(c, inPacket);
         }
@@ -190,9 +220,11 @@ public class LoginHandler {
 
     @Handler(op = InHeader.WVS_CRASH_CALLBACK)
     public static void handleWvsCrashCallback(Client c, InPacket inPacket) {
+        /*
         if (c.getChr() != null) {
             c.getChr().setChangingChannel(false);
         }
+        */
     }
 
     @Handler(op = InHeader.SERVER_STATUS_REQUEST)
@@ -354,7 +386,7 @@ public class LoginHandler {
                 30, 31, 32, 10, 11, 33, 34, 37, 38, 49, 50));
         DatabaseManager.saveToDB(chr);
         CharacterStat cs = chr.getAvatarData().getCharacterStat();
-        if (curSelectedRace == JobConstants.LoginJob.DUAL_BLADE.getJobType()) {
+        if (curSelectedRace == JobConstants.LoginJob.影武者.getJobType()) {
             cs.setSubJob(1);
         }
         cs.setCharacterId(chr.getId());
@@ -627,7 +659,8 @@ public class LoginHandler {
 
     @Handler(op = InHeader.CHECK_SPW_EXIST_REQUEST)
     public static void handleCheckSndPasswordExistRequest(Client c, InPacket inPacket) {
-        c.write(Login.secondPasswordWindows(c.getUser()));
+        c.write(Login.RequestSpw());
+        c.write(Login.secondPasswordWindows());
     }
 
 //    @Handler(op = InHeader.EXCEPTION_LOG)
@@ -741,14 +774,35 @@ public class LoginHandler {
     public static void handleChannelAliveAck(Client c, InPacket inPacket) {
         if (c.isWaitingForAliveAck()) {
             c.setPing(System.currentTimeMillis() - c.getLastPingTime());
-
-/*            c.write(Login.sendChannelAliveResponse(0x11));
+            //c.write(TestPacket.test517());
+/*
+            c.write(Login.sendChannelAliveResponse(0x11));
             c.write(Login.sendChannelAliveResponse(0x24));
             c.write(Login.sendChannelAliveResponse(0x15));
             c.write(Login.sendChannelAliveResponse(0x0C));
             c.write(Login.sendChannelAliveResponse(0x0D));
             c.write(Login.sendChannelAliveResponse(0x0F));
-            c.write(Login.sendChannelAliveResponse(0x10));*/
+            c.write(Login.sendChannelAliveResponse(0x10));
+            */
+
         }
+    }
+
+    @Handler(op = InHeader.UNK_REQ_2)
+    public static void handleUNK_REQ_2(Client c, InPacket inPacket) {
+        OutPacket outPacket = new OutPacket(OutHeader.UNK_ACK_2.getValue());
+        outPacket.encodeInt(1);
+        outPacket.encodeByte(1);
+
+        c.write(outPacket);
+    }
+
+    @Handler(op = InHeader.UNK_REQ_1)
+    public static void handleUNK_REQ_1(Client c, InPacket inPacket) {
+        OutPacket outPacket = new OutPacket(OutHeader.UNK_ACK_1.getValue());
+        outPacket.encodeLong(0);
+        outPacket.encodeLong(0);
+
+        c.write(outPacket);
     }
 }

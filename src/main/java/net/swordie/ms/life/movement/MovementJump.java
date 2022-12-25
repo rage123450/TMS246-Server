@@ -38,7 +38,7 @@ public class MovementJump extends MovementBase {
         if (getCommand() == 21 || getCommand() == 22) {
             outPacket.encodeShort(getFootStart());
         }
-        if (getCommand() == 60) {
+        if (getCommand() == 62) {//60->62
             outPacket.encodePosition(getOffset());
         }
         outPacket.encodeByte(getMoveAction());

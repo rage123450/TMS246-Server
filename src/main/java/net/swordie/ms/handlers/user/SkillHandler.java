@@ -324,6 +324,9 @@ public class SkillHandler {
         if (skillID == 400041021) { // Blades of Destiny
             chr.write(UserLocal.skillUseResult((byte) 1, skillID));
         }
+        if (skillID == 151001001) {
+            chr.write(CFamiliar.CreateSubObtacle(chr , skillID));
+        }
 
         boolean isByUnreliableMemory = option == 1824;
         if ((isByUnreliableMemory) || (chr.applyMpCon(skillID, slv) && ((chr.checkAndSetSkillCooltime(skillID) || SkillConstants.isBypassCooldownSkill(skillID)) || chr.hasSkillCDBypass()))) {
@@ -474,7 +477,7 @@ public class SkillHandler {
                 maxSpeedY = inPacket.decodeInt();
                 b2Body = new B2Body(chr, b2BodyId, skillId, slv, maxSpeedX, maxSpeedY);
                 b2Body.setPosition(position);
-                chr.write(UserLocal.b2BodyResultNew(requestType, b2Body));
+                chr.write(UserLocal.b2BodyResultNew(requestType, b2Body));//??
                 break;
             default:
                 log.error(String.format("Unhandled B2Body Request Type: %d", requestType));
@@ -984,6 +987,4 @@ public class SkillHandler {
         }
         chr.getJobHandler().handleSkill(chr, chr.getTemporaryStatManager(), skillId, chr.getSkillLevel(skillId), inPacket, new SkillUseInfo());
     }
-
-
 }

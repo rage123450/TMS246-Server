@@ -69,7 +69,7 @@ public enum GuildType {
     Req_CreateNewGuild_Block(46),
     Req_CreateNewAlliance_Block(47),
 
-    // Results ------------------------------
+    // Results ------------------------------53
     Res_LoadGuild_Done(48),
     Res_FindGuild_Done(49),
 
@@ -80,7 +80,7 @@ public enum GuildType {
     Res_CreateGuildAgree_Reply(53),
     Res_CreateGuildAgree_Unknown(54),
     Res_CreateNewGuild_Done(55),
-    Res_CreateNewGuild_AlreadyJoined(56),
+    Res_CreateNewGuild_AlreadyJoined(56),//42?
     Res_CreateNewGuild_GuildNameAlreayExist(57),
     Res_CreateNewGuild_Beginner(58),
     Res_CreateNewGuild_Disagree(59),

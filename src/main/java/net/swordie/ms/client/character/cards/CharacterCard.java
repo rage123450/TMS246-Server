@@ -50,11 +50,11 @@ public class CharacterCard {
 
     public void encode(OutPacket outPacket) {
         //CHARACTERCARD::Decode
-        for(int i = 0; i < 9; i++) {
+        //for(int i = 0; i < 9; i++) {
             outPacket.encodeInt(getCharacterId());
             outPacket.encodeByte(getLevel());
             outPacket.encodeInt(getJob());
-        }
+        //}
     }
 
     public int getId() {

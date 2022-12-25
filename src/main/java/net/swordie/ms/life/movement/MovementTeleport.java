@@ -27,6 +27,8 @@ public class MovementTeleport extends MovementBase {
         outPacket.encodeByte(getCommand());
         outPacket.encodePosition(getPosition());
         outPacket.encodeShort(getFh());
+        outPacket.encodeInt(getUnk());
+
         outPacket.encodeByte(getMoveAction());
         outPacket.encodeShort(getDuration());
         outPacket.encodeByte(getForcedStop());

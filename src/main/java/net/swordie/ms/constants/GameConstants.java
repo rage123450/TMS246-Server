@@ -1,5 +1,6 @@
 package net.swordie.ms.constants;
 
+import jnr.ffi.annotations.In;
 import net.swordie.ms.ServerConstants;
 import net.swordie.ms.client.character.Char;
 import net.swordie.ms.client.character.items.Equip;
@@ -10,9 +11,11 @@ import net.swordie.ms.enums.ItemJob;
 import net.swordie.ms.enums.QuickMoveType;
 import net.swordie.ms.loaders.ItemData;
 import net.swordie.ms.util.FileTime;
+import net.swordie.ms.util.Randomizer;
 import net.swordie.ms.util.Rect;
 import net.swordie.ms.util.Util;
 import net.swordie.ms.util.container.Triple;
+import net.swordie.ms.util.container.Tuple;
 
 import java.util.*;
 
@@ -325,7 +328,10 @@ public class GameConstants {
             {{37, 41}, {0, 22}, {24, 0}, {28, 30}, {0, 18}, {20, 0}}, // 21 - Cannon
             {{44, 48}, {0, 4}, {8, 20}, {34, 38}, {0, 2}, {4, 15}}, // 22 - Hayato
             {{40, 44}, {0, 0}, {0, 0}, {28, 32}, {0, 0}, {0, 0}}, // 23 - Kanna
+            {{20, 23}, {0, 0}, {0, 0}, {33, 40}, {0, 0}, {0, 0}}, // 24 - 菈菈
     };
+
+    public static List<Tuple<String, String>> dList;
 
     static {
         initCharExp();
@@ -333,6 +339,16 @@ public class GameConstants {
         initEnchantRatesSuperior();
         initQuickMove();
         initGuildExp();
+        initdList();
+    }
+
+    private static void initdList() {
+        dList = new ArrayList<>();
+        dList.add(new Tuple("mirrorD_322_0_", ""));
+        dList.add(new Tuple("mirrorD_322_1_", ""));
+        dList.add(new Tuple("mirrorD_322_2_", ""));
+        dList.add(new Tuple("mirrorD_322_3_", ""));
+        dList.add(new Tuple("mirrorD_323_0_", ""));
     }
 
     private static void initQuickMove() {
@@ -678,7 +694,7 @@ public class GameConstants {
         } else if (JobConstants.isBeastTamer(job) || JobConstants.isBlazeWizard(job) || JobConstants.isBishop(job)
                 || JobConstants.isEvan(job) || JobConstants.isIceLightning(job) || JobConstants.isFirePoison(job)
                 || JobConstants.isAdventurerMage(job) || JobConstants.isKanna(job) || JobConstants.isKinesis(job)
-                || JobConstants.isLuminous(job) || JobConstants.isIllium(job) || JobConstants.isBattleMage(job)) {
+                || JobConstants.isLuminous(job) || JobConstants.isIllium(job) || JobConstants.isBattleMage(job) || JobConstants.isLara(job)) {
             return BaseStat.inte;
 
         } else if (JobConstants.isAdventurerThief(job) || JobConstants.isNightLord(job) || JobConstants.isShadower(job)
@@ -694,7 +710,7 @@ public class GameConstants {
                 || JobConstants.isAran(job) || JobConstants.isCannonShooter(job) || JobConstants.isDarkKnight(job)
                 || JobConstants.isHero(job) || JobConstants.isPaladin(job) || JobConstants.isBlaster(job)
                 || JobConstants.isHayato(job) || JobConstants.isMihile(job) || JobConstants.isShade(job)
-                || JobConstants.isThunderBreaker(job) || JobConstants.isAdventurerWarrior(job) || JobConstants.isArk(job)) {
+                || JobConstants.isThunderBreaker(job) || JobConstants.isAdventurerWarrior(job) || JobConstants.isArk(job) || JobConstants.isAdele(job)) {
             return BaseStat.str;
 
         } else
@@ -844,13 +860,15 @@ public class GameConstants {
             }
             if (jobRace == 2) {
                 switch (jobCategory) {
-                    case 1:// Aran
+                    case 1:// 狂狼勇士
                         return INC_HP_MP[8];
-                    case 2:// Evan
+                    case 2:// 龍魔導士
                         return INC_HP_MP[9];
-                    case 3:// Mercedes
+                    case 3:// 精靈遊俠
                         return INC_HP_MP[10];
-                    case 4:// Phantom
+                    case 4:// 幻影俠盜
+                        return INC_HP_MP[13];
+                    case 5:// 隱月
                         return INC_HP_MP[13];
                 }
             }
@@ -1077,5 +1095,20 @@ public class GameConstants {
             mult = Math.round(-15 - (-2.5 * (diff + 6)));
         }
         return mult / 100;
+    }
+
+    public static int getTupleRandom(List<Tuple<Integer, Integer>> list) {
+        int potentialid = 0;
+        double bestValue = Double.MAX_VALUE;
+        for (Tuple<Integer, Integer> element : list) {
+            double a = ((Integer) element.getRight()).intValue();
+            double r = a / 10000.0D;
+            double value = -Math.log(Randomizer.nextDouble()) / r;
+            if (value < bestValue) {
+                bestValue = value;
+                potentialid = ((Integer) element.getLeft()).intValue();
+            }
+        }
+        return potentialid;
     }
 }

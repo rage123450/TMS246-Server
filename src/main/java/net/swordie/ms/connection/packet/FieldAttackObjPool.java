@@ -4,6 +4,8 @@ import net.swordie.ms.connection.OutPacket;
 import net.swordie.ms.handlers.header.OutHeader;
 import net.swordie.ms.life.FieldAttackObj;
 
+import java.util.List;
+
 /**
  * @author Sjonnie
  * Created on 8/19/2018.
@@ -22,6 +24,17 @@ public class FieldAttackObjPool {
         OutPacket outPacket = new OutPacket(OutHeader.FIELD_ATTACK_REMOVE_BY_KEY);
 
         outPacket.encodeInt(objectID);
+
+        return outPacket;
+    }
+
+    public static OutPacket objRemoveByList(List<FieldAttackObj> removes) {
+        OutPacket outPacket = new OutPacket(OutHeader.FIELD_ATTACK_REMOVE_LIST);
+
+        outPacket.encodeInt(removes.size());
+        for (FieldAttackObj obj : removes) {
+            outPacket.encodeInt(obj.getObjectId());
+        }
 
         return outPacket;
     }

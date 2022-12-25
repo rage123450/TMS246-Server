@@ -22,16 +22,14 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     IndieMMP(5),
     IndieMMPR(6),
     IndieACC(7),
-
     IndieEVA(8),
     IndieJump(9),
-    IndieSpeed(10),
+    IndieSpeed(10),//移動速度
     IndieAllStat(11),
     IndieAllStatR(12),
     IndieDodgeCriticalTime(13),
     IndieEXP(14),
-    IndieBooster(15),
-
+    IndieBooster(15),//武器加速
     IndieFixedDamageR(16),
     PyramidStunBuff(17), // Osiris' Eye: Stuns monsters for 1 second. Includes Pharaoh Yetis and Pharaoh Mummies at a 30% chance. Costs 500 points.
     PyramidFrozenBuff(18), // Horus' Eye: Slows down all monsters for 15 seconds. Includes Pharaoh Yetis and Pharaoh Mummies at a 30% chance. Costs 700 points.
@@ -49,16 +47,14 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     IndieAsrR(29),
     IndieTerR(30),
     IndieCr(31),
-
     IndiePDDR(32),
     IndieCrDmg(33),
     IndieBDR(34),
     IndieStatR(35),
-    IndieStance(36),
+    IndieStance(36),//格檔機率
     IndieIgnoreMobpdpR(37),
     IndieEmpty(38),
     IndiePADR(39),
-
     IndieMADR(40),
     IndieEVAR(41),
     IndieDrainHP(42),
@@ -75,7 +71,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     IndieCrystalCharge(52),
     IndieNegativeEVAR(53),
     IndieHitDamage(54),
-    IndieNoKnockBack(55),
+    IndieNoKnockBack(55),//-> 60?
     Indie205_56(56), // err38
     IndieHitDamageInclHPR(57), // Indie Hit Damage, including HP% hits
     IndieArcaneForce(58),
@@ -90,34 +86,35 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     IndieUnk63(67),
     IndieStatCount(68),
 
-    PAD(79),
-    DEF(80),
-    MAD(81),
-    ACC(82),
-    EVA(83),
-    Craft(84),
-    Speed(85),
-    Jump(86),
-    MagicGuard(87),
-    DarkSight(88),
-    Booster(89),
-    PowerGuard(90),
-    MaxHP(91),
-    MaxMP(92),
+    PAD(79),//物理攻擊力
+    DEF(80),//物理防御力
+    MAD(81),//魔法防御力
+    ACC(82),//命中率
+    EVA(83),//迴避率
 
-    Invincible(93),
-    SoulArrow(94),
-    Stun(95),
-    Poison(96),
-    Seal(97),
-    Darkness(98),
-    ComboCounter(99),
+    Craft(84),//手技
+    Speed(85),//移動速度
+    Jump(86),//跳躍力
+    MagicGuard(87),//魔心防禦
+    DarkSight(88),//隱藏術
+    Booster(89),//攻擊加速
+    PowerGuard(90),//傷害反擊
+    MaxHP(91),//神聖之火_最大HP
+    MaxMP(92),//神聖之火_最大MP
+
+    Invincible(93),//神聖之光
+    SoulArrow(94),//無形之箭
+    Stun(95),//昏迷
+    Poison(96),//中毒
+    Seal(97),//封印
+    Darkness(98),//黑暗
+    ComboCounter(99),//鬥氣集中
     WorldReaver(-1),
     HammerOfTheRighteous(100),
     BigHammerOfTheRighteous(101),
     WeaponCharge(102),
 
-    HolySymbol(103),
+    HolySymbol(103),//*實用的祈禱
     MesoUp(104),
     ShadowPartner(105),
     Steal(106),
@@ -195,13 +192,12 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     EPAD(172),
     EMAD(173),
     EPDD(174),
-    Guard(175),
+    Guard(175),//PerfectArmor?
     Cyclone(176),
     RadiantOrb(177),
     HowlingCritical(-1),
     HowlingMaxMP(-1),
     HowlingDefence(-1),
-
     // 1 2 of these are removed, idk which
     HowlingEvasion(-1),
     Conversion(-1),
@@ -229,34 +225,35 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     Explosion(199),
     BuffLimit(200),
 
-    STR(201),
-    INT(202),
-    DEX(203),
-    LUK(204),
-    DispelItemOptionByField(205),
-    DarkTornado(206),
-    PVPDamage(207),
-    PvPScoreBonus(208),
-    PvPInvincible(209),
-    PvPRaceEffect(210),
-    WeaknessMdamage(211),
-    Frozen2(212), // *
-    PVPDamageSkill(213),
-    AmplifyDamage(214),
-    Shock(215),
-    InfinityForce(216),
-    IncMaxHP(217),
-    IncMaxMP(218),
-    HolyMagicShell(219),
-    KeyDownTimeIgnore(220),
-    ArcaneAim(221),
-    MasterMagicOn(222),
-    AsrR(223),
-    TerR(224),
-    DamAbsorbShield(225),
-    DevilishPower(226),
-    Roulette(227),
-    SpiritLink(228),
+//------------------------
+    STR(202),
+    INT(203),
+    DEX(204),
+    LUK(205),
+    DispelItemOptionByField(206),
+    DarkTornado(207),
+    PVPDamage(208),
+    PvPScoreBonus(209),
+    PvPInvincible(210),
+    PvPRaceEffect(211),
+    WeaknessMdamage(212),
+    Frozen2(213), // *
+    PVPDamageSkill(214),
+    AmplifyDamage(215),
+    Shock(216),
+    InfinityForce(217),
+    IncMaxHP(218),
+    IncMaxMP(219),
+    HolyMagicShell(220),
+    KeyDownTimeIgnore(221),
+    ArcaneAim(222),
+    MasterMagicOn(223),
+    AsrR(224),
+    TerR(225),
+    DamAbsorbShield(226),
+    DevilishPower(227),
+    Roulette(228),
+    SpiritLink(229),
     AsrRByItem(230),
     Event(231),
     CriticalBuff(232),
@@ -293,8 +290,8 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     Judgement(259),
     DojangLuckyBonus(253),
     PainMark(254),
-    Magnet(255),
-    MagnetArea(256),
+    Magnet(255),//262?
+    MagnetArea(256),//263?
 
     GuidedArrow(257),
     SpiritFlow(258),
@@ -370,30 +367,27 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     BuckShot(324),
     FireBomb(325),
     HalfstatByDebuff(326),
-
     SurplusSupply(327),
     SetBaseDamage(328),
-    EVAR(329),
-    NewFlying(330), // *
-    AmaranthGenerator(331),
-    OnCapsule(332),
-    CygnusElementSkill(333),
-    StrikerHyperElectric(334),
-
-    EventPointAbsorb(335),
-    EventAssemble(336),
-    StormBringer(337),
-    ACCR(338),
-    DEXR(339),
-    Albatross(340),
-    Translucence(341),
-    PoseType(349),
-
-    LightOfSpirit(343),
-    ElementSoul(344),
-    GlimmeringTime(345),
-    TrueSight(346),
-    SoulExplosion(347),
+    EVAR(330),//329 -> 330
+    NewFlying(337), // *
+    AmaranthGenerator(332),
+    OnCapsule(333),
+    CygnusElementSkill(334),
+    StrikerHyperElectric(335),
+    EventPointAbsorb(336),
+    EventAssemble(337),
+    StormBringer(338),
+    ACCR(339),
+    DEXR(340),
+    Albatross(341),
+    Translucence(342),
+    PoseType(343),
+    LightOfSpirit(344),
+    ElementSoul(345),
+    GlimmeringTime(346),
+    TrueSight(347),
+    SoulExplosion(348),
     SoulMP(355),
     FullSoulMP(356),
     SoulSkillDamageUp(350),
@@ -433,10 +427,10 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     CursorSniping(380),
     DebuffTolerance(381),
     DotHealHPPerSecond(382),
-    SpiritGuard(386),
-    PreReviveOnce(387),
+    SpiritGuard(386),//*
+    PreReviveOnce(387),//*
 
-    SetBaseDamageByBuff(388),
+    SetBaseDamageByBuff(388),//*
     LimitMP(386),
     ReflectDamR(387),
     ComboTempest(388),
@@ -461,10 +455,10 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     JaguarSummoned(405),
     JaguarCount(406),
 
-    SSFShootingAttack(412),
+    SSFShootingAttack(412),//*
     DevilCry(413),
-    ShieldAttack(414),
-    BMageAura(410),
+    ShieldAttack(415),//*
+    BMageAura(410),//刪除了?
     DarkLighting(411),
     AttackCountX(412),
     BMageDeath(413),
@@ -485,7 +479,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     DivineEcho(430),
     BattlePvPHelenaMark(431),
     BattlePvPHelenaWindSpirit(432),
-    MastemasMark(459),
+    MastemasMark(458),//*
     RiftOfDamnation(430),
 
     QuiverBarrage(431),
@@ -493,12 +487,12 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     PrimalGrenade(433),
     Unk200_430(434),
     Unk200_431(435),
-    BattlePvPLangEProtection(466),
+    BattlePvPLangEProtection(465),//*
     BattlePvPLeeMalNyunScaleUp(467),
     BattlePvPRevive(468),
     Unk188_419(469), // err38
     Unk188_420(470),
-    PinkbeanAttackBuff(471),
+    PinkbeanAttackBuff(470),//*
     PinkbeanRelax(472),
     PinkbeanRollingGrade(473), // *
 
@@ -518,11 +512,11 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     TriflingWhimOnOff(455),
     AddRangeOnOff(456),
     KinesisPsychicPoint(457),
-    KinesisPsychicOver(458),
     KinesisPsychicShield(459),
-
     KinesisIncMastery(460),
-    KinesisPsychicEnergeShield(461),
+    KinesisMind_Break(486),// * done 心靈突破 永恆壞滅也發?
+    KinesisPsychicOver(487),// * done 458 -> 487? 486?
+    KinesisPsychicEnergeShield(489),// *done 心靈本能 //461 -> 489
     BladeStance(491),
     DebuffActiveSkillHPCon(463),
     DebuffIncHP(464),
@@ -553,40 +547,40 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     UsingScouter(514),
     RWMovingEvar(486),
     Stigma(516),
-    MahasFury(488),
-    RuneCooltime(489),
-    Unk188_471(490),
 
-    Unk188_472(491),
-    Unk188_473(492),
-    Unk188_474(493),
-    MeltDown(494),
-    SparkleBurstStage(495),
-    LightningCascade(496),
-    BulletParty(497),
-    Unk188_479(498),
+    MahasFury(514),
+    RuneCooltime(515),
+    Unk188_471(516),
+    Unk188_472(517),
+    Unk188_473(518),
+    Unk188_474(519),
+    MeltDown(520),
+    SparkleBurstStage(521),
+    LightningCascade(522),
+    BulletParty(523),
+    Unk188_479(524),
 
-    AuraScythe(499),
-    Benediction(500),
-    VoidStrike(501),
-    ReduceHitDmgOnlyHPR(502),
-    Unk199_493(503),
-    WeaponAura(504),
-    ManaOverload(505),
-    RhoAias(533),
-    PsychicTornado(507),
+    AuraScythe(525),
+    Benediction(526),
+    VoidStrike(527),
+    ReduceHitDmgOnlyHPR(528),
+    Unk199_493(529),
+    WeaponAura(530),//*
+    ManaOverload(531),
+    RhoAias(532),// * done
+    PsychicTornado(533),//* done 507 -> 533
+    SpreadThrow(534),
+    超載魔力(535),
+    WindEnergy(535),
+    MassDestructionRockets(536),
+    ShadowAssault(537),
+    Unk188_492(538),  // Awakened Relic placeholder
+    Unk188_493(539),
+    Unk188_494(540),
+    BlitzShield(541),
 
-    SpreadThrow(508),
-    WindEnergy(509),
-    MassDestructionRockets(510),
-    ShadowAssault(511),
-    Unk188_492(512),  // Awakened Relic placeholder
-    Unk188_493(513),
-    Unk188_494(514),
-    BlitzShield(515),
-
-    SplitShot(516),
-    FreudBlessing(517),
+    SplitShot(542),
+    FreudBlessing(543),
     OverloadMode(573),
     SpotLight(574), // *
     Unk188_500(575),
@@ -594,6 +588,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     //    NuclearOption(522), // moved/removed
     WingsOfGlory(577), // *
     TrickBladeMobStat(578),
+    UNK248_561(561),
     Overdrive(524),
     EtherealForm(525),
     LastResort(526),
@@ -601,7 +596,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     Unk176_466(583), // *
     Unk200_527(584),
     Unk200_528(530),
-    ImpenetrableSkin(586),
+    ImpenetrableSkin(521),//586 -> 521?
 
     Unk199_520(532),
     Unk199_521(533),
@@ -616,6 +611,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     Unk199_529(541),
     Unk199_530(542),
     Unk200_557(543),
+
     SpecterEnergy(599),
     SpecterState(600),
     BasicCast(601), // *
@@ -632,7 +628,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     Unk199_544(612),
     Unk199_545(613),
     Unk199_546(614),
-    BigBangAttackCharge(615),
+    BigBangAttackCharge(615),//584?
     Unk199_548(616),
     TridentStrike(617),
     ComboInstinct(618),
@@ -733,6 +729,16 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     RelicGauge(649),
 
     None(-1),
+    UNK248_448(448),
+
+    乙太(672),//?
+    創造(673),
+    奇蹟(675),
+    山不敗(742),//
+    UNK248_763(763),
+    UNK248_764(764),
+    UNK248_768(768),
+    UNK248_771(771),
     ;
 
     private int bitPos;
@@ -813,7 +819,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
             HayatoStance,HayatoBooster,HayatoStanceBonus,WillowDodge, Unk176_471,HayatoPAD,HayatoHPR,HayatoMPR,Jinsoku,
             HayatoCr,HakuBlessing,HayatoBoss, BattoujutsuAdvance, Unk176_483, Unk176_484,BlackHeartedCurse, EyeForEye,
             BeastMode,TeamRoar, Unk176_488, Unk176_489, Unk176_493, WaterSplashEventMarking, WaterSplashEventMarking2, WaterSplashEventCombo, WaterSplashEventWaterDripping,
-            Unk188_539, YukiMusumeShoukan, IaijutsuBlade, Unk199_595,Unk199_596,Unk199_597, BroAttack, LiberatedSpiritCircle, Unk205_640
+            Unk188_539, YukiMusumeShoukan, IaijutsuBlade, Unk199_595,Unk199_596,Unk199_597, BroAttack, LiberatedSpiritCircle, Unk205_640,山不敗,KinesisMind_Break,超載魔力,創造
 
     );
 
@@ -1141,7 +1147,19 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     public static void main(String[] args) {
 //        getBitPosByString("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 10 40 21 00 01 00 87 93 03 00 87 00 00 00 00 00 00 00 00 00 00 00"
 //        );
-        changeCts();
+        getBitPosByString("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 20 00 6D F0 A7 09 00 00 00 00 00 00 00 00 00 00 00 00 00 B4 00 00 00 01 01 01 00 00 00 00 01");
+        //changeCts();
+        //getBitPos(0x2000, 12);
+    }
+
+    private static void getBitPos(int val, int pos) {
+        int a = Stigma.bitPos;
+        log.debug(String.format("value 0x%04x, pos %d", val, pos));
+        for(CharacterTemporaryStat cts : values()) {
+            if(cts.getVal() == val && cts.getPos() == pos) {
+                log.debug("Corresponds to " + cts);
+            }
+        }
     }
 
     private static void getBitPosByString(String str) {
@@ -1158,6 +1176,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
         }
         for (int i = 0; i < iArr.length; i++) {
             int mask = iArr[i];
+            log.debug(String.format("value 0x%04x, pos %d", i, mask));
             for (CharacterTemporaryStat cts : CharacterTemporaryStat.values()) {
                 if (cts.getPos() == i && (cts.getVal() & mask) != 0) {
                     log.error(String.format("Contains stat %s", cts.toString()));
@@ -1201,7 +1220,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
 
 
     private static void changeCts() {
-        File file = new File("D:\\SwordieMS\\SwordieUTD\\src\\main\\java\\net\\swordie\\ms\\client\\character\\skills\\temp\\CharacterTemporaryStat.java");
+        File file = new File("D:\\Maplestory\\MaplestoryServer\\myserver\\TMS248\\src\\main\\java\\net\\swordie\\ms\\client\\character\\skills\\temp\\CharacterTemporaryStat.java");
         int change = 11;
         CharacterTemporaryStat checkOp = null;
         try(Scanner s = new Scanner(file)) {
