@@ -194,7 +194,7 @@ public class MovementInfo implements Encodable {
                     res.add(new MovementAction(inPacket, type));
                     break;
                 case 50:
-                    res.add(new MovementOffsetX(inPacket, type));
+                    res.add(new MovementOffsetX(inPacket, type));//??
                     break;
                 case 57:
                 case 71:

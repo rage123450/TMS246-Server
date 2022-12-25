@@ -85,6 +85,7 @@ public class QuestHandler {
                 String scriptName = qi.getStartScript();
                 if (QuestConstants.isSpamQuest(scriptName) || !qm.canStartQuest(questID)) {
                     // ~_~
+                    System.out.println("重製任務?");
                     return;
                 }
                 if (scriptName == null || scriptName.equalsIgnoreCase("")) {

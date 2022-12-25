@@ -17,7 +17,7 @@ import java.util.Random;
 public class Option {
     private static final Random keyRng = new Random();
     public int nOption;
-    public int rOption;
+    public int rOption;//技能ID
     public int tOption;
     public int xOption;
     public int mOption;
@@ -29,7 +29,7 @@ public class Option {
     public int ssOption;
     public int cOption;
     public int yOption;
-    public int nReason;
+    public int nReason;//技能ID isIndie
     public int nValue;
     public int nKey = keyRng.nextInt();
     public int tStart;

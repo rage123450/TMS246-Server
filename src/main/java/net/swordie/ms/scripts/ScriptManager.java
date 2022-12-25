@@ -1540,6 +1540,13 @@ public interface ScriptManager extends Observer {
 	void closeUI(UIType uiID);
 
 	/**
+	 * Closes a ui with a given UIType.
+	 * @param uiID
+	 * Example: "sm.openUIOption(UITYPE.EQUIP, 4034803)"
+	 */
+	void openUIOption(UIType uiID, int option);
+
+	/**
 	 * Shows the {@link Char} the "Clear Stage with Exp" window, as well as giving the specified Exp.
 	 *
 	 * @param expGiven

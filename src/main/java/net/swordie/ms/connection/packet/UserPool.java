@@ -38,7 +38,7 @@ public class UserPool {
         CharacterStat cs = chr.getAvatarData().getCharacterStat();
         AvatarLook al = chr.getAvatarData().getAvatarLook();
         TemporaryStatManager tsm = chr.getTemporaryStatManager();
-
+        System.out.println("進入userEnterField");
         OutPacket outPacket = new OutPacket(OutHeader.USER_ENTER_FIELD);
 
         outPacket.encodeLong(0); // 90 FE 6D 3A B1 CE D8 01
@@ -102,17 +102,29 @@ public class UserPool {
 
         outPacket.encodeInt(chr.getDamageSkin() == null ? 0 : chr.getDamageSkin().getDamageSkinID());
         outPacket.encodeInt(chr.getPremiumDamageSkin() == null ? 0 : chr.getPremiumDamageSkin().getDamageSkinID());
+        outPacket.encodeInt(0);//248++
         outPacket.encodeString(""); // damage skin?
         outPacket.encodeString(""); // premium damage skin?
         outPacket.encodeInt(al.getDemonWingID());
         outPacket.encodeInt(al.getKaiserWingID());
         outPacket.encodeInt(al.getKaiserTailID());
+        outPacket.encodeByte(true);//248++
         outPacket.encodeInt(chr.getCompletedSetItemID());
+        outPacket.encodeInt(0);//248++
+        outPacket.encodeInt(0);//248++
         outPacket.encodeShort(chr.getFieldSeatID());
+        outPacket.encodeByte(false);//248++
 
         // ==== START  Portable Chair Encoding ====and
         PortableChair chair = chr.getChair() != null ? chr.getChair() : new PortableChair(chr, 0);
         outPacket.encodeInt(chair.getItemID());
+        outPacket.encodeInt(0);
+        outPacket.encodeByte(0);
+        outPacket.encodePosition(chr.getPosition());
+        outPacket.encodeByte(0);
+        outPacket.encodeShort(chr.getFoothold());
+        outPacket.encodeByte(1);
+        outPacket.encodeByte(1);
         boolean hasPortableChairMsg = chair.isTextChair();
         outPacket.encodeByte(hasPortableChairMsg);
         if (hasPortableChairMsg) {
@@ -122,7 +134,7 @@ public class UserPool {
         if (chair.isMesoChair()) {
             outPacket.encodeLong(chair.getMeso()); // Meso Displayed
         }
-
+/* ?????
         QuestManager qm = chr.getQuestManager();
         Quest q = qm.getQuests().getOrDefault(QuestConstants.TOWER_CHAIR, null);
         if (q == null) {
@@ -170,7 +182,7 @@ public class UserPool {
             // virtual function :(
         }
         // ==== END  Portable Chair Encoding ====
-
+*/
         for(Pet pet : chr.getPets()) {
             if (pet.getId() == 0) {
                 continue;
@@ -182,6 +194,7 @@ public class UserPool {
         outPacket.encodeByte(0); // indicating that pets are no longer being encoded
 
         outPacket.encodeByte(false); // if true, encode something. idk what (v4->vfptr[35].Update)(v4, iPacket);
+        /*
         // start new 188
         size = 0;
         outPacket.encodeByte(size);
@@ -193,6 +206,7 @@ public class UserPool {
             }
         }
         // end new 188
+        */
         outPacket.encodeInt(chr.getTamingMobLevel());
         outPacket.encodeInt(chr.getTamingMobExp());
         outPacket.encodeInt(chr.getTamingMobFatigue());
@@ -205,26 +219,44 @@ public class UserPool {
         outPacket.encodeByte(miniRoomType);
         if(miniRoomType > 0) {
             chr.getMiniRoom().encode(outPacket);
+            chr.encodeChatInfo(outPacket, chr.getMiniRoom().getMsg());
         }
+
         outPacket.encodeByte(chr.getADBoardRemoteMsg() != null);
         if (chr.getADBoardRemoteMsg() != null) {
             outPacket.encodeString(chr.getADBoardRemoteMsg());
         }
+
         outPacket.encodeByte(chr.isInCouple());
         if(chr.isInCouple()) {
             chr.getCouple().encodeForRemote(outPacket);
         }
-        outPacket.encodeByte(chr.hasFriendshipItem());
+
+        outPacket.encodeByte(chr.hasFriendshipItem()); //未完成
         if(chr.hasFriendshipItem()) {
             chr.getFriendshipRingRecord().encode(outPacket);
         }
-        outPacket.encodeByte(chr.isMarried());
+
+        outPacket.encodeByte(chr.isMarried());//未完成
         if(chr.isMarried()) {
             chr.getMarriageRecord().encodeForRemote(outPacket);
         }
-        outPacket.encodeByte(0); // some flag that shows uninteresting things for now
 
+        outPacket.encodeByte(true); //
+
+        byte flag = 0;
+        if (chr.getSkillLevel(1320016) > 0 && chr.getJob() == 132) {
+            flag = (byte) (flag | 0x1);
+        }
+        if (JobConstants.isEvan(chr.getJob())) {
+            flag = (byte) (flag | 0x2);
+        }
+        outPacket.encodeInt(0);
+
+        outPacket.encodeByte(flag);
+        //outPacket.encodeInt(0);
         outPacket.encodeInt(chr.getEvanDragonGlide());
+
         if(JobConstants.isKaiser(chr.getJob())) {
             outPacket.encodeInt(chr.getKaiserMorphRotateHueExtern());
             outPacket.encodeInt(chr.getKaiserMorphPrimiumBlack());
@@ -237,10 +269,12 @@ public class UserPool {
         for (int i = 0; i < 5; i++) {
             outPacket.encodeByte(-1); // activeEventNameTag
         }
-        outPacket.encodeInt(chr.getCustomizeEffect());
+
+        outPacket.encodeInt(chr.getCustomizeEffect());//??
         if(chr.getCustomizeEffect() > 0) {
             outPacket.encodeString(chr.getCustomizeEffectMsg());
         }
+
         outPacket.encodeByte(chr.getSoulEffect());
         if(tsm.hasStat(CharacterTemporaryStat.RideVehicle)) {
             int vehicleID = tsm.getTSBByTSIndex(TSIndex.RideVehicle).getNOption();

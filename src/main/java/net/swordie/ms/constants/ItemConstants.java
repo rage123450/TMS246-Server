@@ -64,6 +64,8 @@ public class ItemConstants {
 
     public static final int NEBILITE_BASE_ID = 3060000;
 
+    public static final int GOLD_APPLE = 5060048;
+
     public static final int HORNTAIL_NECKLACE[] = {
             1122000, // Horntail Necklace
             1122076, // Chaos Horntail Necklace

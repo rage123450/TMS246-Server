@@ -230,7 +230,7 @@ public class ScriptManagerImpl implements ScriptManager {
             return;
         }
         if (!isField()) {
-            //chr.chatMessage(Mob, String.format("Starting script %s, scriptType %s.", scriptName, scriptType));
+            chr.chatMessage(SystemNotice, String.format("Starting script %s, scriptType %s.", scriptName, scriptType));//Mob
             log.debug(String.format("Starting script %s, scriptType %s.", scriptName, scriptType));
         }
         resetParam();
@@ -873,6 +873,7 @@ public class ScriptManagerImpl implements ScriptManager {
         setJob(jobID);
         addAP(5); //Standard added AP upon Job Advancing
         addSP(5); //Standard added SP upon Job Advancing
+
     }
 
     @Override
@@ -1527,6 +1528,12 @@ public class ScriptManagerImpl implements ScriptManager {
             script = String.valueOf(npc.getTemplateId());
         }
         chr.getScriptManager().startScript(npc.getTemplateId(), npcId, script, ScriptType.Npc);
+    }
+
+    public void openNpc(int npcId, String filename) {
+        Npc npc = NpcData.getNpcDeepCopyById(npcId);
+
+        chr.getScriptManager().startScript(npc.getTemplateId(), npcId, filename, ScriptType.Npc);
     }
 
     @Override
@@ -2937,6 +2944,16 @@ public class ScriptManagerImpl implements ScriptManager {
 
     public void closeUI(int id) {
         chr.write(FieldPacket.closeUI(id));
+    }
+
+    @Override
+    public void openUIOption(UIType uiType, int option) {
+        int id = uiType.getVal();
+        openUIOption(id, option);
+    }
+
+    public void openUIOption(int id, int option){
+        chr.write(FieldPacket.openUIOption(id, option));
     }
 
     @Override

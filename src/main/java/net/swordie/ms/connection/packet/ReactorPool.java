@@ -24,7 +24,7 @@ public class ReactorPool {
         outPacket.encodePosition(reactor.getPosition());
         outPacket.encodeShort(delay);
         outPacket.encodeByte(reactor.getProperEventIdx());
-        outPacket.encodeByte(stateLength);
+        outPacket.encodeInt(stateLength);// byte -> int
         outPacket.encodeInt(reactor.getOwnerID());
 
         return outPacket;
@@ -75,6 +75,7 @@ public class ReactorPool {
         outPacket.encodeByte(false); // new 199
         outPacket.encodeByte(reactor.getState());
         outPacket.encodePosition(reactor.getPosition());
+        outPacket.encodeByte(0); // new 248?
 
         return outPacket;
     }

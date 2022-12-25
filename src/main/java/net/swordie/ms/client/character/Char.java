@@ -848,12 +848,12 @@ public class Char {
             boolean hasBlessingOfFairy = getBlessingOfFairy() != null;
             boolean hasBlessingOfEmpress = getBlessingOfEmpress() != null;
 
-            outPacket.encodeByte(hasBlessingOfFairy);
+            outPacket.encodeByte(hasBlessingOfFairy); //精靈的祝福
             if (hasBlessingOfFairy) {
                 outPacket.encodeString(getBlessingOfFairy());
             }
 
-            outPacket.encodeByte(hasBlessingOfEmpress);
+            outPacket.encodeByte(hasBlessingOfEmpress); //女皇的祝福
             if (hasBlessingOfEmpress) {
                 outPacket.encodeString(getBlessingOfEmpress());
             }
@@ -1059,7 +1059,7 @@ public class Char {
 
             outPacket.encodeShort(0);//15
 
-            outPacket.encodeByte(0);
+            outPacket.encodeByte(0); //( v458 & 0x200000000000i64 )
             // Cash equipped items
             for (Item item : getEquippedInventory().getItems()) {
                 Equip equip = (Equip) item;
@@ -1563,7 +1563,7 @@ public class Char {
             outPacket.encodeInt(1); // honor level, deprecated
             outPacket.encodeInt(getHonorExp()); // honor exp
         }
-
+/* 246++
         if (mask.isInMask(DBChar.CoreAura)) {
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
@@ -1588,9 +1588,9 @@ public class Char {
 
             outPacket.encodeByte(1);
         }
-
+*/
         outPacket.encodeShort(0); // size -> buffer 20
-
+///////////////////////////////////////////////////////////////////////////////////
         if (mask.isInMask(DBChar.RedLeafInfo)) {
             outPacket.encodeInt(getUserId());
             outPacket.encodeInt(getId());
@@ -1629,7 +1629,7 @@ public class Char {
         }
 
         if (mask.isInMask(DBChar.ReturnEffectInfo)) {
-//            getReturnEffectInfo().encode(outPacket); // ReturnEffectInfo::Decode
+       //     getReturnEffectInfo().encode(outPacket); // ReturnEffectInfo::Decode
             outPacket.encodeByte(0);
         }
 
@@ -2004,11 +2004,21 @@ public class Char {
 
     }
 
-
     public void dropItem(int itemId, int x, int y) {
         Field field = getField();
         Drop drop = new Drop(field.getNewObjectID());
         drop.setItem(ItemData.getItemDeepCopy(itemId));
+        Position position = new Position(x, y);
+        drop.setPosition(position);
+        field.drop(drop, position, true);
+    }
+
+    public void dropItem(int itemId, int x, int y, int count) {
+        Field field = getField();
+        Drop drop = new Drop(field.getNewObjectID());
+        Item item = ItemData.getItemDeepCopy(itemId);
+        item.setQuantity(count);
+        drop.setItem(item);
         Position position = new Position(x, y);
         drop.setPosition(position);
         field.drop(drop, position, true);
@@ -3394,7 +3404,7 @@ public class Char {
             return;
         }
 
-        checkAndRemoveExpiredItems();
+        checkAndRemoveExpiredItems();//發了MESSAGE 好像不用發?
 
         TemporaryStatManager tsm = getTemporaryStatManager();
         for (AffectedArea aa : tsm.getAffectedAreas()) {
@@ -3422,12 +3432,13 @@ public class Char {
         getAvatarData().getCharacterStat().setPortal(portal.getId());
         setPosition(new Position(portal.getX(), portal.getY()));
         initFriendStatus();
+
         write(Stage.setField(this, toField, getClient().getChannel(), false, 0, characterData, hasBuffProtector(),
                 (byte) (portal != null ? portal.getId() : 0), false, 100, null, true, -1));
         write(ClientSocket.AuthCodeChanged());
-//        write(WvsContext.updateEventNameTag(new int[]{-1, -1, -1, -1, -1}));
+        write(TestPacket.test181());
 
-        toField.addChar(this);
+        toField.addChar(this);//生出NPC
         showProperUI(currentField != null ? currentField.getId() : -1, toField.getId());
 
         if (isHide()) {
@@ -4454,6 +4465,9 @@ public class Char {
 
     public void setADBoardRemoteMsg(String ADBoardRemoteMsg) {
         this.ADBoardRemoteMsg = ADBoardRemoteMsg;
+        if (this.field != null) {
+            this.field.broadcastPacket(FieldPacket.useADboard(this.getId(), ADBoardRemoteMsg));
+        }
     }
 
     public boolean isInCouple() {
@@ -5401,6 +5415,12 @@ public class Char {
 
     public void setDeathCount(int deathCount) {
         this.deathCount = deathCount;
+        /*
+        this.getField().broadcastPacket(UserLocal.setdeathCountInfo(this, this.deathCount));
+        if (deathCount > 0) {
+            this.getField().broadcastPacket(UserLocal.);
+        }
+        */
     }
 
     public Set<LinkSkill> getLinkSkills() {
@@ -6967,5 +6987,11 @@ public class Char {
 
     public void removeSetBaseStat(BaseStat bs, int value) {
         addSetBaseStat(bs, -value);
+    }
+
+    public void updatePetAuto() {
+        write(FieldPacket.petAutoHP(0));
+        write(FieldPacket.petAutoMP(0));
+        write(FieldPacket.petAutoUNK(0));
     }
 }

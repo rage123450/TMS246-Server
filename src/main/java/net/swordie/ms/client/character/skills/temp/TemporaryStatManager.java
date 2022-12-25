@@ -46,7 +46,7 @@ public class TemporaryStatManager {
     private int pvpDamage;
     private byte defenseState;
     private byte defenseAtt;
-    private int[] diceInfo = new int[21/*22*/];
+    private int[] diceInfo = new int[21];
     private int[] diceOption = new int[8];
     private List<Integer> mobZoneStates;
     private int viperEnergyCharge;
@@ -326,9 +326,9 @@ public class TemporaryStatManager {
                 .filter(cts -> cts.getOrder() != -1)
                 .sorted(Comparator.comparingInt(CharacterTemporaryStat::getOrder))
                 .collect(Collectors.toList());
-        int[] mask = getMaskByCollection(collection);
+        int[] mask = getMaskByCollection(collection);//33554432
         for (int i = 0; i < getNewMask().length; i++) {
-            outPacket.encodeInt(mask[i]);
+            outPacket.encodeInt(mask[i]);//i = 24
         }
 
         for (CharacterTemporaryStat cts : orderedAndFilteredCtsList) {
@@ -343,7 +343,7 @@ public class TemporaryStatManager {
         }
 
         if (hasNewStat(SoulMP)) {
-            outPacket.encodeInt(getOption(SoulMP).xOption);
+            outPacket.encodeInt(getOption(SoulMP).xOption);//1000
             outPacket.encodeInt(getOption(SoulMP).rOption);
         }
         if (hasNewStat(FullSoulMP)) {
@@ -371,10 +371,10 @@ public class TemporaryStatManager {
             }
         }
         if (hasNewStat(Unk176_466)) {
-            outPacket.encodeInt(getOption(Unk176_466).xOption);
+            outPacket.encodeInt(getOption(Unk176_466).xOption);//CurseOfCreation
         }
         if (hasNewStat(Unk200_527)) {
-            outPacket.encodeInt(getOption(Unk200_527).xOption);
+            outPacket.encodeInt(getOption(Unk200_527).xOption);//CurseOfDestruction
         }
         if (hasNewStat(BigBangAttackCharge)) {
             outPacket.encodeInt(getOption(BigBangAttackCharge).xOption);
@@ -385,13 +385,13 @@ public class TemporaryStatManager {
 /*        if (hasNewStat(KillingPoint)) {
             outPacket.encodeByte(getOption(KillingPoint).nOption);
         }*/
-        if (hasNewStat(PinkbeanRollingGrade)) {
+        if (hasNewStat(PinkbeanRollingGrade)) {//472
             outPacket.encodeByte(getOption(PinkbeanRollingGrade).nOption);
         }
-        if (hasNewStat(Judgement)) {
+        if (hasNewStat(Judgement)) {//259
             outPacket.encodeInt(getOption(Judgement).xOption);
         }
-        if (hasNewStat(Infinity)) {
+        if (hasNewStat(Infinity)) {//121
             outPacket.encodeInt(getOption(Infinity).nOption); // 不確定
         }
         if (hasNewStat(StackBuff)) {
@@ -523,10 +523,12 @@ public class TemporaryStatManager {
         if (hasNewStat(SSFShootingAttack)) {
             outPacket.encodeInt(getOption(SSFShootingAttack).xOption);
         }
+        /*
         if (hasNewStat(BMageAura)) {
             outPacket.encodeInt(getOption(BMageAura).xOption);
             outPacket.encodeByte(getOption(BMageAura).bOption);
         }
+*/
         if (hasNewStat(BattlePvPLangEProtection)) {
             outPacket.encodeInt(getOption(BattlePvPLangEProtection).cOption);
         }
@@ -747,12 +749,22 @@ public class TemporaryStatManager {
             outPacket.encodeInt(getOption(BroAttack).yOption);
             outPacket.encodeInt(getOption(BroAttack).zOption);
         }
-        if (hasNewStat(LiberatedSpiritCircle)) {
+        if (hasNewStat(LiberatedSpiritCircle)) {//560
             outPacket.encodeInt(getOption(LiberatedSpiritCircle).xOption);
         }
-        if (hasNewStat(Unk205_639)) {
-            outPacket.encodeInt(getOption(Unk205_639).xOption);
+        if (hasNewStat(UNK248_561)) {
+            outPacket.encodeInt(getOption(UNK248_561).xOption);
         }
+        if (hasNewStat(UNK248_764)) {
+            outPacket.encodeInt(getOption(UNK248_764).xOption);
+        }
+        if (hasNewStat(UNK248_768)) {
+            outPacket.encodeInt(getOption(UNK248_768).xOption);
+        }
+        if (hasNewStat(UNK248_771)) {
+            outPacket.encodeInt(getOption(UNK248_771).xOption);
+        }
+
         getNewStats().clear();
     }
 

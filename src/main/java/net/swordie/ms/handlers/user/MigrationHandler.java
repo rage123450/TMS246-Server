@@ -9,6 +9,7 @@ import net.swordie.ms.client.character.Char;
 import net.swordie.ms.client.character.HyperTPRock;
 import net.swordie.ms.client.character.damage.DamageSkinType;
 import net.swordie.ms.client.character.skills.TownPortal;
+import net.swordie.ms.client.character.skills.temp.TemporaryStatManager;
 import net.swordie.ms.client.friend.result.FriendResult;
 import net.swordie.ms.client.jobs.JobManager;
 import net.swordie.ms.client.party.Party;
@@ -96,14 +97,16 @@ public class MigrationHandler {
         Server.getInstance().addUser(user);
         Field field = chr.getOrCreateFieldByCurrentInstanceType(chr.getFieldID() <= 0 ? 100000000 : chr.getFieldID());
         if (Server.getInstance().isOpcodeEnc()) {
-            c.sendOpcodeEncryption(charId);
+            c.sendOpcodeEncryption(charId);//有發
         }
+
         if (chr.getHP() <= 0) { // automatically revive when relogging
             chr.heal(chr.getMaxHP() / 2);
         }
         // blessing has to be split up, as adding skills before SetField is send will crash the client
         chr.initBlessingSkillNames();
         chr.setOnline(true); // v195+: respect 'invisible login' setting
+
         if (chr.getPartyID() != 0) {
             Party party = c.getWorld().getPartybyId(chr.getPartyID());
             if (party == null) {
@@ -117,7 +120,6 @@ public class MigrationHandler {
             }
         }
         chr.warp(field, true);
-
         chr.initBlessingSkills();
         c.write(WvsContext.updateEventNameTag(new int[]{}));
         if (chr.getGuild() != null) {
@@ -129,12 +131,15 @@ public class MigrationHandler {
             c.write(FieldPacket.funcKeyMappedManInit(chr.getFuncKeyMap()));
         }
         c.write(FieldPacket.quickslotInit(chr.getQuickslotKeys()));
+        //c.write(WvsContext.onSessionValue("kill_count", "0"));
+        c.write(MobPool.hangOverReleaseReq());
         chr.setBulletIDForAttack(chr.calculateBulletIDForAttack());
         c.write(WvsContext.friendResult(FriendResult.loadFriends(chr.getAllFriends())));
-
+        //chr.updatePetAuto();//246++?
         c.write(WvsContext.macroSysDataInit(chr.getMacros()));
         c.write(UserLocal.damageSkinSaveResult(DamageSkinType.Req_SendInfo, null, chr));
-        // c.write(WvsContext.mapTransferResult(MapTransferType.RegisterListSend, (byte) 5, chr.getHyperRockFields()));
+        //c.write(CUIHandler.unionAssignResult(chr));
+        //c.write(WvsContext.mapTransferResult(MapTransferType.RegisterListSend, (byte) 5, chr.getHyperRockFields()));//??
         acc.getMonsterCollection().init(chr);
         chr.checkAndRemoveExpiredItems();
         chr.updatePartyHP();
@@ -146,9 +151,12 @@ public class MigrationHandler {
         if (chr.getField().isBuffedField()) {
             chr.chatScriptMessage(ServerConfig.BUFFED_CH_MSG);
         }
+        /*
         if (GameConstants.HIDE_ON_LOGIN && chr.isGM()) {
             chr.setHide(true);
         }
+        */
+
     }
 
     @Handler(op = InHeader.USER_TRANSFER_FIELD_REQUEST)

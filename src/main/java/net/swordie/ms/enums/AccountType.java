@@ -2,10 +2,10 @@ package net.swordie.ms.enums;
 
 public enum AccountType {
     Player(0),
-    Tester(1 << 5),
-    Intern(1 << 3),
-    GameMaster(1 << 4),
-    Admin(1 << 4);
+    Intern(1),
+    Tester(2),
+    GameMaster(4),
+    Admin(4);
 
     private int val;
 

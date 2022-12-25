@@ -50,6 +50,10 @@ public class ObtacleAtomInfo {
         outPacket.encodeInt(getEndPos().getX());
         outPacket.encodeInt(getEndPos().getY());
         outPacket.encodeInt(getHitBoxRange());
+
+        outPacket.encodeByte(0);//??
+        outPacket.encodeArr(new byte[16]);
+
         outPacket.encodeInt(getTrueDamR());
         outPacket.encodeInt(getMobDamR());
         outPacket.encodeInt(getCreateDelay());

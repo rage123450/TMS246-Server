@@ -710,7 +710,7 @@ public class FieldData {
         for (File file : files) {
             Document doc = XMLApi.getRoot(file);
             Node node = XMLApi.getAllChildren(doc).get(0);
-            if (node == null) {
+            if (node == null || file.getName().contains("SearchExcept.img") || file.getName().contains("SearchExceptForNPC.img")) {
                 continue;
             }
             Node mapList = XMLApi.getFirstChildByNameBF(node, "MapList");

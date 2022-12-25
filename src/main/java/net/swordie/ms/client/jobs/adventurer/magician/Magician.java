@@ -48,7 +48,8 @@ public class Magician extends Beginner {
 
 
     // V skills
-    public static final int UNRELIABLE_MEMORY = 400001021;
+    public static final int 波動記憶 = 400001021;
+    public static final int 超載魔力 = 400021000;
 
 
     private ScheduledFuture infinityTimer;
@@ -203,7 +204,12 @@ public class Magician extends Beginner {
             case Bishop.HEROS_WILL_BISH:
                 tsm.removeAllDebuffs();
                 break;
-            case UNRELIABLE_MEMORY:
+            case 超載魔力:
+                o1.nValue = si.getValue(x, slv);
+                o1.nReason = skillID;
+                tsm.putCharacterStatValue(CharacterTemporaryStat.超載魔力, o1);
+                break;
+            case 波動記憶:
                 chr.write(UserLocal.skillRequestRequest(Util.getRandomFromCollection(
                         JobConstants.isFirePoison(chr.getJob()) ? FirePoison.unreliableMemFP :
                         JobConstants.isIceLightning(chr.getJob()) ? IceLightning.unreliableMemIL :

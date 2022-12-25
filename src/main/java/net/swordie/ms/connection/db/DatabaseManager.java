@@ -45,6 +45,7 @@ import net.swordie.ms.loaders.containerclasses.MonsterCollectionSessionRewardInf
 import net.swordie.ms.util.FileTime;
 import net.swordie.ms.util.SystemTime;
 import net.swordie.ms.world.auction.AuctionItem;
+import net.swordie.ms.world.map.BossReward;
 import net.swordie.ms.world.shop.NpcShopItem;
 import net.swordie.ms.world.shop.cashshop.CashItemInfo;
 import net.swordie.ms.world.shop.cashshop.CashShopCategory;
@@ -136,6 +137,7 @@ public class DatabaseManager {
                 EventCoolDown.class,
                 BeautyAlbum.class,
                 HotTimeReward.class,
+                BossReward.class,
         };
         for (Class clazz : dbClasses) {
             configuration.addAnnotatedClass(clazz);

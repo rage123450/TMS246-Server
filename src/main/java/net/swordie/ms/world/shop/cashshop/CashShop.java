@@ -2,6 +2,7 @@ package net.swordie.ms.world.shop.cashshop;
 
 import net.swordie.ms.connection.OutPacket;
 import net.swordie.ms.constants.GameConstants;
+import net.swordie.ms.util.FileTime;
 import net.swordie.ms.util.Util;
 
 import java.util.*;
@@ -107,7 +108,14 @@ public class CashShop {
     public void encode(OutPacket outPacket) {
 //        outPacket.encodeArr(new byte[1 + 4 + 4 + 2 + 4 /*nox*/ + 1080 + 1 + 1 + 1 + 4 + 1 + 1 + 1 + 8 + 1 + 1 + 4 + 1 + 1 + /*extra*/2]);
         // CCashShop::LoadData
-        outPacket.encodeByte(!isBetaTest());
+        outPacket.encodeFT(FileTime.currentTime());
+        outPacket.encodeByte(0);//!isBetaTest()
+        outPacket.encodeByte(0);
+        outPacket.encodeByte(0);
+        outPacket.encodeByte(0);
+        outPacket.encodeByte(0);
+        outPacket.encodeByte(0);
+
         encodeSaleInfo(outPacket);
         encodeMainBest(outPacket);
         encodeCustomizedPackage(outPacket);

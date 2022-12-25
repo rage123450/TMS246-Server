@@ -842,7 +842,7 @@ public class AngelicBuster extends Job {
 
         // Skills
         // Items
-        Item secondary = ItemData.getItemDeepCopy(1352601); // Pink Soul Ring (Secondary)
+        Item secondary = ItemData.getItemDeepCopy(1354010); // D基本武器腰封
         chr.forceUpdateSecondary(null, secondary);
     }
 }

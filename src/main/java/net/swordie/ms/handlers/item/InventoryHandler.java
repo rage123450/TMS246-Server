@@ -102,8 +102,10 @@ public class InventoryHandler {
             int x = chr.getPosition().getX();
             int y = chr.getPosition().getY();
             Foothold fh = chr.getField().findFootHoldBelow(new Position(x, y - GameConstants.DROP_HEIGHT));
+
             chr.getField().drop(drop, chr.getPosition(), new Position(x, fh.getYFromX(x)));
             drop.setCanBePickedUpByPet(false);
+            System.out.println("fullDrop:"+fullDrop);
             if (fullDrop) {
                 c.write(WvsContext.inventoryOperation(true, false, Remove, oldPos, newPos, 0, item));
             } else {

@@ -1,6 +1,8 @@
 package net.swordie.ms.handlers.item;
 
+import jnr.ffi.annotations.In;
 import net.swordie.ms.Server;
+import net.swordie.ms.ServerConstants;
 import net.swordie.ms.client.Client;
 import net.swordie.ms.client.character.BroadcastMsg;
 import net.swordie.ms.client.character.Char;
@@ -30,15 +32,21 @@ import net.swordie.ms.loaders.containerclasses.ItemInfo;
 import net.swordie.ms.loaders.containerclasses.MakingSkillRecipe;
 import net.swordie.ms.scripts.ScriptType;
 import net.swordie.ms.util.Position;
+import net.swordie.ms.util.Randomizer;
 import net.swordie.ms.util.Util;
+import net.swordie.ms.util.container.Triple;
+import net.swordie.ms.util.container.Tuple;
 import net.swordie.ms.world.World;
 import net.swordie.ms.world.field.Field;
 import net.swordie.ms.world.field.Portal;
+import net.swordie.ms.world.gach.result.GachaponResult;
 import org.apache.log4j.Logger;
+import org.graalvm.nativeimage.c.struct.CField;
 
 import java.text.NumberFormat;
 import java.util.*;
 
+import static net.swordie.ms.client.character.items.Item.Type.getTypeById;
 import static net.swordie.ms.enums.ChatType.*;
 import static net.swordie.ms.enums.EquipBaseStat.tuc;
 import static net.swordie.ms.enums.InvType.*;
@@ -257,12 +265,16 @@ public class ItemHandler {
         if (item == null || item.getItemId() != itemID) {
             return;
         }
+        if (itemID == 5064000 || itemID == 5064100 || itemID == 5064300 || itemID == 5064400) {
+            inPacket.decodeShort();
+        }
+
         if (itemID / 10000 == 553) {
             // Reward items
             Item reward = itemInfo.getRandomReward();
             chr.addItemToInventory(reward);
 
-        } else if (itemID / 10000 == 555) {
+        } else if (itemID / 10000 == 555) {//墜飾
             //Beauty Salon Slots
             int salonType = itemID % 5550000;
             switch (salonType) {
@@ -276,7 +288,7 @@ public class ItemHandler {
                     return;
             }
 
-        } else if (itemID / 10000 == 512) { // Weather Effects
+        } else if (itemID / 10000 == 512) { // Weather Effects 天氣效果
             String text = inPacket.decodeString();
             Field field = c.getChr().getField();
             field.broadcastPacket(FieldPacket.blowWeather(itemID, chr.getName() + " : " + text, 10, null));
@@ -290,7 +302,7 @@ public class ItemHandler {
                     10000
             );
 
-        } else if (itemID / 10000 == 539) {
+        } else if (itemID / 10000 == 539) {//喇叭系列
             // Avatar Megaphones
             List<String> lineList = new ArrayList<>();
             for (int i = 0; i < 4; i++) {
@@ -333,7 +345,6 @@ public class ItemHandler {
             return;
 
         } else {
-
             Equip medal = (Equip) chr.getEquippedInventory().getFirstItemByBodyPart(BodyPart.Medal);
             int medalInt = 0;
             if (medal != null) {
@@ -342,7 +353,108 @@ public class ItemHandler {
             String medalString = (medalInt == 0 ? "" : String.format("<%s> ", StringData.getItemStringById(medalInt)));
 
             switch (itemID) {
-                case ItemConstants.HYPER_TELEPORT_ROCK: // Hyper Teleport Rock
+                case 5150132://美髮券
+                case 5152020:
+                case 5153015: {
+                    break;
+                }//美髮券
+                case 5068300:{
+                    if (chr.getInventoryByType(CASH).getEmptySlots() >= 1
+                            && chr.getInventoryByType(EQUIP).getEmptySlots() >= 1
+                            && chr.getInventoryByType(CONSUME).getEmptySlots() >= 1) {
+                        Item item13;
+                        List<Tuple<Integer, Integer>> list = new ArrayList<>();
+
+                        int[][] NormalItem = {{5068300,1}};
+                        int[] HighuerItem = {5000762, 5000763, 5000764, 5000790, 5000791, 5000792, 5000918, 5000919, 5000920, 5000933, 5000934, 5000935, 5000963, 5000964, 5000965, 5002033, 5002034, 5002035, 5002082, 5002083, 5002084, 5002137, 5002138, 5002139, 5002161, 5002162, 5002163, 5002186, 5002187, 5002188, 5002200, 5002201, 5002202, 5002226, 5002227, 5002228};
+                        int[] UniqueItem = {5000762, 5000763, 5000764, 5000790, 5000791, 5000792, 5000918, 5000919, 5000920, 5000933, 5000934, 5000935, 5000963, 5000964, 5000965, 5002033, 5002034, 5002035, 5002082, 5002083, 5002084, 5002137, 5002138, 5002139, 5002161, 5002162, 5002163, 5002186, 5002187, 5002188, 5002200, 5002201, 5002202, 5002226, 5002227, 5002228};
+
+                        boolean bool = (Calendar.getInstance().get(7) == 2);
+
+                        list.add(new Tuple(Integer.valueOf(1), Integer.valueOf(3004)));
+                        list.add(new Tuple(Integer.valueOf(2), Integer.valueOf(6000 + (bool ? -500 : 0))));
+                        list.add(new Tuple(Integer.valueOf(3), Integer.valueOf(996 + (bool ? 500 : 0))));
+                        int itemid = 0;
+                        int count = 1;
+
+                        int i8 = GameConstants.getTupleRandom(list);
+                        if (i8 == 1) {
+                            int rand = Randomizer.rand(0, NormalItem.length -1);
+                            itemid = NormalItem[rand][0];
+                            count = NormalItem[rand][1];
+                        } else if (i8 == 2) {
+                            int rand = Randomizer.rand(0, HighuerItem.length - 1);
+                            itemid = HighuerItem[rand];
+                        } else if (i8 == 3) {
+                            int rand = Randomizer.rand(0, UniqueItem.length - 1);
+                            itemid = UniqueItem[rand];
+                        }
+                        Equip equip = ItemData.getEquipDeepCopyFromID(itemid, true);
+                        Item getitem = ItemData.getItemDeepCopy(itemid, false);
+
+                        if (equip == null) {
+                            getitem.setQuantity(count);
+                            chr.addItemToInventory(getitem);
+                            c.write(WvsContext.WonderBerry((byte) 1,getitem, item.getItemId()));
+                        } else {
+                            chr.addItemToInventory(InvType.EQUIP, equip, false);
+                            c.write(WvsContext.WonderBerry((byte) 1, equip, item.getItemId()));
+                        }
+
+                    }
+                    break;
+                }//小精靈的奇幻果實
+                case ItemConstants.GOLD_APPLE: {// 金蘋果
+                    if (chr.getInventoryByType(EQUIP).getEmptySlots() > 0
+                            && chr.getInventoryByType(CONSUME).getEmptySlots() >= 2
+                            && chr.getInventoryByType(INSTALL).getEmptySlots() > 0
+                            && chr.getInventoryByType(ETC).getEmptySlots() > 0) {
+                        boolean fromSpecial = Randomizer.isSuccess(ServerConstants.SgoldappleSuc);
+
+                        List<Triple<Integer, Integer, Integer>> list = ServerConstants.goldapple;
+                        if (fromSpecial) {
+                            list = ServerConstants.Sgoldapple;
+                        }
+
+                        int itemid = 0, count = 0;
+                        double bestValue = Double.MAX_VALUE;
+
+                        for (Triple<Integer, Integer, Integer> element : list) {
+                            double a = (Integer) element.getRight().intValue();
+                            double r = a / 10000.0D;
+                            double value = -Math.log(Randomizer.nextDouble()) / r;
+                            if (value < bestValue) {
+                                bestValue = value;
+                                itemid = ((Integer) element.getLeft()).intValue();
+                                count = ((Integer) element.getMiddle()).intValue();
+                            }
+                        }
+
+                        if (itemid > 0 && count > 0) {
+                            Equip equip = ItemData.getEquipDeepCopyFromID(itemid, true);
+                            Item getitem = ItemData.getItemDeepCopy(itemid, false);
+                            if (equip == null) {
+                                getitem.setQuantity(count);
+                                chr.addItemToInventory(getitem);
+                                c.write(WvsContext.goldApple(getitem, item));
+                                //c.write(UserPacket.effect(Effect.gainQuestItem(getitem.getItemId(), getitem.getQuantity())));
+                            } else {
+                                chr.addItemToInventory(InvType.EQUIP, equip, false);
+                                c.write(WvsContext.goldApple(equip, item));
+                                //c.write(UserPacket.effect(Effect.gainQuestItem(equip.getItemId(), equip.getQuantity())));
+                            }
+                            chr.addItemToInventory(2435458, 1);//蘋果碎片
+                            if (fromSpecial) {
+                                World world = chr.getClient().getWorld();
+                                BroadcastMsg msg = BroadcastMsg.yellowFilled("恭喜玩家" + c.getChr().getName() + "獲得金蘋果大獎:", equip == null ? getitem : equip, true);
+                                world.broadcastPacket(WvsContext.broadcastMsg(msg));
+                                chr.write(WvsContext.broadcastMsg(msg));
+                            }
+                        }
+                    }
+                    break;
+                }// 金蘋果
+                case ItemConstants.HYPER_TELEPORT_ROCK: {// Hyper Teleport Rock
                     short type = inPacket.decodeShort();
                     if (type == 1) {
                         int fieldId = inPacket.decodeInt();
@@ -395,8 +507,9 @@ public class ItemHandler {
                         }
                     }
                     break;
-                case ItemConstants.RED_CUBE: // Red Cube
-                case ItemConstants.BLACK_CUBE: // Black cube
+                }// Hyper Teleport Rock
+                case ItemConstants.RED_CUBE: // 紅色方塊
+                case ItemConstants.BLACK_CUBE: { // 黑色方塊
                     short ePos = (short) inPacket.decodeInt();
                     InvType invType = ePos < 0 ? EQUIPPED : EQUIP;
                     Equip equip = (Equip) chr.getInventoryByType(invType).getItemBySlot(ePos);
@@ -420,7 +533,7 @@ public class ItemHandler {
                     equip.setHiddenOptionBase(hiddenValue, ItemConstants.THIRD_LINE_CHANCE);
                     equip.releaseOptions(false);
                     if (itemID == ItemConstants.RED_CUBE) {
-                        c.write(FieldPacket.redCubeResult(chr.getId(), tierUp, itemID, ePos, equip));
+                        c.write(FieldPacket.redCubeResult(chr.getId(), tierUp, itemID, ePos, item.getQuantity() - 1, equip));
                         c.write(FieldPacket.showItemReleaseEffect(chr.getId(), ePos, false));
                     } else {
                         if (chr.getMemorialCubeInfo() == null) {
@@ -431,10 +544,11 @@ public class ItemHandler {
                     }
                     equip.updateToChar(chr);
                     break;
-                case 5062024: // Violet cube
-                    ePos = (short) inPacket.decodeInt();
-                    invType = ePos < 0 ? EQUIPPED : EQUIP;
-                    equip = (Equip) chr.getInventoryByType(invType).getItemBySlot(ePos);
+                }// 黑色方塊
+                case 5062020:{ // 閃炫方塊
+                    short ePos = (short) inPacket.decodeInt();
+                    InvType invType = ePos < 0 ? EQUIPPED : EQUIP;
+                    Equip equip = (Equip) chr.getInventoryByType(invType).getItemBySlot(ePos);
                     if (equip == null) {
                         chr.chatMessage(SystemNotice, "Could not find equip.");
                         chr.dispose();
@@ -445,7 +559,7 @@ public class ItemHandler {
                         chr.dispose();
                         return;
                     }
-                    oldEquip = equip.deepCopy();
+                    Equip oldEquip = equip.deepCopy();
 
                     OutPacket outPacket = new OutPacket(OutHeader.UNK_690);
                     outPacket.encodeInt(chr.getId());
@@ -461,17 +575,18 @@ public class ItemHandler {
 
                     chr.write(outPacket);
                     break;
-                case ItemConstants.BONUS_POT_CUBE: // Bonus Potential Cube
-                case ItemConstants.SPECIAL_BONUS_POT_CUBE: // [Special] Bonus Potential Cube
-                case ItemConstants.WHITE_BONUS_POT_CUBE: // White Bonus Potential Cube
+                }// 閃炫方塊
+                case ItemConstants.BONUS_POT_CUBE: // 附加方塊
+                case ItemConstants.SPECIAL_BONUS_POT_CUBE: // [MS特價] 大師附加奇幻方塊
+                case ItemConstants.WHITE_BONUS_POT_CUBE: {// 白色附加方塊
                     if (c.getWorld().isReboot()) {
                         chr.getOffenseManager().addOffense(String.format("Character %d attempted to use a bonus potential cube in reboot world.", chr.getId()));
                         chr.dispose();
                         return;
                     }
-                    ePos = (short) inPacket.decodeInt();
-                    invType = ePos < 0 ? EQUIPPED : EQUIP;
-                    equip = (Equip) chr.getInventoryByType(invType).getItemBySlot(ePos);
+                    short ePos = (short) inPacket.decodeInt();
+                    InvType invType = ePos < 0 ? EQUIPPED : EQUIP;
+                    Equip equip = (Equip) chr.getInventoryByType(invType).getItemBySlot(ePos);
                     if (equip == null) {
                         chr.chatMessage(SystemNotice, "Could not find equip.");
                         return;
@@ -480,17 +595,17 @@ public class ItemHandler {
                         chr.dispose();
                         return;
                     }
-                    oldEquip = equip.deepCopy();
-                    tierUpChance = ItemConstants.getTierUpChance(itemID);
-                    hiddenValue = ItemGrade.getHiddenGradeByVal(equip.getBonusGrade()).getVal();
-                    tierUp = !(hiddenValue >= ItemGrade.HiddenLegendary.getVal()) && Util.succeedProp(tierUpChance);
+                    Equip oldEquip = equip.deepCopy();
+                    int tierUpChance = ItemConstants.getTierUpChance(itemID);
+                    short hiddenValue = ItemGrade.getHiddenGradeByVal(equip.getBonusGrade()).getVal();
+                    boolean tierUp = !(hiddenValue >= ItemGrade.HiddenLegendary.getVal()) && Util.succeedProp(tierUpChance);
                     if (tierUp) {
                         hiddenValue++;
                     }
                     equip.setHiddenOptionBonus(hiddenValue, ItemConstants.THIRD_LINE_CHANCE);
                     equip.releaseOptions(true);
                     if (itemID != ItemConstants.WHITE_BONUS_POT_CUBE) {
-                        c.write(FieldPacket.bonusCubeResult(chr.getId(), tierUp, itemID, ePos, equip));
+                        c.write(FieldPacket.bonusCubeResult(chr.getId(), tierUp, itemID, ePos, item.getQuantity() - 1, equip));
                         c.write(FieldPacket.showItemReleaseEffect(chr.getId(), ePos, true));
                     } else {
                         if (chr.getMemorialCubeInfo() == null) {
@@ -501,9 +616,10 @@ public class ItemHandler {
                     }
                     equip.updateToChar(chr);
                     break;
-                case 5750001: // Nebulite Diffuser
-                    ePos = inPacket.decodeShort();
-                    equip = (Equip) chr.getEquipInventory().getItemBySlot(ePos);
+                }// 白色附加方塊
+                case 5750001: {// Nebulite Diffuser
+                    short ePos = inPacket.decodeShort();
+                    Equip equip = (Equip) chr.getEquipInventory().getItemBySlot(ePos);
                     if (equip == null || equip.getSocket(0) == 0 || equip.getSocket(0) == ItemConstants.EMPTY_SOCKET_ID) {
                         chr.chatMessage("That item currently does not have an active socket.");
                         chr.dispose();
@@ -512,7 +628,8 @@ public class ItemHandler {
                     equip.setSocket(0, ItemConstants.EMPTY_SOCKET_ID);
                     equip.updateToChar(chr);
                     break;
-                case 5072000: // Super Megaphone
+                }//Nebulite Diffuser
+                case 5072000: {// 高效能喇叭
                     String text = inPacket.decodeString();
                     boolean whisperIcon = inPacket.decodeByte() != 0;
                     World world = chr.getClient().getWorld();
@@ -521,11 +638,12 @@ public class ItemHandler {
                             (byte) chr.getClient().getChannelInstance().getChannelId(), whisperIcon, chr);
                     world.broadcastPacket(WvsContext.broadcastMsg(smega));
                     break;
-                case 5076000: // Item Megaphone
-                    text = inPacket.decodeString();
-                    whisperIcon = inPacket.decodeByte() != 0;
+                }// 高效能喇叭
+                case 5076000: {// 道具喇叭
+                    String text = inPacket.decodeString();
+                    boolean whisperIcon = inPacket.decodeByte() != 0;
                     boolean eqpSelected = inPacket.decodeByte() != 0;
-                    invType = EQUIP;
+                    InvType invType = EQUIP;
                     int itemPosition = 0;
                     if (eqpSelected) {
                         invType = InvType.getInvTypeByVal(inPacket.decodeInt());
@@ -536,26 +654,28 @@ public class ItemHandler {
                     }
                     Item broadcastedItem = chr.getInventoryByType(invType).getItemBySlot(itemPosition);
 
-                    world = chr.getClient().getWorld();
-                    smega = BroadcastMsg.itemMegaphone(String.format("%s%s : %s", medalString, chr.getName(), text),
+                    World world = chr.getClient().getWorld();
+                    BroadcastMsg smega = BroadcastMsg.itemMegaphone(String.format("%s%s : %s", medalString, chr.getName(), text),
                             (byte) chr.getClient().getChannelInstance().getChannelId(), whisperIcon, eqpSelected,
                             broadcastedItem, chr);
                     world.broadcastPacket(WvsContext.broadcastMsg(smega));
                     break;
-                case 5077000: // Triple Megaphone
+                }// 道具喇叭
+                case 5077000: { // 三行喇叭
                     byte stringListSize = inPacket.decodeByte();
                     List<String> stringList = new ArrayList<>();
                     for (int i = 0; i < stringListSize; i++) {
                         stringList.add(String.format("%s%s : %s", medalString, chr.getName(), inPacket.decodeString()));
                     }
-                    whisperIcon = inPacket.decodeByte() != 0;
+                    boolean whisperIcon = inPacket.decodeByte() != 0;
 
-                    world = chr.getClient().getWorld();
-                    smega = BroadcastMsg.tripleMegaphone(stringList,
+                    World world = chr.getClient().getWorld();
+                    BroadcastMsg smega = BroadcastMsg.tripleMegaphone(stringList,
                             (byte) chr.getClient().getChannelInstance().getChannelId(), whisperIcon, chr);
                     world.broadcastPacket(WvsContext.broadcastMsg(smega));
                     break;
-                case 5170000: // Pet Name Tag
+                }// 三行喇叭
+                case 5170000: { // 取寵物名
                     int petID = inPacket.decodeInt();
                     inPacket.decodeInt(); //??
                     String petName = inPacket.decodeString();
@@ -574,7 +694,8 @@ public class ItemHandler {
                         chr.write(UserLocal.petNameChange(chr, idx, petName));
                     }
                     break;
-                case 5062405: // Fusion anvil
+                }// 取寵物名
+                case 5062405: {// 神秘鐵砧
                     int appearancePos = inPacket.decodeInt();
                     int functionPos = inPacket.decodeInt();
                     Inventory inv = chr.getEquipInventory();
@@ -585,8 +706,17 @@ public class ItemHandler {
                     }
                     function.updateToChar(chr);
                     break;
-                default:
-                    return;
+                }// 神秘鐵砧
+                case 5370000:
+                case 5370001:
+                case 5370002: {//黑板
+                    chr.setADBoardRemoteMsg(inPacket.decodeString());
+                    break;
+                }//黑板
+                default: {
+                    chr.write(WvsContext.broadcastMsg(BroadcastMsg.popUpMessage("錯誤使用道具ID:" + itemID + "待修復.")));
+                    break;
+                }//待修復道具
             }
         }
         if (itemID != ItemConstants.HYPER_TELEPORT_ROCK) {

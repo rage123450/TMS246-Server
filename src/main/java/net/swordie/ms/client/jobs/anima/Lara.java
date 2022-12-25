@@ -36,10 +36,11 @@ import static net.swordie.ms.client.character.skills.temp.CharacterTemporaryStat
 
 public class Lara extends Job {
 
-    public static final int SHELTER_RETURN = 150001021; // requires Complete QuestId  34900
-    public static final int MAGIC_CONVERSION = 150000079;
+    public static final int 前往納林 = 160011074;
+    public static final int 獨門咒語 = 160001005;
 
-    public static final int EX = 152001003;
+    public static final int 精氣散播 = 162001000;
+    public static final int 山不敗 = 162001005;
     public static final int RADIANT_ORB = 152001002;
     public static final int RADIANT_JAVELIN = 152001001;
     public static final int CRYSTALLINE_WINGS = 152001004;
@@ -114,8 +115,8 @@ public class Lara extends Job {
     }};
 
     private static final int[] addedSkills = new int[]{
-//            SHELTER_RETURN,
-//            MAGIC_CONVERSION,
+            前往納林,
+            獨門咒語,
     };
 
     public Lara(Char chr) {
@@ -358,138 +359,10 @@ public class Lara extends Job {
         Option o2 = new Option();
         Option o3 = new Option();
         switch (skillID) {
-                case LONGINUS_ZONE:
-                AffectedArea aa = AffectedArea.getPassiveAA(chr, LONGINUS_ZONE, slv);
-                aa.setPosition(getCrystal().getPosition());
-                aa.setRect(aa.getPosition().getRectAround(si.getFirstRect()));
-                aa.setSkillID(LONGINUS_ZONE);
-                aa.setDelay((short) 18);
-                chr.getField().spawnAffectedArea(aa);
-                break;
-            case FLORAN_HERO_WILL:
-                tsm.removeAllDebuffs();
-                break;
-            case REPOSITION_CRYSTAL:
-                if (getCrystal() != null) {
-                    inPacket.decodeInt(); // unknown
-                    boolean isLeft = inPacket.decodeByte() != 0;
-                    Position position = inPacket.decodePosition();
-                    chr.getField().broadcastPacket(Summoned.repositionSummon(getCrystal(), skillID, position));
-                }
-                break;
-            case RADIANT_JAVELIN:
-            case RADIANT_JAVELIN_II:
-            case RADIANT_JAVELIN_ENHANCED:
-                ForceAtomEnum fae = skillID == RADIANT_JAVELIN_ENHANCED ? ForceAtomEnum.GLORY_WING_JAVELIN : ForceAtomEnum.RADIANT_JAVELIN;
-                ForceAtomInfo fai = new ForceAtomInfo(chr.getNewForceAtomKey(), skillID == RADIANT_JAVELIN_II ? 2 : 1, 50, 50,
-                        0, 300, Util.getCurrentTime(), 0, 0, new Position(-48, 7));
-                ForceAtom fa = new ForceAtom(false, chr.getId(), chr.getId(), fae, true, 0, skillID, fai, si == null ? new Rect() : si.getFirstRect(), 0, 0,
-                        (tsm.hasStatBySkillId(CRYSTAL_BATTERY) ? getCrystal().getPosition() : chr.getPosition()), 0,
-                        (tsm.hasStatBySkillId(CRYSTAL_BATTERY) ? getCrystal().getPosition() : chr.getPosition()), 0);
-                if (skillID != RADIANT_JAVELIN_ENHANCED) {
-                    fa.setRect2(si.getLastRect());
-                }
-                chr.createForceAtom(fa);
-                break;
-            case CRYSTALLINE_WINGS_FLY:
-                o1.nOption = 1;
+            case 山不敗:
+                o1.nOption = si.getValue(x, slv);
                 o1.rOption = skillID;
-                o1.tOption = si.getValue(time, slv);
-                o1.setInMillis(true);
-                tsm.putCharacterStatValue(NewFlying, o1);
-//                o2.nOption = 1;
-//                o2.rOption = skillID;
-//                o2.tOption = si.getValue(time, slv);
-//                o2.setInMillis(true);
-//                tsm.putCharacterStatValue(NuclearOption, o2); // NuclearOption is moved/removed
-                break;
-            case GAUNTLET_FRENZY:
-                o1.nValue = -5; // si.getValue(x, slv);
-                o1.nReason = skillID;
-                o1.tTerm = si.getValue(time, slv);
-                tsm.putCharacterStatValue(IndieBooster, o1);
-                break;
-            case HERO_OF_THE_FLORA:
-                o1.nReason = skillID;
-                o1.nValue = si.getValue(x, slv);
-                o1.tTerm = si.getValue(time, slv);
-                tsm.putCharacterStatValue(IndieStatR, o1);
-                break;
-            case DIVINE_WRATH:
-                o1.nReason = skillID;
-                o1.nValue = si.getValue(indieDamR, slv);
-                o1.tTerm = si.getValue(time, slv);
-                tsm.putCharacterStatValue(IndieDamR, o1);
-                break;
-            case FLASH_CRYSTAL_BATTERY:
-                o1.nOption = 1;
-                o1.rOption = skillID;
-                o1.tOption = si.getValue(time, slv);
-                tsm.putCharacterStatValue(FlashCrystalBattery, o1);
-                break;
-            case WINGS_OF_GLORY:
-                o1.nOption = 1;
-                o1.rOption = skillID;
-                o1.tOption = si.getValue(time, slv);
-                tsm.putCharacterStatValue(WingsOfGlory, o1);
-                tsm.putCharacterStatValue(NewFlying, o1);
-                crystalSkillMap.put(CRYSTAL_SKILL_ID_WINGS_OF_GLORY, false);
-                chr.getField().broadcastPacket(Summoned.stateChanged(getCrystal(), 2, crystalSkillMap));
-                chr.getField().broadcastPacket(Summoned.summonUpgradeStage(getCrystal(), 3)); // resets crystal attacks
-                break;
-            case EX:
-                summon = Summon.getSummonBy(chr, skillID, slv);
-                summon.setMoveAbility(MoveAbility.Walk);
-                summon.setAssistType(AssistType.AttackCounter);
-                field.spawnSummon(summon);
-                break;
-            case MACHINA: // spawn at Crystal Position
-                summon = Summon.getSummonBy(chr, skillID, slv);
-                summon.setMoveAbility(MoveAbility.Fly);
-                summon.setAssistType(AssistType.Attack);
-                field.spawnSummon(summon);
-                break;
-            case CRYSTAL_SKILL_DEUS: // TODO
-                field.getSummons().stream().filter(s -> s.getChr() == chr && (s.getSkillID() == MACHINA || s.getSkillID() == EX)).forEach(field::removeLife);
-                summon = Summon.getSummonBy(chr, skillID, slv);
-                summon.setMoveAbility(MoveAbility.Walk);
-                field.spawnSummon(summon);
-
-                for (int i = 0; i < 5; i++) {
-                    summon = Summon.getSummonByNoCTS(chr, DEUS_SUB, slv);
-                    summon.setMoveAbility(MoveAbility.Fly);
-                    summon.setAssistType(AssistType.AttackCounter);
-                    field.spawnAddSummon(summon);
-                }
-
-                crystalSkillMap.put(CRYSTAL_SKILL_ID_DEUS, false);
-                chr.getField().broadcastPacket(Summoned.stateChanged(getCrystal(), 2, crystalSkillMap));
-                chr.getField().broadcastPacket(Summoned.summonUpgradeStage(getCrystal(), 3)); // resets crystal attacks
-                break;
-            case DEPLOY_CRYSTAL:
-                Summon crystal = Summon.getSummonByNoCTS(chr, skillID, slv);
-                crystal.setMoveAbility(MoveAbility.Crystal);
-                crystal.setAssistType(AssistType.AttackCounter);
-                crystal.setSummonTerm(0);
-                o1.nValue = 1;
-                o1.nReason = skillID;
-                o1.summon = crystal;
-                tsm.putCharacterStatValue(IndieSummon, o1, true);
-                field.spawnSummon(crystal);
-                resetCrystalBattery();
-                chr.getField().broadcastPacket(Summoned.summonUpgradeStage(getCrystal(), 3)); // resets crystal attacks
-                break;
-            case CONVERSION_OVERDRIVE:
-                o1.nOption = 1;
-                o1.rOption = skillID;
-                o1.tOption = si.getValue(time, slv);
-                tsm.putCharacterStatValue(ConversionOverdrive, o1);
-                break;
-            case TEMPLAR_KNIGHT:
-                summon = Summon.getSummonBy(chr, skillID, slv);
-                summon.setMoveAbility(MoveAbility.Stop);
-                summon.setAssistType(AssistType.CreateShootObj);
-                field.spawnSummon(summon);
+                tsm.putCharacterStatValue(CharacterTemporaryStat.山不敗, o1);
                 break;
         }
         tsm.sendSetStatPacket();
@@ -613,7 +486,7 @@ public class Lara extends Job {
     public void handleJobStart() {
         super.handleJobStart();
 
-        handleJobAdvance(JobConstants.JobEnum.ILLIUM_1.getJobId());
+        handleJobAdvance(JobConstants.JobEnum.LARA_1.getJobId());
 
         handleJobEnd();
     }
@@ -621,9 +494,7 @@ public class Lara extends Job {
     @Override
     public void handleJobEnd() {
         super.handleJobEnd();
-
-
-        chr.forceUpdateSecondary(null, ItemData.getItemDeepCopy(1353500)); // Basic Wings (2ndary)
+        chr.forceUpdateSecondary(null, ItemData.getItemDeepCopy(1354020)); // 樸素的四玉飾品
         chr.addSpToJobByCurrentJob(8);
     }
 }

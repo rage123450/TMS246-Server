@@ -108,7 +108,7 @@ public class JobSkillHandler {
         pa.psychicAreaKey = localKey;
         chr.write(UserLocal.doActivePsychicArea(pa));
 
-        if (pa.skillID == Kinesis.ULTIMATE_BPM) {
+        if (pa.skillID == Kinesis.終極技_BPM) {
             chr.getJobHandler().handleSkill(chr, chr.getTemporaryStatManager(), pa.skillID, chr.getSkillLevel(pa.skillID), inPacket, new SkillUseInfo());
         }
     }
@@ -833,5 +833,11 @@ public class JobSkillHandler {
         if (JobConstants.isPathFinder(chr.getJob()) && (skillID == 3311002 || skillID == 3321006)) {
             ((Pathfinder) chr.getJobHandler()).incrementSwiftStrikeCharge();
         }
+    }
+
+    @Handler(op = InHeader.碎片)
+    public static void handleCreateSubObtacle(Char chr, InPacket inPacket) {
+        int count = inPacket.decodeInt();
+        chr.write(CFamiliar.removeSecondAtom(chr, count));
     }
 }

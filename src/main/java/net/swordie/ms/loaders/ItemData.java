@@ -264,7 +264,7 @@ public class ItemData {
             File[] files = subDir.listFiles();
 
             for (File file : files) {
-                if (file.getName().contains("LinkCashWeaponData"))  { //TODO [HEX]: Figure out what this meme is
+                if (file.getName().contains("LinkCashWeaponData") || file.getName().contains("CommonFaceCN.img"))  { //TODO [HEX]: Figure out what this meme is
                     continue;
                 }
                 Node node = XMLApi.getRoot(file);

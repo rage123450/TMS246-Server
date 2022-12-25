@@ -749,7 +749,12 @@ public class AdminCommands {
     public static class DropItem extends AdminCommand {
         public static void execute(Char chr, String[] args) {
             final int itemId = Integer.parseInt(args[1]);
-            chr.dropItem(itemId, chr.getPosition().getX(), chr.getPosition().getY());
+            int count = 1;
+
+            if (args.length > 1) {
+                count = Integer.parseInt(args[2]);
+            }
+            chr.dropItem(itemId, chr.getPosition().getX(), chr.getPosition().getY(), count);
         }
     }
 

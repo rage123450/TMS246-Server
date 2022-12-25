@@ -4,10 +4,13 @@ import net.swordie.ms.ServerConstants;
 import net.swordie.ms.client.character.items.BossSoul;
 import net.swordie.ms.enums.SoulType;
 import net.swordie.ms.loaders.containerclasses.AndroidInfo;
+import net.swordie.ms.loaders.containerclasses.CashItemInfo;
+import net.swordie.ms.util.Loader;
 import net.swordie.ms.util.Saver;
 import net.swordie.ms.util.Util;
 import net.swordie.ms.util.XMLApi;
 import org.apache.log4j.Logger;
+import org.python.antlr.ast.Str;
 import org.w3c.dom.Node;
 
 import java.io.*;
@@ -25,6 +28,7 @@ public class EtcData {
     private static final Map<Integer, AndroidInfo> androidInfo = new HashMap<>();
     private static final Map<Integer, Integer> familiarSkills = new HashMap<>();
     private static Map<Integer, BossSoul> soulCollection = new HashMap<>();
+    private static Map<Integer, CashItemInfo> Commodity = new HashMap<>();
 
     private static void loadFamiliarSkillsFromWz() {
         File file = new File(String.format("%s/Etc.wz/FamiliarInfo.img.xml", ServerConstants.WZ_DIR));
@@ -179,6 +183,70 @@ public class EtcData {
         }
     }
 
+    public static void loadCommodityFormWz(){
+        String wzDir = ServerConstants.WZ_DIR + "/Etc.wz/Commodity.img.xml";
+        File dir = new File(wzDir);
+        Node node = XMLApi.getFirstChildByNameBF(XMLApi.getRoot(dir), "Commodity.img");
+        List<Node> nodes = XMLApi.getAllChildren(node);
+        for (Node mainNode : nodes) {
+
+            int SNID = 0;
+            int ItemID = 0;
+            int PriceID = 0;
+            int CountID = 0;
+            Node SN = XMLApi.getFirstChildByNameBF(mainNode, "SN");
+            Node Item = XMLApi.getFirstChildByNameBF(mainNode, "ItemId");
+            Node Count = XMLApi.getFirstChildByNameBF(mainNode, "Count");
+            Node Price = XMLApi.getFirstChildByNameBF(mainNode, "Price");
+            if (SN != null) {
+                SNID = Integer.parseInt(XMLApi.getNamedAttribute(SN, "value"));
+            }
+            if (Item != null) {
+                ItemID = Integer.parseInt(XMLApi.getNamedAttribute(Item, "value"));
+            }
+            if (Count != null) {
+                CountID = Integer.parseInt(XMLApi.getNamedAttribute(Count, "value"));
+            }
+            if (Price != null) {
+                PriceID = Integer.parseInt(XMLApi.getNamedAttribute(Price, "value"));
+            }
+            CashItemInfo cii = new CashItemInfo(SNID, ItemID, CountID, PriceID);
+            Commodity.put(cii.getSn(), cii);
+        }
+    }
+
+    public static void saveCommodity(String dir) {
+        Util.makeDirIfAbsent(dir);
+        try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(new File(dir + "/" + "Commodity" + ".dat")))) {
+            dataOutputStream.writeInt(Commodity.size());
+            for (Map.Entry<Integer, CashItemInfo> commodityEntry : Commodity.entrySet()) {
+                dataOutputStream.writeInt(commodityEntry.getKey());
+                dataOutputStream.writeInt(commodityEntry.getValue().getSn());
+                dataOutputStream.writeInt(commodityEntry.getValue().getItemId());
+                dataOutputStream.writeInt(commodityEntry.getValue().getCount());
+                dataOutputStream.writeInt(commodityEntry.getValue().getPrice());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadCommodityFromFile(String dir) {
+        Util.makeDirIfAbsent(dir);
+        try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(new File(dir + "/" + "Commodity" + ".dat")))) {
+            int size = dataInputStream.readInt();
+            for (int i = 0; i < size; i++) {
+                int sn = dataInputStream.readInt();
+                int itemid = dataInputStream.readInt();
+                int count = dataInputStream.readInt();
+                int price = dataInputStream.readInt();
+                Commodity.put(sn, new CashItemInfo(sn, itemid, count, price));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void saveSoulCollection(String dir) {
         Util.makeDirIfAbsent(dir);
         try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(new File(dir + "/" + "soulCollection" + ".dat")))) {
@@ -269,6 +337,8 @@ public class EtcData {
         long start = System.currentTimeMillis();
         loadAndroidsFromWz();
         loadSoulCollectionFromWz();
+        loadCommodityFormWz();
+        saveCommodity(ServerConstants.DAT_DIR + "/etc/cash");
         saveSoulCollection(ServerConstants.DAT_DIR);
         saveAndroidInfo(ServerConstants.DAT_DIR + "/etc/android");
         log.info(String.format("Completed generating etc data in %dms.", System.currentTimeMillis() - start));

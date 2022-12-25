@@ -226,7 +226,7 @@ public class SkillData {
             File dir = new File(wzDir);
             File[] files = dir.listFiles();
             for (File file : files) {
-                if (file.getName().contains("Dragon") || file.getName().contains("MobSkill")) {
+                if (file.getName().contains("Dragon") || file.getName().contains("MobSkill") || file.getName().contains("AbyssExpedition") || file.getName().contains("Roguelike")) {
                     continue;
                 }
                 Node node = XMLApi.getRoot(file);

@@ -143,8 +143,49 @@ public class ChatHandler {
                 3, 0, chr.getClient().getWorldId(), item, false));
     }
 
+    @Handler(op = InHeader.USER_AD_BOARD_CLOSE)
+    public static void handleUserAdBoardClose(Char chr, InPacket inPacket){
+        chr.setADBoardRemoteMsg(null);
+    }
+
     @Handler(op = InHeader.WHISPER)
     public static void handleWhisper(Client c, InPacket inPacket) {
+        Char chr = c.getChr();
+        byte type = inPacket.decodeByte();
+        inPacket.decodeInt(); // tick
+        String destName = inPacket.decodeString();
+        Char dest = c.getWorld().getCharByName(destName);
+        if (dest == null) {
+            chr.chatMessage("Character not found.");
+            return;
+        }
+        switch (type) {
+            case 5: // /find command
+                int fieldId = dest.getField().getId();
+                int channel = dest.getClient().getChannel();
+                if (channel != chr.getClient().getChannel()) {
+                    chr.chatMessage("%s is in channel %s-%d.", dest.getName(), dest.getWorld().getName(), channel);
+                } else {
+                    String fieldString = StringData.getMapStringById(fieldId);
+                    if (fieldString == null) {
+                        fieldString = "Unknown field.";
+                    }
+                    chr.chatMessage("%s is at %s.", dest.getName(), fieldString);
+                }
+                break;
+            case 68:
+                break;
+            case 6: // whisper
+                String msg = inPacket.decodeString();
+                dest.write(FieldPacket.whisper(chr, (byte) (c.getChannel() - 1), false, msg, false));
+                chr.chatMessage(Whisper, String.format("%s<< %s", dest.getName(), msg));
+                break;
+        }
+
+    }
+
+    @Handler(op = InHeader.WHISPER_ITEM)
+    public static void handleWhisper_Item(Client c, InPacket inPacket) {
         Char chr = c.getChr();
         byte type = inPacket.decodeByte();
         inPacket.decodeInt(); // tick

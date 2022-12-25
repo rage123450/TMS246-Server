@@ -36,63 +36,63 @@ import static net.swordie.ms.client.character.skills.temp.CharacterTemporaryStat
  * Created on 12/14/2017.
  */
 public class Kinesis extends Job {
-    public static final int RETURN_KINESIS = 140001290;
+    public static final int 回歸_凱內西斯 = 140001290;
 
-    public static final int PSYCHIC_FORCE = 142001000;
-    public static final int MENTAL_SHIELD = 142001007;
-    public static final int ESP_BOOSTER = 142001003;
-    public static final int ULTIMATE_METAL_PRESS = 142001002;
+    public static final int 心靈推手 = 142001000;
+    public static final int 心靈本能 = 142001007;
+    public static final int ESP_加速器 = 142001003;
+    public static final int 終極技_梅泰利爾 = 142001002;
 
-    public static final int PSYCHIC_BLAST_FWD = 142100000;
-    public static final int PSYCHIC_BLAST_DOWN = 142100001;
-    public static final int PSYCHIC_DRAIN = 142101009;
-    public static final int PSYCHIC_ARMOR = 142101004;
-    public static final int PURE_POWER = 142101005;
+    public static final int 心靈推手2 = 142100000;
+    public static final int 心靈推手2_共享 = 142100001;
+    public static final int 心靈領域 = 142101009;
+    public static final int 心靈護盾 = 142101004;
+    public static final int 純粹的力量 = 142100005;
     public static final int ULTIMATE_DEEP_IMPACT = 142101003;
 
-    public static final int PSYCHIC_ASSAULT_FWD = 142110000;
-    public static final int PSYCHIC_ASSAULT_DOWN = 142110001;
-    public static final int PSYCHIC_BULWARK = 142110009;
-    public static final int PSYCHIC_REINFORCEMENT = 142111008;
-    public static final int KINETIC_JAUNT = 142111010;
-    public static final int ULTIMATE_TRAINWRECK = 142111007;
+    public static final int 心靈推手3 = 142110000;
+    public static final int 心靈推手3_共享 = 142110001;
+    public static final int 心靈護盾2_扭曲 = 142110009;
+    public static final int 精神強化 = 142110008;
+    public static final int 心靈遊動 = 142111010;
+    public static final int 終極技_火車扔擲 = 142111007;
     public static final int KINETIC_COMBO = 142110011;
     public static final int MIND_TREMOR = 142111006;
 
-    public static final int MIND_BREAK = 142121004;
+    public static final int 心靈突破 = 142121004;
     public static final int ULTIMATE_PSYCHIC_SHOT = 142120002;
-    public static final int ULTIMATE_BPM = 142121005;
-    public static final int PRESIDENTS_ORDERS = 142121016;
-    public static final int PSYCHIC_CHARGER = 142121008;
+    public static final int 終極技_BPM = 142121005;
+    public static final int 異界祝禱 = 142121016;
+    public static final int 心靈填充 = 142121008;
     public static final int TELEPATH_TACTICS = 142121006;
     public static final int MIND_QUAKE = 142120003;
-    public static final int CLEAR_MIND = 142121007;
+    public static final int 精神淨化 = 142121007;
 
     public static final int MENTAL_TEMPEST = 142121030;
     public static final int MENTAL_TEMPEST_END = 142120030;
     public static final int MENTAL_SHOCK = 142121031;
-    public static final int MENTAL_OVERDRIVE = 142121032;
+    public static final int 心靈超越 = 142121032;
 
     // V skills
-    public static final int PSYCHIC_TORNADO = 400021008;
-    public static final int MIND_OVER_MATTER = 400021048;
+    public static final int 心靈龍捲風 = 400021008;
+    public static final int 終極_移動物質 = 400021048;
 
 
     private static final int MAX_PP = 30;
 
     private static final int[] nonOrbSkills = new int[]{
-            ULTIMATE_METAL_PRESS,
+            終極技_梅泰利爾,
             ULTIMATE_DEEP_IMPACT,
-            ULTIMATE_TRAINWRECK,
-            ULTIMATE_BPM,
+            終極技_火車扔擲,
+            終極技_BPM,
             ULTIMATE_PSYCHIC_SHOT,
 
-            PSYCHIC_FORCE,
-            PSYCHIC_BLAST_DOWN,
-            PSYCHIC_BLAST_FWD,
-            PSYCHIC_ASSAULT_DOWN,
-            PSYCHIC_ASSAULT_FWD,
-            PSYCHIC_DRAIN,
+            心靈推手,
+            心靈推手2_共享,
+            心靈推手2,
+            心靈推手3_共享,
+            心靈推手3,
+            心靈領域,
             MENTAL_TEMPEST,
             KINETIC_COMBO,
     };
@@ -177,11 +177,11 @@ public class Kinesis extends Job {
         Skill skill = chr.getSkill(attackInfo.skillId);
         if (skill == null) {
             switch (attackInfo.skillId) {
-                case PSYCHIC_ASSAULT_DOWN:
-                    skill = chr.getSkill(PSYCHIC_ASSAULT_FWD);
+                case 心靈推手3_共享:
+                    skill = chr.getSkill(心靈推手3);
                     break;
-                case PSYCHIC_BLAST_DOWN:
-                    skill = chr.getSkill(PSYCHIC_BLAST_FWD);
+                case 心靈推手2_共享:
+                    skill = chr.getSkill(心靈推手2);
                     break;
             }
         }
@@ -197,10 +197,10 @@ public class Kinesis extends Job {
         if (hasHitMobs && chr.hasSkill(KINETIC_COMBO) && attackInfo.skillId != KINETIC_COMBO) {
             createKineticOrbForceAtom(skillID, slv, attackInfo);
         }
-        if (attackInfo.skillId != ULTIMATE_BPM &&
-                attackInfo.skillId != ULTIMATE_METAL_PRESS &&
-                attackInfo.skillId != ULTIMATE_TRAINWRECK &&
-                attackInfo.skillId != MIND_OVER_MATTER &&
+        if (attackInfo.skillId != 終極技_BPM &&
+                attackInfo.skillId != 終極技_梅泰利爾 &&
+                attackInfo.skillId != 終極技_火車扔擲 &&
+                attackInfo.skillId != 終極_移動物質 &&
                 attackInfo.skillId != ULTIMATE_PSYCHIC_SHOT
         ) {
             kinesisPPAttack(skillID, slv, si);
@@ -209,11 +209,11 @@ public class Kinesis extends Job {
         Option o2 = new Option();
         Option o3 = new Option();
         switch (attackInfo.skillId) {
-            case PSYCHIC_FORCE:
-            case PSYCHIC_BLAST_FWD:
-            case PSYCHIC_BLAST_DOWN:
-            case PSYCHIC_ASSAULT_FWD:
-            case PSYCHIC_ASSAULT_DOWN:
+            case 心靈推手:
+            case 心靈推手2:
+            case 心靈推手2_共享:
+            case 心靈推手3:
+            case 心靈推手3_共享:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
                     if (mob == null) {
@@ -223,7 +223,7 @@ public class Kinesis extends Job {
                     mts.createAndAddBurnedInfo(chr, skill);
                 }
                 break;
-            case MIND_BREAK:
+            case 心靈突破:
                 int count = 0;
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
@@ -243,7 +243,7 @@ public class Kinesis extends Job {
                 o1.nValue = count * si.getValue(indiePMdR, slv);
                 o1.nReason = skillID;
                 o1.tTerm = si.getValue(time, slv);
-                tsm.putCharacterStatValue(IndiePMdR, o1);
+                tsm.putCharacterStatValue(KinesisMind_Break, o1);//486  IndiePMdR
                 tsm.sendSetStatPacket();
                 break;
             case MENTAL_SHOCK:
@@ -266,7 +266,7 @@ public class Kinesis extends Job {
                     o1.nOption = 1;
                     o1.rOption = skillID;
                     o1.tOption = 5;
-                    tsm.putCharacterStatValue(NotDamaged, o1);
+                    tsm.putCharacterStatValue(NotDamaged, o1);//發56 和 486
                     tsm.sendSetStatPacket();
                 }
                 break;
@@ -348,10 +348,10 @@ public class Kinesis extends Job {
         if (chr.getTemporaryStatManager().hasStat(KinesisPsychicOver)) {
             ppCons = ppCons / 2;
         }
-        if (skillID == ULTIMATE_BPM) {
+        if (skillID == 終極技_BPM) {
             ppCons = si.getValue(w, slv); // why nexon..
         }
-        if (skillID == KINETIC_JAUNT) {
+        if (skillID == 心靈遊動) {
             ppCons = si.getValue(x, slv); // why nexon..
         }
         substractPP(ppCons);
@@ -378,20 +378,21 @@ public class Kinesis extends Job {
         Option o2 = new Option();
         Option o3 = new Option();
         switch (skillID) {
-            case PSYCHIC_CHARGER:
+            case 心靈填充:
                 int add = (MAX_PP - getPP()) / 2;
                 addPP(add);
                 break;
-            case CLEAR_MIND:
+            case 精神淨化:
                 tsm.removeAllDebuffs();
                 break;
-            case ESP_BOOSTER:
+            case ESP_加速器:
                 o1.nValue = -5; // si.getValue(indieBooster, slv);
+                si.getValue(indieBooster, slv);
                 o1.nReason = skillID;
                 o1.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndieBooster, o1);
                 break;
-            case MENTAL_SHIELD:
+            case 心靈本能:
                 if (tsm.hasStatBySkillId(skillID)) {
                     tsm.removeStatsBySkill(skillID);
                 } else {
@@ -400,11 +401,11 @@ public class Kinesis extends Job {
                     tsm.putCharacterStatValue(KinesisPsychicEnergeShield, o1);
                 }
                 break;
-            case PSYCHIC_ARMOR:
-            case PSYCHIC_BULWARK:
-                int psyArmorSLV = chr.getSkillLevel(PSYCHIC_ARMOR);
-                int t = SkillData.getSkillInfoById(PSYCHIC_ARMOR).getValue(time, psyArmorSLV);
-                int e = SkillData.getSkillInfoById(PSYCHIC_ARMOR).getValue(er, psyArmorSLV);
+            case 心靈護盾://改為被動
+            case 心靈護盾2_扭曲://改為被動
+                int psyArmorSLV = chr.getSkillLevel(心靈護盾);
+                int t = SkillData.getSkillInfoById(心靈護盾).getValue(time, psyArmorSLV);
+                int e = SkillData.getSkillInfoById(心靈護盾).getValue(er, psyArmorSLV);
                 o1.nValue = si.getValue(indiePdd, slv);
                 o1.nReason = skillID;
                 o1.tTerm = t;
@@ -418,23 +419,23 @@ public class Kinesis extends Job {
                 o3.tTerm = t;
                 tsm.putCharacterStatValue(IndieStance, o3);
                 break;
-            case PURE_POWER:
+            case 純粹的力量://改為被動
                 o1.nValue = si.getValue(indieDamR, slv);
                 o1.nReason = skillID;
                 o1.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndieDamR, o1);
                 break;
-            case PSYCHIC_REINFORCEMENT:
+            case 精神強化://改為被動
                 o1.nValue = si.getValue(indieMadR, slv);
                 o1.nReason = skillID;
                 o1.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndieMADR, o1);
                 break;
-            case PRESIDENTS_ORDERS:
+            case 異界祝禱:
                 o1.nValue = si.getValue(x, slv);
                 o1.nReason = skillID;
                 o1.tTerm = si.getValue(time, slv);
-                tsm.putCharacterStatValue(IndieStatR, o1);
+                tsm.putCharacterStatValue(IndieStatR, o1);//116 IndieStatR
                 break;
             case TELEPATH_TACTICS:
                 o1.nValue = si.getValue(indieMad, slv);
@@ -446,19 +447,19 @@ public class Kinesis extends Job {
                 o2.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndieDamR, o2);
                 break;
-            case KINETIC_JAUNT:
+            case 心靈遊動:
                 o1.nOption = 1;
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(NewFlying, o1);
                 break;
-            case MENTAL_OVERDRIVE:
+            case 心靈超越://發了4個stat 未處理完
                 o1.nOption = 1;
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(KinesisPsychicOver, o1);
                 break;
-            case PSYCHIC_TORNADO: // TODO  Increment as the Tornado is growing.
+            case 心靈龍捲風: // TODO  Increment as the Tornado is growing.
                 o1.nOption = 3;
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
@@ -474,12 +475,12 @@ public class Kinesis extends Job {
     @Override
     public void handleHit(Client c, InPacket inPacket, HitInfo hitInfo) {
         TemporaryStatManager tsm = chr.getTemporaryStatManager();
-        if (tsm.hasStatBySkillId(MENTAL_SHIELD)) {
+        if (tsm.hasStatBySkillId(心靈本能)) {
             hitInfo.hpDamage = (int) (hitInfo.hpDamage * (tsm.getOption(KinesisPsychicEnergeShield).nOption / 100D));
             substractPP(1);
         }
         if (getPP() <= 0) {
-            tsm.removeStatsBySkill(MENTAL_SHIELD);
+            tsm.removeStatsBySkill(心靈本能);
         }
         super.handleHit(c, inPacket, hitInfo);
     }

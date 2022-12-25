@@ -1,5 +1,7 @@
 package net.swordie.ms.enums;
 
+import net.swordie.ms.client.character.quest.Quest;
+
 /**
  * Created on 3/2/2018.
  */
@@ -14,7 +16,9 @@ public enum QuestStatus {
         this.val = (byte) val;
     }
 
+
     public byte getVal() {
         return val;
     }
+
 }

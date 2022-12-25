@@ -23,6 +23,7 @@ import net.swordie.ms.life.drop.Drop;
 import net.swordie.ms.life.drop.DropInfo;
 import net.swordie.ms.life.mob.Mob;
 import net.swordie.ms.life.npc.Npc;
+import net.swordie.ms.life.pet.Pet;
 import net.swordie.ms.loaders.ItemData;
 import net.swordie.ms.loaders.MobData;
 import net.swordie.ms.loaders.SkillData;
@@ -614,6 +615,7 @@ public class Field {
             execUserEnterScript(chr);
         }
         OutPacket enterPacket = UserPool.userEnterField(chr);
+        broadcastPacket(enterPacket, chr);
         if (!chr.isHide()) {
             broadcastPacket(enterPacket, chr);
         } else {
@@ -627,6 +629,8 @@ public class Field {
                 }
             }
         }
+
+
     }
 
     private boolean hasUserFirstEnterScript() {

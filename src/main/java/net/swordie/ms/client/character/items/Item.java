@@ -8,9 +8,12 @@ import net.swordie.ms.connection.packet.WvsContext;
 import net.swordie.ms.constants.ItemConstants;
 import net.swordie.ms.enums.InvType;
 import net.swordie.ms.loaders.ItemData;
+import net.swordie.ms.loaders.containerclasses.ItemInfo;
 import net.swordie.ms.util.FileTime;
 
 import jakarta.persistence.*;
+import net.swordie.ms.world.map.BossReward;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
@@ -46,6 +49,8 @@ public class Item implements Serializable, Encodable {
     protected boolean isCash;
     protected int quantity;
     private String owner = "";
+
+    //private BossReward bossReward;
 
     public boolean isTradable() {
         return !ItemData.getItemInfoByID(getItemId()).isTradeBlock();
@@ -223,6 +228,16 @@ public class Item implements Serializable, Encodable {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    /*
+    public BossReward getBossReward() {
+        return this.bossReward;
+    }
+
+    public void setBossReward(BossReward bossReward) {
+        this.bossReward = bossReward;
+    }
+    */
 
     @Override
     public String toString() {

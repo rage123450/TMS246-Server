@@ -144,13 +144,13 @@ public abstract class Job {
     public static final int DECENT_COMBAT_ORDERS_V = 400001004;
     public static final int DECENT_ADV_BLESSING_V = 400001005;
     public static final int DECENT_SPEED_INFUSION_V = 400001006;
-    public static final int DECENT_HOLY_SYMBOL = 400001020;
+    public static final int 實用的祈禱 = 400001020;
     public static final int ERDA_NOVA = 400001008;
     public static final int WILL_OF_ERDA = 400001009;
     public static final int ERDA_SHOWER = 400001036;
 
     // First Branch V Skills
-    public static final int WEAPON_AURA = 400011000;
+    public static final int 幻靈武具 = 400011000;
     public static final int MANA_OVERLOAD = 400021000;
     public static final int GUIDED_ARROW = 400031000;
     public static final int GUIDED_ARROW_ATOM = 400031001;
@@ -160,7 +160,7 @@ public abstract class Job {
     public static final int LUCKY_DICE = 400051001;
 
     // Second Branch V Skills
-    public static final int IMPENETRABLE_SKIN = 400011066;
+    public static final int 鋼鐵之軀 = 400011066;
     public static final int ETHEREAL_FORM = 400021060;
     public static final int VICIOUS_SHOT = 400031023;
     public static final int LAST_RESORT = 400041032;
@@ -196,11 +196,11 @@ public abstract class Job {
             FOR_THE_GUILD,
 
             // Branch V skill
-            WEAPON_AURA,
+            幻靈武具,
             MANA_OVERLOAD,
             ETHEREAL_FORM,
             WILL_OF_ERDA,
-            IMPENETRABLE_SKIN,
+            鋼鐵之軀,
             LUCKY_DICE,
             LAST_RESORT,
             VICIOUS_SHOT,
@@ -212,7 +212,7 @@ public abstract class Job {
             DECENT_COMBAT_ORDERS_V,
             DECENT_ADV_BLESSING_V,
             DECENT_SPEED_INFUSION_V,
-            DECENT_HOLY_SYMBOL,
+            實用的祈禱,
             RESISTANCE_INFANTRY_1,
             RESISTANCE_INFANTRY_2,
             FREUDS_WISDOM_1,
@@ -422,7 +422,7 @@ public abstract class Job {
                 }
                 // TOOD: make sure user owns skill
                 switch (skillID) {
-                    case MONOLITH:
+                    case MONOLITH://輪迴
                         summon = Summon.getSummonBy(c.getChr(), skillID, slv);
                         field = c.getChr().getField();
                         summon.setMoveAbility(MoveAbility.Stop);
@@ -629,7 +629,7 @@ public abstract class Job {
                 o1.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndieBooster, o1);
                 break;
-            case DECENT_HOLY_SYMBOL:
+            case 實用的祈禱:
                 o1.nOption = si.getValue(x, slv);
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
@@ -703,7 +703,7 @@ public abstract class Job {
                 tsm.putCharacterStatValue(AsrR, o1);
                 tsm.removeAllDebuffs();
                 break;
-            case IMPENETRABLE_SKIN:
+            case 鋼鐵之軀:
                 o1.nOption = 1;
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
@@ -718,7 +718,7 @@ public abstract class Job {
                 o3.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndieNoKnockBack, o3);
                 break;
-            case WEAPON_AURA:
+            case 幻靈武具://46 37 530
                 o1.nOption = si.getValue(z, slv);
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
@@ -1080,9 +1080,8 @@ public abstract class Job {
         HitInfo hitInfo = new HitInfo();
         // cryto.username
         inPacket.decodeInt(); // Unknown
-        inPacket.decodeInt(); // Unknown
         hitInfo.damagedTime = inPacket.decodeInt();
-        //   hitInfo.attackIdx = inPacket.decodeByte(); // -1 attack idx = body (touch) attack
+        hitInfo.attackIdx = inPacket.decodeByte(); // -1 attack idx = body (touch) attack
         hitInfo.type = inPacket.decodeByte();
         hitInfo.elemAttr = inPacket.decodeByte();
         hitInfo.hpDamage = inPacket.decodeInt();
@@ -1178,8 +1177,8 @@ public abstract class Job {
         }
 
         // Warrior V - Impenetrable Skin
-        if (tsm.hasStat(ImpenetrableSkin) && chr.hasSkill(IMPENETRABLE_SKIN)) {
-            Skill skill = chr.getSkill(IMPENETRABLE_SKIN);
+        if (tsm.hasStat(ImpenetrableSkin) && chr.hasSkill(鋼鐵之軀)) {
+            Skill skill = chr.getSkill(鋼鐵之軀);
             SkillInfo si = SkillData.getSkillInfoById(skill.getSkillId());
             int slv = skill.getCurrentLevel();
             int count = tsm.getOption(ImpenetrableSkin).xOption;
@@ -1188,13 +1187,13 @@ public abstract class Job {
 
                 o1.nOption = 100;
                 o1.rOption = skill.getSkillId();
-                o1.tOption = (int) (tsm.getRemainingTime(ImpenetrableSkin, IMPENETRABLE_SKIN));
+                o1.tOption = (int) (tsm.getRemainingTime(ImpenetrableSkin, 鋼鐵之軀));
                 o1.xOption = count;
                 o1.setInMillis(true);
                 tsm.putCharacterStatValue(ImpenetrableSkin, o1, true);
                 o2.nValue = si.getValue(x, slv) * count;
                 o2.nReason = skill.getSkillId();
-                o2.tTerm = (int) (tsm.getRemainingTime(ImpenetrableSkin, IMPENETRABLE_SKIN));
+                o2.tTerm = (int) (tsm.getRemainingTime(ImpenetrableSkin, 鋼鐵之軀));
                 o2.setInMillis(true);
                 tsm.putCharacterStatValue(IndieDamR, o2, true);
                 tsm.sendSetStatPacket();
@@ -1699,12 +1698,12 @@ public abstract class Job {
         chr.setStatAndSendPacket(Stat.job, chr.getJob());
         chr.addStatAndSendPacket(Stat.ap, apToAdd);
 
-        chr.chatMessage("[Job Advancement] Congratulations, you are now a(n) %s!", JobConstants.getJobEnumById(jobId).getJobName());
-        chr.chatMessage("[Job Advancement] You've gained (%d) ability points.", apToAdd);
+        chr.chatMessage("[自動轉職] 轉職成功為 %s!", JobConstants.getJobEnumById(jobId).getJobName());
+        chr.chatMessage("[自動轉職] 你得到 (%d) 能力點.", apToAdd);
 
         if (CustomConstants.MAX_SKILLS) {
             setMaxSkillsToJob(jobId);
-            chr.chatMessage("[Job Advancement] Your skills have been maxed out.");
+            chr.chatMessage("[自動轉職] 技能自動加滿.");
         }
     }
 

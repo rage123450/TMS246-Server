@@ -855,38 +855,38 @@ public class JobConstants {
     }
 
     public enum LoginJob {
-        RESISTANCE(0, JobFlag.ENABLED, JobEnum.CITIZEN),
-        EXPLORER(1, JobFlag.ENABLED, JobEnum.BEGINNER),
-        CYGNUS(2, JobFlag.ENABLED, JobEnum.NOBLESSE),
-        ARAN(3, JobFlag.ENABLED, JobEnum.LEGEND),
-        EVAN(4, JobFlag.ENABLED, JobEnum.EVAN_NOOB),
-        MERCEDES(5, JobFlag.ENABLED, JobEnum.MERCEDES),
-        DEMON(6, JobFlag.ENABLED, JobEnum.DEMON),
-        PHANTOM(7, JobFlag.ENABLED, JobEnum.PHANTOM),
-        DUAL_BLADE(8, JobFlag.ENABLED, JobEnum.BEGINNER),
-        MIHILE(9, JobFlag.ENABLED, JobEnum.NAMELESS_WARDEN),
-        LUMINOUS(10, JobFlag.ENABLED, JobEnum.LUMINOUS),
-        KAISER(11, JobFlag.ENABLED, JobEnum.KAISER),
-        ANGELIC(12, JobFlag.ENABLED, JobEnum.ANGELIC_BUSTER),
-        CANNONER(13, JobFlag.ENABLED, JobEnum.BEGINNER),
-        XENON(14, JobFlag.ENABLED, JobEnum.XENON),
-        ZERO(15, JobFlag.ENABLED, JobEnum.ZERO),
-        SHADE(16, JobFlag.ENABLED, JobEnum.SHADE),
-        PINK_BEAN(17, JobFlag.ENABLED, JobEnum.PINK_BEAN_0),
-        KINESIS(18, JobFlag.ENABLED, JobEnum.KINESIS_0),
-        CADENA(19, JobFlag.ENABLED, JobEnum.CADENA),
-        ILLIUM(20, JobFlag.ENABLED, JobEnum.ILLIUM),
-        ARK(21, JobFlag.ENABLED, JobEnum.ARK),
-        PATHFINDER(22, JobFlag.ENABLED, JobEnum.PATHFINDER_1),
-        HOYOUNG(23, JobFlag.ENABLED, JobEnum.HOYOUNG),
-        ADELE(24, JobFlag.ENABLED, JobEnum.ADELE),
-        KAIN(25, JobFlag.ENABLED, JobEnum.KAIN),
-        YETI(26, JobFlag.ENABLED, JobEnum.YETI),
-        LARA(27, JobFlag.ENABLED, JobEnum.LARA),
-        MOXUAN(1000, JobFlag.ENABLED, JobEnum.MOXUAN),
-        HAYATO(1001, JobFlag.ENABLED, JobEnum.HAYATO),
-        KANNA(1002, JobFlag.ENABLED, JobEnum.KANNA),
-        CHASE(1003, JobFlag.ENABLED, JobEnum.BEAST_TAMER),
+        末日反抗軍(0, JobFlag.ENABLED, JobEnum.CITIZEN),
+        冒險家(1, JobFlag.ENABLED, JobEnum.BEGINNER),
+        皇家騎士團(2, JobFlag.ENABLED, JobEnum.NOBLESSE),
+        狂郎勇士(3, JobFlag.ENABLED, JobEnum.LEGEND),
+        龍魔導士(4, JobFlag.ENABLED, JobEnum.EVAN_NOOB),
+        精靈遊俠(5, JobFlag.ENABLED, JobEnum.MERCEDES),
+        惡魔殺手(6, JobFlag.ENABLED, JobEnum.DEMON),
+        幻影俠盜(7, JobFlag.ENABLED, JobEnum.PHANTOM),
+        影武者(8, JobFlag.ENABLED, JobEnum.BEGINNER),
+        米哈逸(9, JobFlag.ENABLED, JobEnum.NAMELESS_WARDEN),
+        夜光(10, JobFlag.ENABLED, JobEnum.LUMINOUS),
+        凱薩(11, JobFlag.ENABLED, JobEnum.KAISER),
+        天使破壞者(12, JobFlag.ENABLED, JobEnum.ANGELIC_BUSTER),
+        重砲指揮官(13, JobFlag.ENABLED, JobEnum.BEGINNER),
+        傑諾(14, JobFlag.ENABLED, JobEnum.XENON),
+        神之子(15, JobFlag.ENABLED, JobEnum.ZERO),
+        隱月(16, JobFlag.ENABLED, JobEnum.SHADE),
+        皮卡啾(17, JobFlag.ENABLED, JobEnum.PINK_BEAN_0),
+        凱內西斯(18, JobFlag.ENABLED, JobEnum.KINESIS_0),
+        卡蒂娜(19, JobFlag.ENABLED, JobEnum.CADENA),
+        伊利恩(20, JobFlag.ENABLED, JobEnum.ILLIUM),
+        亞克(21, JobFlag.ENABLED, JobEnum.ARK),
+        開拓者(22, JobFlag.ENABLED, JobEnum.PATHFINDER_1),
+        虎影(23, JobFlag.ENABLED, JobEnum.HOYOUNG),
+        阿戴爾(24, JobFlag.ENABLED, JobEnum.ADELE),
+        凱殷(25, JobFlag.ENABLED, JobEnum.KAIN),
+        雪吉拉(26, JobFlag.ENABLED, JobEnum.YETI),
+        菈菈(27, JobFlag.ENABLED, JobEnum.LARA),
+        墨玄(1000, JobFlag.ENABLED, JobEnum.MOXUAN),
+        劍豪(1001, JobFlag.ENABLED, JobEnum.HAYATO),
+        陰陽師(1002, JobFlag.ENABLED, JobEnum.KANNA),
+        幻獸師(1003, JobFlag.ENABLED, JobEnum.BEAST_TAMER),
         ;
 
         private final int jobType, flag;
@@ -1053,6 +1053,10 @@ public class JobConstants {
         return jobId == JobConstants.JobEnum.KAISER.getJobId() || jobId / 100 == 61;
     }
 
+    public static boolean isKain(short jobID) {
+        return jobID == 6003 || (jobID >= 6300 && jobID <= 6312);
+    }
+
     public static boolean isZero(short jobId) {
         return jobId == JobEnum.ZERO.getJobId()
                 || jobId == JobEnum.ZERO_1.getJobId()
@@ -1081,7 +1085,7 @@ public class JobConstants {
         return (job == 16001 || (job >= 16200 && job <= 16212));
     }
 
-    public static final boolean isAdel(int job) {
+    public static final boolean isAdele(int job) {
         return (job == 15002 || (job >= 15100 && job <= 15112));
     }
 
@@ -1122,6 +1126,7 @@ public class JobConstants {
     }
 
     public static boolean isBeginnerJob(short jobId) {
+        /*
         switch (jobId) {
             case 8001:
             case 15001:
@@ -1140,6 +1145,8 @@ public class JobConstants {
             default:
                 return jobId % 1000 == 0 || jobId / 100 == 8000 || jobId / 100 == 8001;
         }
+        */
+        return jobId % 1000 < 100;
     }
 
     public static int getJobLevel(short jobId) {
@@ -1228,13 +1235,13 @@ public class JobConstants {
     public static boolean isWarriorEquipJob(short jobID) {
         return isAdventurerWarrior(jobID) || isPinkBean(jobID) || isDawnWarrior(jobID) || isMihile(jobID) ||
                 isAran(jobID) || isKaiser(jobID) || isBlaster(jobID) || isDemon(jobID) || isHayato(jobID) ||
-                isZero(jobID);
+                isZero(jobID) || isAdele(jobID);
 
     }
 
     public static boolean isMageEquipJob(short jobID) {
         return isBeastTamer(jobID) || isKinesis(jobID) || isAdventurerMage(jobID) || isBlazeWizard(jobID) ||
-                isEvan(jobID) || isLuminous(jobID) || isBattleMage(jobID) || isKanna(jobID) || isIllium(jobID);
+                isEvan(jobID) || isLuminous(jobID) || isBattleMage(jobID) || isKanna(jobID) || isIllium(jobID) || isLara(jobID);
     }
 
 
@@ -1251,4 +1258,24 @@ public class JobConstants {
                 isXenon(jobID) || isMechanic(jobID) || isJett(jobID) || isArk(jobID);
     }
 
+    public static boolean is1stJob(short jobID) {
+        return jobID % 1000 >= 100 && jobID % 100 == 0;
+    }
+
+    public static boolean is2ndJob(short jobID) {
+        return jobID % 100 == 10;
+    }
+
+    public static boolean is3rdJob(short jobID) {
+        return !isBeginnerJob(jobID) && jobID % 10 == 1;
+    }
+
+    public static boolean is4rdJob(short jobID) {
+        return !isBeginnerJob(jobID) && jobID % 10 == 2;
+    }
+/*
+    public static boolean is5thJob(short jobID){
+        return !isBeginnerJob(jobID) && !is1stJob(jobID) && !is2ndJob(jobID) && !is3rdJob(jobID);
+    }
+    */
 }

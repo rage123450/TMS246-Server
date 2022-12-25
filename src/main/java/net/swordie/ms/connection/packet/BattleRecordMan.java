@@ -27,6 +27,7 @@ public class BattleRecordMan {
             outPacket.encodeInt(burnedInfo.getDotTickDamR());
         }
         outPacket.encodeInt(burnedInfo.getSkillId());
+        outPacket.encodeInt(0);//248++
 
         return outPacket;
     }

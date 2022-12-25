@@ -1,5 +1,7 @@
 package net.swordie.ms.connection.packet;
 
+import jnr.ffi.annotations.Out;
+import net.swordie.ms.client.Client;
 import net.swordie.ms.client.LinkSkill;
 import net.swordie.ms.client.alliance.AllianceResult;
 import net.swordie.ms.client.character.*;
@@ -29,10 +31,12 @@ import net.swordie.ms.connection.OutPacket;
 import net.swordie.ms.constants.ItemConstants;
 import net.swordie.ms.enums.*;
 import net.swordie.ms.handlers.header.OutHeader;
+import net.swordie.ms.loaders.ItemData;
 import net.swordie.ms.util.AntiMacro;
 import net.swordie.ms.util.FileTime;
 import net.swordie.ms.util.Position;
 import org.apache.log4j.LogManager;
+import org.python.antlr.op.Eq;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -89,57 +93,59 @@ public class WvsContext {
             Stat stat = entry.getKey();
             Object value = entry.getValue();
             switch (stat) {
-                case skin:
-                case fatigue:
+                case skin://
                     outPacket.encodeByte((Byte) value);
                     break;
-                case face:
-                case hair:
-                case hp:
-                case mhp:
-                case mp:
-                case mmp:
-                case pop:
-                case charismaEXP:
-                case insightEXP:
-                case willEXP:
-                case craftEXP:
-                case senseEXP:
-                case charmEXP:
-                case eventPoints:
-                case level:
+                case face://
+                case hair://
+                case hp://
+                case mhp://
+                case mp://
+                case mmp://
+                case pop://
+                case charismaEXP://
+                case insightEXP://
+                case willEXP://
+                case craftEXP://
+                case senseEXP://
+                case charmEXP://
+                case eventPoints://
+                case level://
                     outPacket.encodeInt((Integer) value);
                     break;
-                case str:
-                case dex:
-                case inte:
-                case luk:
-                case ap:
+                case str://
+                case dex://
+                case inte://
+                case luk://
+                case ap://
+                case fatigue:
                     outPacket.encodeShort((Short) value);
                     break;
-                case sp:
+                case sp://
                     if (value instanceof ExtendSP) {
                         ((ExtendSP) value).encode(outPacket);
                     } else {
                         outPacket.encodeShort((Short) value);
                     }
                     break;
-                case exp:
-                case money:
+                case exp://
+                case money://
                     outPacket.encodeLong((Long) value);
                     break;
-                case dayLimit:
+                case dayLimit://
                     ((NonCombatStatDayLimit) value).encode(outPacket);
                     break;
-                case albaActivity:
+                case albaActivity://
                     //TODO
                     break;
-                case characterCard:
+                case characterCard://248 + 腳色卡改掉了
                     ((CharacterCard) value).encode(outPacket);
                     break;
-                case pvp2:
+                case pvp2://??
+                    outPacket.encodeByte((Byte) value);
+                    outPacket.encodeByte((Byte) value);
                     break;
-                case job:
+                case job://
                     outPacket.encodeShort((Short) value);
                     outPacket.encodeShort(subJob);
             }
@@ -172,8 +178,7 @@ public class WvsContext {
         io.newPos = newPos;
         io.type = type;
         operations.add(io);
-
-        return inventoryOperation(exclRequest ? 1 : 0, true, operations);
+        return inventoryOperation(exclRequest ? 1 : 0, notRemoveAddInfo, operations);
     }
 
     public static OutPacket inventoryOperation(int exclResult, boolean notAddRemoveInfo, List<ItemOperation> itemOperations) {
@@ -248,6 +253,19 @@ public class WvsContext {
 
         return outPacket;
     }
+    @Deprecated//增加物品格子
+    public static OutPacket getSlotUpdate(byte invType, byte newSlots) {
+        OutPacket outPacket = new OutPacket(OutHeader.INVENTORY_GROW);
+        outPacket.encodeByte(invType);
+        outPacket.encodeByte(newSlots);
+        return outPacket;
+    }
+
+    public static OutPacket onMesoPickupResult(int meso) {
+        OutPacket outPacket = new OutPacket(OutHeader.MOB_DROP_MESO_PICKUP);
+        outPacket.encodeInt(meso);
+        return outPacket;
+    }
 
     public static OutPacket updateEventNameTag(int[] tags) {
         OutPacket outPacket = new OutPacket(OutHeader.EVENT_NAME_TAG);
@@ -301,6 +319,7 @@ public class WvsContext {
         outPacket.encodeByte(0);
         outPacket.encodeByte(0);
         outPacket.encodeByte(hasMovingAffectingStat);
+
         if (hasMovingAffectingStat) {
             outPacket.encodeByte(0);
         }
@@ -308,6 +327,7 @@ public class WvsContext {
         outPacket.encodeByte(0);
 
         outPacket.encodeArr(new byte[10]);
+
 
         return outPacket;
     }
@@ -908,6 +928,7 @@ public class WvsContext {
 
         outPacket.encodeLong(equip.getSerialNumber());
         mci.encode(outPacket);
+        outPacket.encodeInt(0);//248++
 
         return outPacket;
     }
@@ -918,6 +939,8 @@ public class WvsContext {
         outPacket.encodeLong(equip.getId());
         mci.encode(outPacket);
         outPacket.encodeInt(equip.getBagIndex());
+        outPacket.encodeInt(0);//248++
+        outPacket.encodeByte(0);//248++
 
         return outPacket;
     }
@@ -928,6 +951,8 @@ public class WvsContext {
         outPacket.encodeLong(equip.getSerialNumber());
         mci.encode(outPacket);
         outPacket.encodeInt(equip.getBagIndex());
+        outPacket.encodeInt(0);//248++
+        outPacket.encodeByte(0);//248++
 
         return outPacket;
     }
@@ -988,6 +1013,29 @@ public class WvsContext {
             case 21:
             case 23:
         }
+        return outPacket;
+    }
+
+    public static OutPacket goldApple(Item item, Item apple) {
+        OutPacket outPacket = new OutPacket(OutHeader.GOLD_APPLE);
+
+        outPacket.encodeByte((item != null));
+        if (item != null) {
+            outPacket.encodeInt(item.getItemId());//抽到的道具
+            outPacket.encodeShort(item.getQuantity());
+            outPacket.encodeInt(apple.getItemId());
+            outPacket.encodeInt(apple.getBagIndex());
+            outPacket.encodeInt(2435458);//2630612
+            outPacket.encodeInt(1);
+            outPacket.encodeByte(item.getType().getVal() == 1);
+            if (item.getType().getVal() ==1) {
+                Equip equip = (Equip) item;
+                equip.encode(outPacket);
+            }
+        } else {
+            outPacket.encodeInt(0);
+        }
+
         return outPacket;
     }
 
@@ -1185,7 +1233,7 @@ public class WvsContext {
         for (MatrixRecord mr : activeRecords) {
             outPacket.encodeInt(matrixRecords.indexOf(mr));
             outPacket.encodeInt(mr.getPosition());
-            outPacket.encodeInt(0); // nLevel
+            outPacket.encodeInt(mr.getSlv()); // nLevel
             outPacket.encodeByte(1); // bHide
         }
         outPacket.encodeByte(remove);
@@ -1201,7 +1249,7 @@ public class WvsContext {
         OutPacket outPacket = new OutPacket(OutHeader.NODE_STONE_OPEN_RESULT);
 
         outPacket.encodeInt(mr.getIconID());
-        outPacket.encodeInt(1); // ?
+        outPacket.encodeInt(1); // core level 原本發1
         outPacket.encodeInt(mr.getSkillID1());
         outPacket.encodeInt(mr.getSkillID2());
         outPacket.encodeInt(mr.getSkillID3());
@@ -1269,11 +1317,45 @@ public class WvsContext {
         return outPacket;
     }
 
+    public static OutPacket report(int mode) {
+        OutPacket outPacket = new OutPacket(OutHeader.CLAIM_RESULT);
+        outPacket.encodeByte(mode);
+        switch (mode) {
+            case 2:
+                outPacket.encodeByte(0);
+                outPacket.encodeInt(1);
+                outPacket.encodeInt(0);
+                break;
+        }
+        return outPacket;
+    }
+
+    public static OutPacket OnSetClaimSvrAvailableTime(int from, int to) {
+        OutPacket outPacket = new OutPacket(OutHeader.SET_CLAIM_SVR_AVAILABLE_TIME);
+        outPacket.encodeByte(from);
+        outPacket.encodeByte(to);
+        return outPacket;
+    }
+
+    public static OutPacket onSessionValue(String key, String value) {
+        OutPacket outPacket = new OutPacket(OutHeader.SESSION_VALUE);
+
+        outPacket.encodeString(key);
+        outPacket.encodeString(value);
+        return outPacket;
+    }
+
     public static OutPacket setPassenserRequest(int requestorChrId) {
         OutPacket outPacket = new OutPacket(OutHeader.SET_PASSENGER_REQUEST);
 
         outPacket.encodeInt(requestorChrId);
 
+        return outPacket;
+    }
+
+    public static OutPacket ClaimSvrStatusChanged(boolean enable) {
+        OutPacket outPacket = new OutPacket(OutHeader.CLAIM_SVR_STATUS_CHANGED);
+        outPacket.encodeByte(enable ? 1 : 0);
         return outPacket;
     }
 
@@ -1359,6 +1441,47 @@ public class WvsContext {
             outPacket.encode(ub);
         }
 
+        return outPacket;
+    }
+
+    public static OutPacket setBossReward(Char chr) {
+        OutPacket outPacket = new OutPacket(OutHeader.BOSS_REWARD);
+        /*
+        Iterator<Item> ite = chr.getEtcInventory().getItems().iterator();
+        List<Item> items = new ArrayList<>();
+        while (ite.hasNext()) {
+            Item item = ite.next();
+            if (item.getBossReward() != null) {
+                items.add(item);
+            }
+        }
+
+        outPacket.encodeInt(items.size());
+        for (int i = 0; i < items.size(); i++) {
+            outPacket.encodeLong(((Item) items.get(i)).getBossReward().getObjectId());
+            outPacket.encodeInt(((Item) items.get(i)).getBossReward().getMobId());
+            outPacket.encodeInt(((Item) items.get(i)).getBossReward().getPartyId());
+            outPacket.encodeInt(((Item) items.get(i)).getBossReward().getPrice());
+            outPacket.encodeInt(0);
+            outPacket.encodeLong(0);
+            //long time =items.get(i).getDateExpire() - FileTime.fromLong(7 * 24 * 60 * 60 * 1000);
+            outPacket.encodeLong(FileTime.currentTime().toLong());
+        }
+        */
+        return outPacket;
+    }
+
+    public static OutPacket WonderBerry(byte effect, Item item, int useitemid) {
+        OutPacket outPacket = new OutPacket(OutHeader.WONDER_BERRY);
+
+        outPacket.encodeByte(effect);
+        outPacket.encodeInt(useitemid);
+        if (item.getType() == Item.Type.EQUIP) {
+            Equip equip = (Equip) item;
+            equip.encode(outPacket);
+        } else {
+            item.encode(outPacket);
+        }
         return outPacket;
     }
 

@@ -25,7 +25,9 @@ import net.swordie.ms.client.jobs.adventurer.warrior.DarkKnight;
 import net.swordie.ms.client.jobs.adventurer.warrior.Hero;
 import net.swordie.ms.client.jobs.adventurer.warrior.Paladin;
 import net.swordie.ms.client.jobs.adventurer.warrior.Warrior;
+import net.swordie.ms.client.jobs.anima.Lara;
 import net.swordie.ms.client.jobs.cygnus.*;
+import net.swordie.ms.client.jobs.flora.Adele;
 import net.swordie.ms.client.jobs.flora.Ark;
 import net.swordie.ms.client.jobs.flora.Illium;
 import net.swordie.ms.client.jobs.legend.*;
@@ -1434,11 +1436,97 @@ public class SkillConstants {
     }
 
     public static int getLinkSkillByJob(short job) {
-        if (JobConstants.isAngelicBuster(job)) { // Terms and Conditions
-            return 80001155;
-        } else if (JobConstants.isAran(job)) { // Combo Kill Blessing
+        // 冒險家職業(劍士)
+        if (JobConstants.isHero(job)) {
+            return 80002759;
+        } else if (JobConstants.isPaladin(job)) {
+            return 80002760;
+        } else if (JobConstants.isDarkKnight(job)) {
+            return 80002761;
+        }
+        // 冒險家職業(法師)
+        else if (JobConstants.isFirePoison(job)) {
+            return 80002763;
+        } else if (JobConstants.isIceLightning(job)) {
+            return 80002764;
+        } else if (JobConstants.isBishop(job)) {
+            return 80002765;
+        }
+        // 冒險家職業(弓箭手)
+        else if (JobConstants.isBowMaster(job)) {
+            return 80002767;
+        } else if (JobConstants.isMarksman(job)) {
+            return 80002768;
+        } else if (JobConstants.isPathFinder(job)) {
+            return 80002769;
+        }
+        // 冒險家職業(盜賊)
+        else if (JobConstants.isNightLord(job)) {
+            return 80002771;
+        } else if (JobConstants.isShadower(job)) {
+            return 80002772;
+        } else if (JobConstants.isDualBlade(job)) {
+            return 80002773;
+        }
+        // 冒險家職業(海盜)
+        else if (JobConstants.isCannonShooter(job)) {
+            return 80000000;
+        } else if (JobConstants.isBuccaneer(job)) {
+            return 80002775;
+        } else if (JobConstants.isCorsair(job)) {
+            return 80002775;
+        }
+        // 末日反抗軍
+        else if (JobConstants.isBlaster(job)) {//爆拳槍神
+            return 80000378;
+        } else if (JobConstants.isBattleMage(job)) {//煉獄巫師
+            return 80000333;
+        } else if (JobConstants.isWildHunter(job)) {//狂豹獵人
+            return 80000334;
+        } else if (JobConstants.isMechanic(job)) {//機甲戰神
+            return 80000335;
+        }
+        //皇家騎士團
+
+        //英雄團
+        else if (JobConstants.isAran(job)) { // Combo Kill Blessing 連續擊殺優勢
             return 80000370;
-        } else if (JobConstants.isArk(job)) { // Solus
+        } else if (JobConstants.isEvan(job)) { // Rune Persistence 輪之堅持
+            return 80000369;
+        } else if (JobConstants.isMercedes(job)) { // Elven Blessing 精靈的祝福
+            return 80001040;
+        } else if (JobConstants.isPhantom(job)) { // Phantom Instinct 致命本能
+            return 80000002;
+        } else if (JobConstants.isLuminous(job)) { //波米艾特
+            return 80000005;
+        } else if (JobConstants.isShade(job)) { //死裡逃生
+            return 80000169;
+        }
+        //惡魔
+        else if (JobConstants.isDemonSlayer(job)) { // Fury Unleashed
+            return 80000001;
+        } else if (JobConstants.isDemonAvenger(job)) { // 狂暴鬥氣
+            return 80000050;
+        }
+
+        else if (JobConstants.isMihile(job)) { // Knight's Watch 光之守護
+            return 80001140;
+        }
+        else if (JobConstants.isZero(job)) { // Rhinne's blessing 時之祝福
+            return 80000110;
+        }
+
+        else if (JobConstants.isKaiser(job)) { // Iron Will
+            return 80000006;
+        } else if (JobConstants.isKain(job)) { // 事前準備
+            return 80003015;
+        } else if (JobConstants.isAngelicBuster(job)) { // Terms and Conditions
+            return 80001155;
+        } else if (JobConstants.isCadena(job)) { // Terms and Conditions 集中狂攻
+            return 80000261;
+        }
+
+        else if (JobConstants.isArk(job)) { // Solus
             return 80000514;
         } else if (JobConstants.isBeastTamer(job)) { // Focus Spirit
             return 80010006;
@@ -1448,46 +1536,20 @@ public class SkillConstants {
             return 80000070;
         } else if (JobConstants.isDemonAvenger(job)) { // Wild Rage
             return 80000050;
-        } else if (JobConstants.isDemonSlayer(job)) { // Fury Unleashed
-            return 80000001;
-            // } else if (JobConstants.isShade(job)) { // Close Call
-            //      return 80000169;
-        } else if (JobConstants.isEvan(job)) { // Rune Persistence
-            return 80000369;
-        } else if (JobConstants.isHayato(job)) { // Keen Edge
+        }  else if (JobConstants.isHayato(job)) { // Keen Edge
             return 80000003;
         } else if (JobConstants.isIllium(job)) { // Tide of Battle
             return 80000268;
         } else if (JobConstants.isJett(job)) { // Core Aura
             return 80001151;
-        } else if (JobConstants.isKaiser(job)) { // Iron Will
-            return 80000006;
         } else if (JobConstants.isKanna(job)) { // Elementalism
             return 80000004;
         } else if (JobConstants.isKinesis(job)) { // Judgment
             return 80000188;
         } else if (JobConstants.isLuminous(job)) { // Light Wash
             return 80000005;
-        } else if (JobConstants.isMercedes(job)) { // Elven Blessing
-            return 80001040;
-        }  else if (JobConstants.isMihile(job)) { // Knight's Watch
-            return 80001140;
-        } else if (JobConstants.isPhantom(job)) { // Phantom Instinct
-            return 80000002;
-        } else if (JobConstants.isXenon(job)) { // Hybrid Logic
+        }   else if (JobConstants.isXenon(job)) { // Hybrid Logic
             return 80000047;
-        } else if (JobConstants.isZero(job)) { // Rhinne's blessing
-            return 80000110;
-        }
-        // Resistance jobs (Spirit of Freedom)
-        else if (JobConstants.isBlaster(job)) {
-            return 80000378;
-        } else if (JobConstants.isBattleMage(job)) {
-            return 80000333;
-        } else if (JobConstants.isWildHunter(job)) {
-            return 80000334;
-        } else if (JobConstants.isMechanic(job)) {
-            return 80000335;
         }
         return 0;
     }
@@ -1680,11 +1742,15 @@ public class SkillConstants {
 
                 // Lef
             case Illium.SHELTER_RETURN:
+            case Adele.再訪:
 
                 // Others
             case BeastTamer.HOMEWARD_BOUND:
-            case Kinesis.RETURN_KINESIS:
+            case Kinesis.回歸_凱內西斯:
             case Zero.TEMPLE_RECALL:
+
+                //anima
+            case Lara.前往納林:
 
                 return true;
             default:
@@ -1746,7 +1812,7 @@ public class SkillConstants {
         return false;
     }
 
-    public static boolean isMultiAttackCooldownSkill(int skillID) {
+    public static boolean isMultiAttackCooldownSkill(int skillID) {//群攻
         switch (skillID) {
             case 5311010:
             case 5711021:
@@ -1786,7 +1852,7 @@ public class SkillConstants {
             case BowMaster.QUIVER_BARRAGE_ATOM:
             case Illium.LONGINUS_SPEAR:
             case NightLord.DARK_LORDS_OMEN:
-            case Kinesis.MIND_OVER_MATTER:
+            case Kinesis.終極_移動物質:
             case DarkKnight.RADIANT_EVIL:
             case Illium.REACTION_DESTRUCTION_II:
             case Job.GUIDED_ARROW:
@@ -1823,10 +1889,11 @@ public class SkillConstants {
             case BlazeWizard.CATACLYSM:
                 //  case Jett.FALLING_STARS:
 
-            case Kinesis.PSYCHIC_TORNADO:
+            case Kinesis.心靈龍捲風:
             case 400021009:
             case 400021010:
             case 400021011:
+            case Adele.碎片:
                 return true;
         }
         return false;

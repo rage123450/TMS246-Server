@@ -35,7 +35,7 @@ public class ClientSocket {
     public static OutPacket AuthCodeChanged() {
         OutPacket outPacket = new OutPacket(OutHeader.AUTH_CODE_CHANGED);
 
-        outPacket.encodeByte(0);
+        outPacket.encodeByte(1);//0?
         outPacket.encodeInt(0);
 
         return outPacket;

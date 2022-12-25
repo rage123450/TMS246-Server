@@ -1,5 +1,6 @@
 package net.swordie.ms.connection.packet;
 
+import net.swordie.ms.client.Client;
 import net.swordie.ms.client.character.Char;
 import net.swordie.ms.connection.OutPacket;
 import net.swordie.ms.handlers.header.OutHeader;
@@ -514,6 +515,7 @@ public class MobPool {
         outPacket.encodeInt(1); // unk
         outPacket.encodeInt(attackCount);
         outPacket.encodeInt(1); // unk
+        outPacket.encodeInt(1); // unk 248++
         outPacket.encodeInt(0); // unk loopSize
         // for (^) {
         //   encodeLong(0);
@@ -527,6 +529,52 @@ public class MobPool {
 
         outPacket.encodeInt(mobId);
         outPacket.encodeByte(chase);
+
+        return outPacket;
+    }
+
+    public static OutPacket hangOverReleaseReq() {
+        OutPacket outPacket = new OutPacket(OutHeader.MOB_HANG_OVER_RELEASE_REQUEST);
+
+        outPacket.encodeInt(0);
+
+        return outPacket;
+    }
+
+    public static OutPacket setTamingInfo(Char chr, boolean levelup) {
+        OutPacket outPacket = new OutPacket(OutHeader.SET_TAMING_MOB_INFO);
+        outPacket.encodeInt(chr.getId());
+        outPacket.encodeInt(1);//chr.getMount().getLevel()
+        outPacket.encodeInt(0);//chr.getMount().getExp()
+        outPacket.encodeInt(0);//chr.getMount().getFatigue()
+        outPacket.encodeByte(levelup ? 1 : 0);
+        return outPacket;
+    }
+
+    public static OutPacket getSmartNotice(int monsterid, int unk0, int unk1, int unk2, String txt) {
+        OutPacket outPacket = new OutPacket(OutHeader.SMART_MOB_NOTICE);
+        outPacket.encodeInt(unk0);
+        outPacket.encodeInt(monsterid);
+        outPacket.encodeInt(unk1);
+        outPacket.encodeInt(unk2);
+        outPacket.encodeString(txt);
+        return outPacket;
+    }
+
+    public static OutPacket changePhase(Mob mob) {
+        OutPacket outPacket = new OutPacket(OutHeader.CHANGE_PHASE);
+        outPacket.encodeInt(mob.getObjectId());
+        outPacket.encodeByte(mob.getPhase());
+        outPacket.encodeInt(0);
+
+        return outPacket;
+    }
+
+    public static OutPacket chaseEffectSet(Char chr,Mob mob) {
+        OutPacket outPacket = new OutPacket(OutHeader.CHASE_EFFECT_SET);
+        outPacket.encodeInt(chr.getId());
+        outPacket.encodeShort(1);
+        outPacket.encodeInt(mob.getObjectId());
 
         return outPacket;
     }
