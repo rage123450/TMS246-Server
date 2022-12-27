@@ -84,7 +84,8 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     IndieUNK5(65),
     IndiePartyDrop(66),
     IndieUnk63(67),
-    IndieStatCount(68),
+    IndieFloating(69),//飛行
+    IndieStatCount(78),
 
     PAD(79),//物理攻擊力
     DEF(80),//物理防御力
@@ -731,8 +732,9 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     None(-1),
     UNK248_448(448),
 
-    乙太(672),//?
+    乙太(672),
     創造(673),
+
     奇蹟(675),
     山不敗(742),//
     UNK248_763(763),
@@ -819,7 +821,8 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
             HayatoStance,HayatoBooster,HayatoStanceBonus,WillowDodge, Unk176_471,HayatoPAD,HayatoHPR,HayatoMPR,Jinsoku,
             HayatoCr,HakuBlessing,HayatoBoss, BattoujutsuAdvance, Unk176_483, Unk176_484,BlackHeartedCurse, EyeForEye,
             BeastMode,TeamRoar, Unk176_488, Unk176_489, Unk176_493, WaterSplashEventMarking, WaterSplashEventMarking2, WaterSplashEventCombo, WaterSplashEventWaterDripping,
-            Unk188_539, YukiMusumeShoukan, IaijutsuBlade, Unk199_595,Unk199_596,Unk199_597, BroAttack, LiberatedSpiritCircle, Unk205_640,山不敗,KinesisMind_Break,超載魔力,創造
+            Unk188_539, YukiMusumeShoukan, IaijutsuBlade, Unk199_595,Unk199_596,Unk199_597, BroAttack, LiberatedSpiritCircle, Unk205_640,山不敗,KinesisMind_Break,超載魔力,
+            乙太,創造,奇蹟
 
     );
 

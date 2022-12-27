@@ -965,6 +965,9 @@ public class WvsContext {
         return outPacket;
     }
 
+    public static OutPacket broadcastMessage(int type, String message){
+        return broadcastMessage(type, 0, message, false);
+    }
 
     public static OutPacket broadcastMessage(int type, int channel, String message, boolean megaEar) {
         OutPacket outPacket = new OutPacket(OutHeader.BROADCAST_MSG);

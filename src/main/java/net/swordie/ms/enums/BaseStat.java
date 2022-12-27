@@ -445,6 +445,11 @@ public enum BaseStat {
             case IndieArcaneForce:
                 stats.put(arc, o.nValue);
                 break;
+                /*
+            case 乙太:
+                stats.put(arc, o.nValue);
+                break;
+                */
 
 				
             default:

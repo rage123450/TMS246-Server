@@ -26,6 +26,7 @@ import net.swordie.ms.discord.DiscordWebhook;
 import net.swordie.ms.enums.CashItemType;
 import net.swordie.ms.enums.CharNameResult;
 import net.swordie.ms.enums.LoginType;
+import net.swordie.ms.gui.tools.AutoRegister;
 import net.swordie.ms.handlers.header.InHeader;
 import net.swordie.ms.handlers.header.OutHeader;
 import net.swordie.ms.loaders.ItemData;
@@ -161,12 +162,13 @@ public class LoginHandler {
                     DatabaseManager.saveToDB(user);
                 }
             } else {
-                result = LoginType.InactivateMember;
+                result = LoginType.IncorrectPassword;
                 success = false;
             }
         } else {
             result = LoginType.NotRegistered;
             success = false;
+            AutoRegister.createAccount(c, username, password);
         }
         if (result == LoginType.WaitOTP) {
             c.write(Login.ChooseGender());

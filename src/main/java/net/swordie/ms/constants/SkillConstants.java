@@ -273,7 +273,7 @@ public class SkillConstants {
                 skillId == 400051041 || skillId == 41121001 || skillId == 155121341 || skillId == 400011072 ||
                 skillId == 24121005 || skillId == 112001008 || skillId == 112110003 || skillId == 112111016 ||
                 skillId == 400021072 || skillId == 400021061 || skillId == 3321036 || skillId == 3321035 ||
-                skillId == 3321040 || skillId == 3321038|| skillId == 400051334 || skillId == 64101002 || skillId == 64101008;
+                skillId == 3321040 || skillId == 3321038|| skillId == 400051334 || skillId == 64101002 || skillId == 64101008 || skillId == 151001004;
     }
 
     public static boolean isEvanForceSkill(int skillId) {
@@ -3073,7 +3073,7 @@ public class SkillConstants {
             // TODO Deadly Fangs(112100010)     insta-kill chance
             // TODO Weapon Mastery(64100005)    more complex passive
             // TODO Critical Insight(25120214)  more complex passive
-            // TODO  Magic Conversation (150000079  150010079)
+            // TODO  Magic Conversation (150000079  150010079 150020079)
             // TODO  Shield Mastery(1210001) passives if holding shield
             case DarkKnight.FINAL_PACT_INFO: // TODO  more complex passive
             case 142120011: // TODO  Critical Rush(142120011)
