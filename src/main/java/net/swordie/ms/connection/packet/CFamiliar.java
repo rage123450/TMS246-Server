@@ -108,6 +108,39 @@ public class CFamiliar {
         return outPacket;
     }
 
+    public static OutPacket CreateSwordReadyObtacle(Char chr, int skillid, int count) {
+        OutPacket outPacket = new OutPacket(OutHeader.FAMILIAR_HIT);
+        outPacket.encodeInt(chr.getId());
+        outPacket.encodeInt(2);
+        for (int i = 1; i <= 2; i++) {
+            outPacket.encodeInt((i == 1) ? ((count - 1) * 10) : (count * 10));
+            outPacket.encodeInt(0);
+            outPacket.encodeInt((i == 1) ? (count - 1) : count);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(chr.getId());
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(skillid);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(1);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(chr.getPosition().getX());
+            outPacket.encodeInt(1);
+            outPacket.encodeByte(0);
+            outPacket.encodeByte(0);
+            outPacket.encodeByte(0);
+            outPacket.encodeInt(0);
+        }
+        outPacket.encodeInt(0);
+        return outPacket;
+    }
+
     public static OutPacket removeSecondAtom(Char chr, int count) {
         OutPacket outPacket = new OutPacket(OutHeader.FAMILIAR_TRANSFER_FIELD);
         outPacket.encodeInt(chr.getId());

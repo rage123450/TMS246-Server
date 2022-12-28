@@ -14,6 +14,7 @@ import java.util.Set;
 public class JobConstants {
 
     public static final boolean enableJobs = true;
+    // UI.wz/Login.img/RaceSelect_new/order
     public static final int jobOrder = 245;
 
     public static JobEnum getJobEnumById(short jobId) {

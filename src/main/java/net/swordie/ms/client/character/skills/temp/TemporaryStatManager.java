@@ -326,9 +326,9 @@ public class TemporaryStatManager {
                 .filter(cts -> cts.getOrder() != -1)
                 .sorted(Comparator.comparingInt(CharacterTemporaryStat::getOrder))
                 .collect(Collectors.toList());
-        int[] mask = getMaskByCollection(collection);//33554432
+        int[] mask = getMaskByCollection(collection);
         for (int i = 0; i < getNewMask().length; i++) {
-            outPacket.encodeInt(mask[i]);//i = 24
+            outPacket.encodeInt(mask[i]);
         }
 
         for (CharacterTemporaryStat cts : orderedAndFilteredCtsList) {
