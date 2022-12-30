@@ -6,6 +6,7 @@ import net.swordie.ms.connection.InPacket;
 import net.swordie.ms.connection.OutPacket;
 import net.swordie.ms.life.Life;
 import net.swordie.ms.util.Position;
+import net.swordie.ms.util.Util;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class MovementInfo implements Encodable {
         oldPos = inPacket.decodePosition();
         oldVPos = inPacket.decodePosition();
         movements = parseMovement(inPacket);
-        keyPadState = inPacket.decodeByte();
+        //keyPadState = inPacket.decodeByte();
     }
 
     @Override
@@ -65,7 +66,7 @@ public class MovementInfo implements Encodable {
         for(Movement m : movements) {
             m.encode(outPacket);
         }
-        outPacket.encodeByte(keyPadState);
+        //outPacket.encodeByte(keyPadState);
     }
 
     private static List<Movement> parseMovement(InPacket inPacket) {
@@ -75,7 +76,7 @@ public class MovementInfo implements Encodable {
         int size = inPacket.decodeShort();
         for (int i = 0; i < size; i++) {
             byte type = inPacket.decodeByte();
-           // System.err.println("move type " + type);
+            //System.err.println("move type " + type);
             switch (type) {
                 case 0:
                 case 8:
@@ -206,6 +207,9 @@ public class MovementInfo implements Encodable {
                     res.add(new MovementAction(inPacket, type));
                     break;
             }
+        }
+        if (size != res.size()) {
+            return null;
         }
         return res;
     }

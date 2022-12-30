@@ -50,6 +50,7 @@ public class CFamiliar {
 
         outPacket.encodeInt(charID);
         outPacket.encodeByte(0); // ?
+        outPacket.encodeByte(0); // ?
         outPacket.encodeByte(attackInfo.idk);
         outPacket.encodeByte(attackInfo.mobCount);
         for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
@@ -72,82 +73,6 @@ public class CFamiliar {
         outPacket.encodeInt(familiar.getFatigue());
         outPacket.encodeFT(familiar.getExpiration());
 
-        return outPacket;
-    }
-
-    public static OutPacket CreateSubObtacle(Char chr, int skillid) {
-        OutPacket outPacket = new OutPacket(OutHeader.FAMILIAR_HIT);
-        outPacket.encodeInt(chr.getId());
-        outPacket.encodeInt(5);
-        for (int i = 1; i <= 5; i++) {
-            outPacket.encodeInt(i);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(i-1);
-            outPacket.encodeInt(chr.getId());
-            outPacket.encodeInt(0);
-            outPacket.encodeInt((i == 2 || i == 3) ? 120 : ((i == 4 || i == 5) ? 240 : 0));
-            outPacket.encodeInt(600);
-            outPacket.encodeInt((i == 2) ? 15 : ((i == 3) ? -15 : ((i == 4) ? 30 : ((i == 5) ? -30 : 0))));
-            outPacket.encodeInt(skillid);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(2400);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(1);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt((i == 1) ? chr.getPosition().getX() : ((i == 2) ? (chr.getPosition().getX() + 40) : ((i == 3) ? (chr.getPosition().getX() - 40) : ((i == 4) ? (chr.getPosition().getX() + 80) : ((i == 5) ? (chr.getPosition().getX() - 80) : 0)))));
-            outPacket.encodeInt((i == 1) ? (chr.getPosition().getY() - 110) : ((i == 2 || i == 3) ? (chr.getPosition().getY() - 100) : ((i == 4 || i == 5) ? (chr.getPosition().getY() - 90) : 0)));
-            outPacket.encodeByte(0);
-            outPacket.encodeByte(0);
-            outPacket.encodeByte(0);
-            outPacket.encodeInt(0);
-        }
-        outPacket.encodeInt(0);
-        return outPacket;
-    }
-
-    public static OutPacket CreateSwordReadyObtacle(Char chr, int skillid, int count) {
-        OutPacket outPacket = new OutPacket(OutHeader.FAMILIAR_HIT);
-        outPacket.encodeInt(chr.getId());
-        outPacket.encodeInt(2);
-        for (int i = 1; i <= 2; i++) {
-            outPacket.encodeInt((i == 1) ? ((count - 1) * 10) : (count * 10));
-            outPacket.encodeInt(0);
-            outPacket.encodeInt((i == 1) ? (count - 1) : count);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(chr.getId());
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(skillid);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(1);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(0);
-            outPacket.encodeInt(chr.getPosition().getX());
-            outPacket.encodeInt(1);
-            outPacket.encodeByte(0);
-            outPacket.encodeByte(0);
-            outPacket.encodeByte(0);
-            outPacket.encodeInt(0);
-        }
-        outPacket.encodeInt(0);
-        return outPacket;
-    }
-
-    public static OutPacket removeSecondAtom(Char chr, int count) {
-        OutPacket outPacket = new OutPacket(OutHeader.FAMILIAR_TRANSFER_FIELD);
-        outPacket.encodeInt(chr.getId());
-        outPacket.encodeInt(1);
-        outPacket.encodeInt(count);
-        outPacket.encodeInt(0);
-        outPacket.encodeInt(2);
         return outPacket;
     }
 }

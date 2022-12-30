@@ -52,8 +52,8 @@ public class Illium extends Job {
 
     public static final int REACTION_DESTRUCTION = 152100001;
     public static final int REACTION_DOMINATION = 152100002;
-    public static final int DEPLOY_CRYSTAL = 152101000;
-    public static final int REPOSITION_CRYSTAL = 152101003;
+    public static final int DEPLOY_CRYSTAL = 152101000;//古代水晶
+    public static final int REPOSITION_CRYSTAL = 152101003;//水晶控制
     public static final int CRYSTAL_BATTERY = 152100010;
     public static final int VORTEX_OF_LIGHT = 152101006;
     public static final int UMBRAL_BRAND = 152100012;
@@ -82,7 +82,7 @@ public class Illium extends Job {
     public static final int DEUS_SUB = 152121006;
 
     public static final int LONGINUS_ZONE = 152121041;
-    public static final int DIVINE_WRATH = 152121042;
+    public static final int 神之種族 = 152121042;
     public static final int CRYSTALLINE_BULWARK = 152121043;
 
     // V skills
@@ -420,7 +420,7 @@ public class Illium extends Job {
                 o1.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndieStatR, o1);
                 break;
-            case DIVINE_WRATH:
+            case 神之種族:
                 o1.nReason = skillID;
                 o1.nValue = si.getValue(indieDamR, slv);
                 o1.tTerm = si.getValue(time, slv);

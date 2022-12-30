@@ -819,9 +819,9 @@ public enum OutHeader {
     FAMILIAR_ENTER_FIELD(842), // *
     FAMILIAR_MOVE(843), // *
     FAMILIAR_HIT(844),//CreateSubObtacle
-    FAMILIAR_ATTACK(845), // *
-    FAMILIAR_RENAME(846),
-    FAMILIAR_TRANSFER_FIELD(847),
+    FAMILIAR_ATTACK(845), // *ATTACK_SECOND_ATOM
+    FAMILIAR_RENAME(846),//
+    FAMILIAR_TRANSFER_FIELD(847),//REMOVE_SECOND_ATOM
     FAMILIAR_UPDATE_INFO(848),
 
     // CUserRemote::OnPacket 248
@@ -1162,6 +1162,8 @@ public enum OutHeader {
     UNK203_1083(1118), //
     // empty op
     UNK203_1085(1119), //
+
+    穿刺(1121),
     //
     //
     SKILL_COOLTIME_SET(1251), //
@@ -1223,14 +1225,14 @@ public enum OutHeader {
     MOB_DAMAGED_BY_SKILL(1303), // 248
     //
     MOB_SPECIAL_EFFECT_BY_SKILL(1305), // 248
-    MOB_CRC_DATA_REQUEST(1306), //
     //
     //
-    MOB_HP_INDICATOR(1309), //
-    MOB_CATCH_EFFECT(1310), //
+    MOB_CRC_DATA_REQUEST(1308), //
+    MOB_HP_INDICATOR(1309), // 248
+    MOB_CATCH_EFFECT(1310), //抓捕怪物
     MOB_STEAL_EFFECT(1311), //
     MOB_EFFECT_BY_ITEM(1312), //
-    MOB_SPEAKING(1313), //
+    MOB_SPEAKING(1313), //怪物說話
     MOB_MESSAGING(1314), //
     MOB_SKILL_DELAY(1315), //
     ESCORT_FULL_PATH(1316), //

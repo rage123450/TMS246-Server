@@ -83,7 +83,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     IndiePartyExp(64),
     IndieUNK5(65),
     IndiePartyDrop(66),
-    IndieUnk63(67),
+    IndieUnk67(67),
     IndieFloating(69),//飛行
     IndieStatCount(78),
 
@@ -337,7 +337,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     IgnoreAllImmune(305),
     FinalJudgement(-1),
     Unk188_283(306),
-    IceAura(-1),
+
     FireAura(307),
     VengeanceOfAngel(308),
     HeavensDoor(309),
@@ -412,8 +412,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     UserControlMob(365),
     ImmuneBarrier(373), // *
     ArmorPiercing(374),
-    ZeroAuraStr(-1),
-    ZeroAuraSpd(-1),
+
     CriticalGrowing(375),
     RelicEmblem(371), // *
     QuickDraw(372), // *
@@ -718,25 +717,101 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     Unk205_639(639),
     Unk205_640(640),
 
-    EnergyCharged(641),
-    DashSpeed(642),
-    DashJump(643),
-    RideVehicle(644),
-    PartyBooster(645),
-    GuidedBullet(646),
-    Undead(647),
 
-    RideVehicleExpire(648),
-    RelicGauge(649),
 
-    None(-1),
-    UNK248_448(448),
 
+
+    DreamDowon(670),//按壓型 根據剩餘時間長短返還技能冷卻
+    意志之劍_重磅出擊(671),//凱薩5轉新技能
     乙太(672),
     創造(673),
-
+    護堤(674),
     奇蹟(675),
+    復原(676),
+    高潔精神(676),
+    魔劍共鳴(677),
+    //
+    //
+    //
+    //
+    //
+    //
+    IceAura(695),
+    //696
+    ZeroAuraStr(697),
+    ZeroAuraSpd(698),
+    //699
+    //700
+    亡靈(701),//惡復5轉新技
+    亡靈傷害(702),
+    殘影幻象(703),//弓箭手5轉共通技能
+    極冰風暴(704),
+    光子射線(705),
+    深淵閃電(706),
+    槍雷連擊(707),
+    皇家騎士(708),
+    火蜥蜴的惡作劇(709),
+    引力法則(710),
+    連射十字弓砲彈(711),
+    水晶之門(712),
+    飛閃起爆符(713),
+    仙技_天地人幻影(714),
+    黑暗靈氣(715),
+    武器變換終章(716),
+    解放寶珠(717),
+    解放寶珠動作(718),
+    自主武器(719),
+    遺跡解放_釋放(720),
+    //721
+    殘影衝擊(722),
+    //723
+    主導(724),
+    死亡祝福(725),
+    死亡降臨(726),
+    殘留憤恨(727),
+    掌握痛苦(728),
+    龍炸裂(729),
+    //730
+    //731
+    //732
+    事前準備(733),
+    啟動鬥氣爆發(734),
+    雪吉拉_火大了(735),
+    //736
+    //737
+    //738
+    魔術秀時間(739),
+    龍脈讀取(740),
+    山之種子(741),
     山不敗(742),//
+    吸收_潑江水(743),
+    吸收_凜冽的寒風(744),
+    吸收_陽光之力(745),
+    自由龍脈(746),
+    花中君子(747),
+    大自然夥伴(748),
+    //
+    //
+    //
+    海龍(751),
+    海龍石(752),
+    海龍螺旋(753),
+    神聖之水(754),
+    勝利之羽(755),
+    閃光幻象(756),
+    神聖之血(757),
+    EnergyCharged(758),//641-> 758
+    DashSpeed(759),
+    DashJump(760),
+    RideVehicle(761),
+    PartyBooster(762),
+    GuidedBullet(763),
+    Undead(764),
+    RideVehicleExpire(765),
+    RelicGauge(766),
+    死亡標記(767),
+    None(-1),
+
     UNK248_763(763),
     UNK248_764(764),
     UNK248_768(768),
@@ -822,7 +897,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
             HayatoCr,HakuBlessing,HayatoBoss, BattoujutsuAdvance, Unk176_483, Unk176_484,BlackHeartedCurse, EyeForEye,
             BeastMode,TeamRoar, Unk176_488, Unk176_489, Unk176_493, WaterSplashEventMarking, WaterSplashEventMarking2, WaterSplashEventCombo, WaterSplashEventWaterDripping,
             Unk188_539, YukiMusumeShoukan, IaijutsuBlade, Unk199_595,Unk199_596,Unk199_597, BroAttack, LiberatedSpiritCircle, Unk205_640,山不敗,KinesisMind_Break,超載魔力,
-            乙太,創造,奇蹟
+            DreamDowon,乙太,創造,奇蹟,魔劍共鳴
 
     );
 

@@ -39,7 +39,7 @@ import static net.swordie.ms.client.character.skills.temp.CharacterTemporaryStat
  * Created on 12/14/2017.
  */
 public class Xenon extends Job {
-    public static final int SUPPLY_SURPLUS = 30020232;
+    public static final int SUPPLY_SURPLUS = 30020232;//蓄能系統
     public static final int MULTILATERAL_I = 30020234;
     public static final int MODAL_SHIFT = 30021236;
     public static final int LIBERTY_BOOSTERS = 30021236;

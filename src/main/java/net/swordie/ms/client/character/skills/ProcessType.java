@@ -34,6 +34,7 @@ public class ProcessType {
                                 inPacket.decodeByte();
                                 inPacket.decodeInt();
                                 inPacket.decodeInt();
+                                inPacket.decodeArr(25);//??
                                 break;
                             case 3:
                                 inPacket.decodeByte();

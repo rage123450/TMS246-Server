@@ -23,10 +23,10 @@ import java.util.*;
  * Created on 1/23/2018.
  */
 public class GameConstants {
-    public static final int CHANNELS_PER_WORLD = 3;
-    public static final int BUFFED_CH_ST = 2;
-    public static final int BUFFED_CH_END = 3;
-    public static final int MOB_EXP_RATE = 10;
+    public static final int CHANNELS_PER_WORLD = 5;
+    public static final int BUFFED_CH_ST = 4;
+    public static final int BUFFED_CH_END = 5;
+    public static final int MOB_EXP_RATE = 10000;
     public static final int MOB_MESO_RATE = 10;
     public static final int MOB_DROP_RATE = 10;
     public static final short DAMAGE_SKIN_MAX_SIZE = 100;

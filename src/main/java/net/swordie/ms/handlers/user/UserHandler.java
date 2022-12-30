@@ -76,7 +76,9 @@ public class UserHandler {
         Char copy = chr.getCopy();
         if (copy != null) {
             chr.write(UserRemote.move(copy, movementInfo));
-        }        
+        }
+
+        /*
         if (chr.getPosition().getY() > 5000) {
             // failsafe when the char falls outside of the map
             Portal portal = field.getDefaultPortal();
@@ -84,7 +86,7 @@ public class UserHandler {
             chr.setPosition(position);
             chr.write(FieldPacket.teleport(position, chr));
         }
-
+*/
         // client has stopped moving. this might not be the best way
         if (chr.getMoveAction() == 4 || chr.getMoveAction() == 5) {
             TemporaryStatManager tsm = chr.getTemporaryStatManager();

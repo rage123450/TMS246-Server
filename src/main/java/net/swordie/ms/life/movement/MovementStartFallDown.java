@@ -30,6 +30,7 @@ public class MovementStartFallDown extends MovementBase {
         outPacket.encodeByte(getCommand());
         outPacket.encodePosition(getVPosition());
         outPacket.encodeShort(getFootStart());
+
         outPacket.encodeByte(getMoveAction());
         outPacket.encodeShort(getDuration());
         outPacket.encodeByte(getForcedStop());
