@@ -3445,6 +3445,7 @@ public class Char {
 
         toField.addChar(this);//生出NPC
         showProperUI(currentField != null ? currentField.getId() : -1, toField.getId());
+        write(ClientSocket.ChannelChangeEnable());
 
         if (isHide()) {
             write(FieldPacket.setHideEffect(true));

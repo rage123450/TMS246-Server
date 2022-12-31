@@ -537,7 +537,7 @@ public enum OutHeader {
     UNK203_491(514), // 
     UNK248_515(515), //
     UNK203_493(516), // 
-    UNK248_517(517), //
+    Channel_Change_Enable(517), //
     UNK203_495(518), // 
     UNK203_496(519), // 
     // blank
@@ -1050,7 +1050,7 @@ public enum OutHeader {
     UNK_881(1010), //
     BONUS_ATTACK_DELAY_REQUEST(1011), //
     CREATE_AREA_DOT_INFO(1012), //
-    UNK_883(1013), //
+    AREA_EXPLOSION_REQUEST(1049), // 248 done
     UNK200_969(1014), //
     SET_SLOW_DOWN(1015), //
     REGISTER_EXTRA_SKILL(1016), //

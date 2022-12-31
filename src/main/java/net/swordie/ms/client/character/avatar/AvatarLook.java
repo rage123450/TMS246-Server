@@ -293,7 +293,7 @@ public class AvatarLook {
             outPacket.encodeInt(0); // face acc?
         }
         if (JobConstants.isHoYeong((short) getJob())) {
-            outPacket.encodeInt(0);
+            outPacket.encodeInt(getDemonSlayerDefFaceAcc());
         }
         if (JobConstants.isXenon((short) getJob())) {
             outPacket.encodeInt(getXenonDefFaceAcc());

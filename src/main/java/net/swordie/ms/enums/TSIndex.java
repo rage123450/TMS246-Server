@@ -21,6 +21,7 @@ public enum TSIndex {
     Undead(6),
     RideVehicleExpire(7),
     RelicGauge(8), // could be on the wrong pos
+    SecondAtomLockOn(9),
     ;
     private final int index;
 
@@ -56,6 +57,8 @@ public enum TSIndex {
                 return CharacterTemporaryStat.RideVehicleExpire;
             case 8:
                 return CharacterTemporaryStat.RelicGauge;
+            case 9:
+                return CharacterTemporaryStat.死亡標記;
             default:
                 return null;
         }
@@ -81,6 +84,8 @@ public enum TSIndex {
                 return RideVehicleExpire;
             case RelicGauge:
                 return RelicGauge;
+            case 死亡標記:
+                return SecondAtomLockOn;
         }
         return null;
     }

@@ -32,6 +32,13 @@ public class ClientSocket {
         return outPacket;
     }
 
+    public static OutPacket ChannelChangeEnable() {
+        OutPacket outPacket = new OutPacket(OutHeader.Channel_Change_Enable);
+        outPacket.encodeInt(0xB3247D3F);
+        outPacket.encodeShort(0x14);
+        return outPacket;
+    }
+
     public static OutPacket AuthCodeChanged() {
         OutPacket outPacket = new OutPacket(OutHeader.AUTH_CODE_CHANGED);
 

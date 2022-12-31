@@ -1895,6 +1895,7 @@ public class SkillConstants {
             case 400021011:
             case Adele.碎片:
             case Adele.穿刺:
+            case Adele.綻放:
                 return true;
         }
         return false;

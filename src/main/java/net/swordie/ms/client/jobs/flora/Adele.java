@@ -3,10 +3,13 @@ package net.swordie.ms.client.jobs.flora;
 import net.swordie.ms.client.Client;
 import net.swordie.ms.client.character.Char;
 import net.swordie.ms.client.character.info.HitInfo;
+import net.swordie.ms.client.character.items.Item;
 import net.swordie.ms.client.character.skills.Option;
 import net.swordie.ms.client.character.skills.Skill;
+import net.swordie.ms.client.character.skills.SkillStat;
 import net.swordie.ms.client.character.skills.info.*;
 import net.swordie.ms.client.character.skills.temp.CharacterTemporaryStat;
+import net.swordie.ms.client.character.skills.temp.TemporaryStatBase;
 import net.swordie.ms.client.character.skills.temp.TemporaryStatManager;
 import net.swordie.ms.client.jobs.Job;
 import net.swordie.ms.connection.InPacket;
@@ -15,10 +18,15 @@ import net.swordie.ms.constants.JobConstants;
 import net.swordie.ms.enums.*;
 import net.swordie.ms.handlers.EventManager;
 import net.swordie.ms.life.*;
+import net.swordie.ms.life.mob.Mob;
+import net.swordie.ms.life.mob.MobStat;
+import net.swordie.ms.life.mob.MobTemporaryStat;
 import net.swordie.ms.loaders.ItemData;
 import net.swordie.ms.loaders.SkillData;
 import net.swordie.ms.util.Position;
 import net.swordie.ms.util.Randomizer;
+import net.swordie.ms.util.Rect;
+import net.swordie.ms.util.container.Tuple;
 import net.swordie.ms.world.field.Field;
 
 import java.util.*;
@@ -39,55 +47,58 @@ public class Adele extends Job {
     public static final int 信念 = 150020006;//完成某任務會給
 
     //1轉
-    public static final int 平砍 = 151001000;
-    public static final int 懸浮 = 151001004;
     public static final int 碎片 = 151001001;
+    public static final int 懸浮 = 151001004;
 
     //2轉
     public static final int 乙太 = 151100017;
-    public static final int 乙太結晶 = 151100002;
     public static final int 刺擊 = 151101000;
-    public static final int 創造 = 151101006;
     public static final int 穿刺 = 151101001;
+    public static final int 乙太結晶 = 151100002;
     public static final int 魔劍共鳴 = 151101003;
-    public static final int 奇蹟 = 151101013;
+    public static final int 魔劍共鳴_1 = 151101004;
+    public static final int 魔劍共鳴_2 = 151101010;
     public static final int 推進器 = 151101005;
+    public static final int 創造 = 151101006;
+    public static final int 創造_1 = 151101007;
+    public static final int 創造_2 = 151101008;
+    public static final int 創造_3 = 151101009;
+    public static final int 奇蹟 = 151101013;
 
     //3轉
     public static final int 十字斬 = 151111000;
+    public static final int 劍域 = 151111001;
     public static final int 回歸 = 151111002;
     public static final int 追蹤 = 151111003;
-    public static final int 綻放 = 151121003;
     public static final int 羽翼 = 151111004;
+    public static final int 高潔精神 = 151111005;
 
     //4轉
+    public static final int 高級乙太 = 151120012;
     public static final int 切割 = 151121000;
-    public static final int 踐踏 = 151121002;
-    public static final int 雷普勇士的意志 = 151121006;
-    public static final int 雷普的勇士 = 151121005;
     public static final int 死亡標記 = 151121001;
-
-    public static final int SPELL_BULLETS = 155001103;
-    public static final int SPECTER_STATE = 155000007;
-    public static final int CORRUPTION_COOLDOWN = 155001008;
-
-    public static final int MASTER_CORRUPTION = 155101006;
-    public static final int ENHANCED_SPECTRA = 155120034;
+    public static final int 踐踏 = 151121002;
+    public static final int 綻放 = 151121003;
+    public static final int 護堤 = 151121004;
+    public static final int 雷普的勇士 = 151121005;
+    public static final int 雷普勇士的意志 = 151121006;
 
     // Hyper Skills
+    public static final int 狂風 = 151121040;
+    public static final int 魔力爆裂 = 151121041;
     public static final int 神之種族 = 151121042;
-    public static final int 無限 = 400011108;
-
     public static final int 魔劍共鳴_額外治癒 = 151120034;
 
-
     // V skills
+    public static final int 無限 = 400011108;
+    public static final int 復原 = 400011109;
 
     private int 乙太量;
     private int 乙太劍;
     public int 激活乙太劍;
 
     public final int max = chr.getSkillLevel(151120012) > 0 ? 400 : 300;
+    private List<Summon> summonList = new ArrayList<>();
 
 
     private ScheduledFuture spectraEnergyTimer;
@@ -201,19 +212,29 @@ public class Adele extends Job {
                     ++size;
                 }
                 if (size > 6) {
-                    summon.broadcastLeavePacket();
+                    chr.getField().removeLife(summon);
+                    //summon.broadcastLeavePacket();
                     //chr.getField().broadcastPacket(Summoned.summonedRemoved(summon, LeaveType.ANIMATION));
                 }
             }
-            Summon summon;
-            summon = Summon.getSummonByNoCTS(chr, 乙太結晶, slv);
-            summon.setMoveAbility(MoveAbility.Stop);
-            summon.setObjectId(乙太結晶);
-            summon.setMobTemplateId(乙太結晶);
+            Summon summon = Summon.getSummonByNoCTS(chr, 乙太結晶, slv);;
             summon.setPosition(pos);
-            summon.setHp(10000);
-            chr.getSummons();
-            field.spawnSummon(summon);
+            summon.setMoveAction((byte) 4);
+            summon.setCurFoothold((short) 0);
+            summon.setMoveAbility(MoveAbility.Stop);
+            summon.setAssistType(AssistType.None);
+            summon.setEnterType(EnterType.NoAnimation);
+            summon.setFlyMob(false);
+            summon.setBeforeFirstAttack(true);
+            summon.setAttackActive(true);
+            summon.setSummonTerm(30);
+            summonList.add(summon);
+            if (summonList.size() > 7) {
+                chr.getField().removeLife(summonList.get(0));
+                summonList.remove(0);
+            }
+
+            field.spawnAddSummon(summon);
             if (!nocooltime) {
                 chr.setSkillCustomInfo(乙太結晶, 0L, 4000L);
             }
@@ -318,9 +339,9 @@ public class Adele extends Job {
                     乙太結晶(chr, summon.getPosition(), false);
                     break;
                 }
-                case 151101007:
-                case 151101008:
-                case 151101009: {
+                case 創造_1:
+                case 創造_2:
+                case 創造_3: {
                     if (!Randomizer.isSuccess(30) || !hasHitMobs) {
                         break;
                     }
@@ -331,27 +352,63 @@ public class Adele extends Job {
         }
         switch (attackInfo.skillId) {
             case 魔劍共鳴:
-            case 151101004:
-                if (hasHitMobs) {
-                    if (tsm.hasStat(CharacterTemporaryStat.魔劍共鳴)) {
-                        chr.removeSkillCustomInfo(151101010);
+            case 魔劍共鳴_1:
+                si = SkillData.getSkillInfoById(魔劍共鳴_2);
+                int amount = 1;
+                if (tsm.hasStat(CharacterTemporaryStat.魔劍共鳴)) {
+                    amount = tsm.getOption(CharacterTemporaryStat.魔劍共鳴).xOption;
+                    if (amount < 3) {
+                        amount++;
                     }
-                    o1.nValue = si.getValue(z, slv);
-                    o1.nReason = skillID;
-                    tsm.putCharacterStatValue(IndieCrDmg, o1);
-                    o2.nOption = si.getValue(y, slv);
-                    o2.rOption = skillID;
-                    o2.tOption = si.getValue(time, slv);
-                    tsm.putCharacterStatValue(CharacterTemporaryStat.魔劍共鳴, o2);
-                    tsm.sendSetStatPacket();
                 }
+                o1.nValue = si.getValue(SkillStat.z, slv) * amount;
+                o1.nReason = 魔劍共鳴_2;
+                o1.tTerm = si.getValue(SkillStat.time, slv);
+                tsm.putCharacterStatValue(CharacterTemporaryStat.IndieIgnoreMobpdpR, o1);
+                o2.nOption = amount; //idk
+                o2.xOption = amount;
+                o2.yOption = si.getValue(SkillStat.y, slv) * amount;
+                o2.rOption = 魔劍共鳴_2;
+                o2.tOption = si.getValue(SkillStat.time, slv) * 2;
+                tsm.putCharacterStatValue(CharacterTemporaryStat.魔劍共鳴, o2);
+                tsm.sendSetStatPacket();
                 break;
             case 死亡標記:
                 if (hasHitMobs) {
+                    for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
+                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
+                        if (mob == null) {
+                            continue;
+                        }
+                        TemporaryStatBase tsb = tsm.getTSBByTSIndex(TSIndex.SecondAtomLockOn);
+                        tsb.setNOption(1);
+                        tsb.setROption(skillID);
+                        tsb.setXOption(mob.getObjectId());
+                        tsb.setYOption(skillID);
+                        tsb.setExpireTerm(1080);
+                        tsm.putCharacterStatValue(CharacterTemporaryStat.死亡標記, tsb.getOption());
+                        tsm.sendSetStatPacket();
+                    }
+                    /*
                     chr.setSkillCustomInfo(死亡標記, summon.getObjectId(), 0L);
                     if (chr.getSkillCustomValue0(死亡標記) != (long) summon.getObjectId()) {
                         chr.removeSkillCustomInfo(死亡標記);
                     }
+
+                     */
+                }
+                break;
+            case 狂風:
+                o1.nOption = 1;
+                o1.rOption = skill.getSkillId();
+                o1.tOption = si.getValue(SkillStat.time, slv);
+                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
+                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
+                    if (mob == null) {
+                        continue;
+                    }
+                    MobTemporaryStat mts = mob.getTemporaryStat();
+                    mts.addStatOptionsAndBroadcast(MobStat.Stun, o1);
                 }
                 break;
         }
@@ -399,14 +456,14 @@ public class Adele extends Job {
                 tsm.sendSetStatPacket();
                 break;
             case 懸浮:
-                o2.nOption = 5;
-                o2.rOption = skillID;
-                o2.tOption = si.getValue(time, slv) / 1000 - 1;
-                tsm.putCharacterStatValue(NewFlying, o2);
-                //o1.nValue = 1;
                 o1.nReason = skillID;
-                o1.tTerm = si.getValue(time, slv) / 1000;
+                o1.nValue = 50;
+                o1.tTerm = si.getValue(SkillStat.time, slv); // 1900/1000
                 tsm.putCharacterStatValue(IndieFloating, o1);
+                o2.nOption = 50;
+                o2.rOption = skillID;
+                o2.tOption = si.getValue(time, slv) / 1000;
+                tsm.putCharacterStatValue(NewFlying, o2);
                 tsm.sendSetStatPacket();
                 break;
             case 創造:
@@ -439,12 +496,15 @@ public class Adele extends Job {
                 tsm.sendSetStatPacket();
                 break;
             case 魔劍共鳴:
+                /*
                 final int objectId = inPacket.decodeInt();
                 final Summon summon = chr.getField().getSummonByChrAndSkillId(chr, objectId);
                 summon.getMobTemplateId();
                 if (summon != null) {
                     summon.broadcastLeavePacket();
                 }
+                */
+                chr.getField().removeLife(skillUseInfo.objectId, true);
                 if (chr.getSkillLevel(151120034) > 0) {
                     乙太處理器(chr, 20, skillID, false);
                     break;
@@ -453,8 +513,17 @@ public class Adele extends Job {
             case 神之種族:
                 o1.nReason = skillID;
                 o1.nValue = si.getValue(indieDamR, slv);
-                o1.tTerm = si.getValue(time, slv);
+                o1.tTerm = si.getValue(SkillStat.time, slv);
                 tsm.putCharacterStatValue(IndieDamR, o1);
+                tsm.sendSetStatPacket();
+                break;
+            case 高潔精神:
+                o1.rOption = skillID;
+                o1.nOption = 10; //Sniff
+                o1.tOption = si.getValue(SkillStat.time, slv);
+                o1.xOption = si.getValue(SkillStat.x, slv);
+                o1.yOption = si.getValue(SkillStat.y, slv);
+                tsm.putCharacterStatValue(CharacterTemporaryStat.高潔精神, o1);
                 tsm.sendSetStatPacket();
                 break;
             case 追蹤:
@@ -478,19 +547,38 @@ public class Adele extends Job {
             case 羽翼:
                 乙太處理器(chr, -30, skillID, false);
                 break;
+            case 復原:
+                o1.nReason = skillID;
+                o1.nValue = si.getValue(SkillStat.indieDamR, slv);
+                o1.tTerm = si.getValue(SkillStat.time, slv);
+                tsm.putCharacterStatValue(CharacterTemporaryStat.IndieDamR, o1);
+                o2.rOption = skillID;
+                o2.nOption = 1;
+                o2.tOption = si.getValue(SkillStat.time, slv);
+                tsm.putCharacterStatValue(CharacterTemporaryStat.高潔精神, o1);
+                tsm.sendSetStatPacket();
+                break;
+            case 魔力爆裂://inpacket 264 outpacket 1449*7
+                List<Rect> shardRects = new ArrayList<>();
+                for (Tuple<Integer, Position> shard : skillUseInfo.shardsPositions) {
+                    Position shardPosition = shard.getRight();
+                    Rect shardRect = shardPosition.getRectAround(si.getLastRect());
+                    shardRects.add(shardRect);
+                    AffectedArea aa = AffectedArea.getPassiveAA(chr, 魔力爆裂, slv);
+                    aa.setSkillID(魔力爆裂);
+                    aa.setPosition(shard.getRight());
+                    aa.setDelay((short) 3);
+                    aa.setDuration(1590);
+                    aa.setRect(shard.getRight().getRectAround(si.getLastRect()));
+                    aa.setHitMob(shard.getLeft() != 0);
+                    chr.getField().spawnAffectedArea(aa);
+                }
+                chr.write(UserLocal.adeleShardBreakerResult(魔力爆裂, shardRects));
+                break;
         }
         if (tsm.hasStat(CharacterTemporaryStat.創造)){
             乙太處理器(chr, 0, 0, true);
         }
-    }
-
-    private void createEther(List<Wreckage> wreckageList) {
-        TemporaryStatManager tsm = chr.getTemporaryStatManager();
-        Field field = chr.getField();
-        for (Wreckage wreckage : wreckageList) {
-
-        }
-        field.removeWreckage(chr, wreckageList);
     }
 
     @Override
@@ -517,9 +605,6 @@ public class Adele extends Job {
         super.handleLevelUp();
         short level = chr.getLevel();
         switch (level) {
-            case 10:
-                handleJobAdvance(JobConstants.JobEnum.ADELE_1.getJobId());
-                break;
             case 30:
                 handleJobAdvance(JobConstants.JobEnum.ADELE_2.getJobId());
                 break;
@@ -535,14 +620,19 @@ public class Adele extends Job {
     @Override
     public void handleJobStart() {
         super.handleJobStart();
+        handleJobAdvance(JobConstants.JobEnum.ADELE_1.getJobId());
+        chr.addSpToJobByCurrentJob(3);
         handleJobEnd();
     }
 
     @Override
     public void handleJobEnd() {
         super.handleJobEnd();
-        handleJobAdvance(JobConstants.JobEnum.ADELE_1.getJobId());
-        chr.forceUpdateSecondary(null, ItemData.getItemDeepCopy(1353600)); // Initial Path (2ndary)
-        chr.addSpToJobByCurrentJob(3);
+        //chr.forceUpdateSecondary(null, ItemData.getItemDeepCopy(1353600)); // Initial Path (2ndary)
+        Item secondary = ItemData.getItemDeepCopy(1354000); // unk
+        if (secondary != null) {
+            chr.addItemToInventory(secondary);
+        }
+
     }
 }

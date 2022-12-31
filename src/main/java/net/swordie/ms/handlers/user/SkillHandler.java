@@ -20,6 +20,7 @@ import net.swordie.ms.client.character.skills.temp.TemporaryStatManager;
 import net.swordie.ms.client.jobs.Job;
 import net.swordie.ms.client.jobs.adventurer.magician.FirePoison;
 import net.swordie.ms.client.jobs.cygnus.DawnWarrior;
+import net.swordie.ms.client.jobs.flora.Adele;
 import net.swordie.ms.client.jobs.legend.Evan;
 import net.swordie.ms.client.party.PartyMember;
 import net.swordie.ms.connection.InPacket;
@@ -326,6 +327,9 @@ public class SkillHandler {
 
         if (skillID == 400041021) { // Blades of Destiny
             chr.write(UserLocal.skillUseResult((byte) 1, skillID));
+        }
+        if (skillID == Adele.魔劍共鳴) {
+            skillUseInfo.objectId = inPacket.decodeInt();
         }
 
         boolean isByUnreliableMemory = option == 1824;

@@ -76,12 +76,6 @@ public class TestPacket {
         return outPacket;
     }
 
-    public static OutPacket test517() {
-        OutPacket outPacket = new OutPacket(OutHeader.UNK248_517);
-        outPacket.encodeArr("3F 7D 24 B3 01 00 DD 05 67 A1 35 48 E4 40 E4 CA 47 E0 55 16 D9 01");
-        return outPacket;
-    }
-
     public static OutPacket test527() {
         OutPacket outPacket = new OutPacket(OutHeader.UNK248_527);
         outPacket.encodeByte(0);
