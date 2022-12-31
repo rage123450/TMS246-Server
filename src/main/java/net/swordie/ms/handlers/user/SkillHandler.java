@@ -20,6 +20,7 @@ import net.swordie.ms.client.character.skills.temp.TemporaryStatManager;
 import net.swordie.ms.client.jobs.Job;
 import net.swordie.ms.client.jobs.adventurer.magician.FirePoison;
 import net.swordie.ms.client.jobs.cygnus.DawnWarrior;
+import net.swordie.ms.client.jobs.flora.Adele;
 import net.swordie.ms.client.jobs.legend.Evan;
 import net.swordie.ms.client.party.PartyMember;
 import net.swordie.ms.connection.InPacket;
@@ -316,16 +317,19 @@ public class SkillHandler {
         int slv = inPacket.decodeInt();
         new ProcessType(skillUseInfo).decode(inPacket); // Not using anything from Process type as of now
         int option = inPacket.decodeInt();
+        /*
         if (((option >> 4) & 1) != 0) {
             inPacket.decodeShort();
             inPacket.decodeShort();
         }
+        */
+        inPacket.decodeArr(3);
 
         if (skillID == 400041021) { // Blades of Destiny
             chr.write(UserLocal.skillUseResult((byte) 1, skillID));
         }
-        if (skillID == 151001001) {
-            chr.write(CFamiliar.CreateSubObtacle(chr , skillID));
+        if (skillID == Adele.魔劍共鳴) {
+            skillUseInfo.objectId = inPacket.decodeInt();
         }
 
         boolean isByUnreliableMemory = option == 1824;

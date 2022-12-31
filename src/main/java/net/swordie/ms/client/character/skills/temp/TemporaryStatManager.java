@@ -411,6 +411,7 @@ public class TemporaryStatManager {
         }
         if (hasNewStat(AntiMagicShell)) {
             outPacket.encodeByte(getOption(AntiMagicShell).bOption);
+            //int?
         }
         if (hasNewStat(Larkness)) {
             getLarknessManager().encode(outPacket);
@@ -763,6 +764,11 @@ public class TemporaryStatManager {
         }
         if (hasNewStat(UNK248_771)) {
             outPacket.encodeInt(getOption(UNK248_771).xOption);
+        }
+
+        if (hasNewStat(魔劍共鳴)) {
+            outPacket.encodeInt(getOption(魔劍共鳴).yOption);
+            outPacket.encodeInt(getOption(魔劍共鳴).zOption);
         }
 
         getNewStats().clear();

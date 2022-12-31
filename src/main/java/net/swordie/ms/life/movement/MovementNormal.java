@@ -35,7 +35,6 @@ public class MovementNormal extends MovementBase {
             offset = new Position(xoffset, yoffset);
             unk = inPacket.decodeShort(); // new 202
 
-
             moveAction = inPacket.decodeByte();
             elapse = inPacket.decodeShort();
             forcedStop = inPacket.decodeByte();
@@ -52,6 +51,7 @@ public class MovementNormal extends MovementBase {
         }
         outPacket.encodePosition(getOffset());
         outPacket.encodeShort(getUnk());
+
         outPacket.encodeByte(getMoveAction());
         outPacket.encodeShort(getDuration());
         outPacket.encodeByte(getForcedStop());

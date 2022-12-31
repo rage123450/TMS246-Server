@@ -10,6 +10,7 @@ import net.swordie.ms.client.character.skills.temp.TemporaryStatManager;
 import net.swordie.ms.client.jobs.Job;
 import net.swordie.ms.client.jobs.adventurer.archer.BowMaster;
 import net.swordie.ms.client.jobs.cygnus.NightWalker;
+import net.swordie.ms.client.jobs.flora.Adele;
 import net.swordie.ms.client.jobs.resistance.OpenGate;
 import net.swordie.ms.client.party.Party;
 import net.swordie.ms.client.party.PartyMember;
@@ -51,6 +52,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static net.swordie.ms.client.character.skills.SkillStat.mob;
 import static net.swordie.ms.client.character.skills.SkillStat.time;
 
 /**
@@ -534,7 +536,6 @@ public class Field {
         broadcastPacket(FieldPacket.addWreckage(wreckage, getWreckageByChrId(chr.getId()).size()));
         EventManager.addEvent(() -> removeWreckage(chr, wreckage), wreckage.getDuration(), TimeUnit.MILLISECONDS);
     }
-    
 
     public void removeWreckage(Char chr, Wreckage wreckage) {
         removeWreckage(chr, Arrays.asList(wreckage));
@@ -544,6 +545,29 @@ public class Field {
         broadcastPacket(FieldPacket.delWreckage(chr, wreckageList));
         for (Wreckage wreckage : wreckageList) {
             removeLife(wreckage);
+        }
+    }
+
+    public void spawnMagicSword(Char chr, MagicSword magicSword, final boolean core, Adele adele) {
+        addLife(magicSword);
+        broadcastPacket(SkillPacket.CreateSworldObtacle(magicSword));
+        EventManager.addEvent(() -> removeMagicSword(chr, magicSword, core, adele), magicSword.getDuration(), TimeUnit.MILLISECONDS);
+    }
+
+    public void removeMagicSword(Char chr, MagicSword magicSword, final boolean core, Adele adele) {
+        if (!core) {
+            adele.激活乙太劍--;
+            if (adele.激活乙太劍 < 0) {
+                adele.激活乙太劍 = 0;
+            }
+            removeMagicSword(chr, Arrays.asList(magicSword));
+        }
+    }
+
+    public void removeMagicSword(Char chr, List<MagicSword> magicSwordList) {
+        broadcastPacket(SkillPacket.removeSecondAtom(chr, magicSwordList.size()));
+        for (MagicSword magicSword : magicSwordList) {
+            removeLife(magicSword);
         }
     }
 
@@ -1031,6 +1055,10 @@ public class Field {
 
     public Summon getSummonByChrAndSkillIdInRect(Char chr, int skillId, Rect rect) {
         return getSummonsInRect(rect).stream().filter(s -> s.getSkillID() == skillId && s.getChr() == chr).findFirst().orElse(null);
+    }
+
+    public Summon getSummonByMobTemplateId(int mobTemplateId) {
+        return getSummons().stream().filter(s -> s.getMobTemplateId() == mobTemplateId).findFirst().orElse(null);
     }
 
     public synchronized void removeLife(int id, boolean fromSchedule) {

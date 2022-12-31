@@ -15,6 +15,7 @@ import net.swordie.ms.client.character.skills.temp.TemporaryStatManager;
 import net.swordie.ms.client.jobs.Job;
 import net.swordie.ms.connection.InPacket;
 import net.swordie.ms.connection.packet.Summoned;
+import net.swordie.ms.connection.packet.UserLocal;
 import net.swordie.ms.constants.JobConstants;
 import net.swordie.ms.enums.AssistType;
 import net.swordie.ms.enums.ForceAtomEnum;
@@ -27,6 +28,7 @@ import net.swordie.ms.util.Position;
 import net.swordie.ms.util.Rect;
 import net.swordie.ms.util.Util;
 import net.swordie.ms.world.field.Field;
+import org.graalvm.nativeimage.c.struct.CField;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +40,7 @@ public class Lara extends Job {
 
     public static final int 前往納林 = 160011074;
     public static final int 獨門咒語 = 160001005;
+    public static final int 大自然夥伴 = 160010001;
 
     public static final int 精氣散播 = 162001000;
     public static final int 山不敗 = 162001005;
@@ -293,6 +296,36 @@ public class Lara extends Job {
         return state;
     }
 
+    public void handleNatureFriend() {
+        final int skilllv = (chr.getSkillLevel(80003070) > 0) ? chr.getSkillLevel(80003070) : chr.getSkillLevel(160010001);
+        final int skillId = (chr.getSkillLevel(80003070) > 0) ? 80003070 : 160010001;
+        if (chr.hasSkillOnCooldown(skillId)) {
+            return;
+        }
+        TemporaryStatManager tsm = chr.getTemporaryStatManager();
+        Skill skill = chr.getSkill(skillId);
+        SkillInfo si = null;
+        Option o1 = new Option();
+        if (skill != null) {
+            si = SkillData.getSkillInfoById(skill.getSkillId());
+        }
+        if (!tsm.hasStat(CharacterTemporaryStat.大自然夥伴)) {
+            chr.setSkillCustomInfo(80003070, 0L, 0L);
+        } else {
+            chr.addSkillCustomInfo(80003070, 1L);
+        }
+        if (chr.getSkillCustomValue0(80003070) >= si.getValue(x, skilllv)) {
+            chr.addSkillCoolTime(skillId, System.currentTimeMillis());
+            chr.write(UserLocal.skillCooltimeSetM(skillId, si.getValue(cooltime, skilllv)));
+            tsm.removeStatsBySkill(80003070);
+        } else {
+            o1.nOption = 5;
+            o1.tOption = si.getValue(time, skilllv);
+            tsm.putCharacterStatValue(CharacterTemporaryStat.大自然夥伴, o1);
+            tsm.sendSetStatPacket();
+        }
+    }
+
 
     @Override
     public void handleAttack(Client c, AttackInfo attackInfo) {
@@ -363,9 +396,13 @@ public class Lara extends Job {
                 o1.nOption = si.getValue(x, slv);
                 o1.rOption = skillID;
                 tsm.putCharacterStatValue(CharacterTemporaryStat.山不敗, o1);
+                tsm.sendSetStatPacket();
                 break;
         }
-        tsm.sendSetStatPacket();
+        if (chr.getSkillLevel(160010001) > 0 || chr.getSkillLevel(80003058) > 0) {
+            handleNatureFriend();
+        }
+
     }
 
     public void handleShootObj(Char chr, int skillId, int slv) {
@@ -465,21 +502,21 @@ public class Lara extends Job {
     @Override
     public void handleLevelUp() {
         super.handleLevelUp();
-//        int level = chr.getLevel();
-//        switch (level) {
-//            case 30:
-//                handleJobAdvance(JobConstants.JobEnum.ILLIUM_2.getJobId());
-//                chr.addSpToJobByCurrentJob(7);
-//                break;
-//            case 60:
-//                handleJobAdvance(JobConstants.JobEnum.ILLIUM_3.getJobId());
-//                chr.addSpToJobByCurrentJob(7);
-//                break;
-//            case 100:
-//                handleJobAdvance(JobConstants.JobEnum.ILLIUM_4.getJobId());
-//                chr.addSpToJobByCurrentJob(5);
-//                break;
-//        }
+        int level = chr.getLevel();
+        switch (level) {
+            case 30:
+                handleJobAdvance(JobConstants.JobEnum.LARA_2.getJobId());
+                chr.addSpToJobByCurrentJob(7);
+                break;
+            case 60:
+                handleJobAdvance(JobConstants.JobEnum.LARA_3.getJobId());
+                chr.addSpToJobByCurrentJob(7);
+                break;
+            case 100:
+                handleJobAdvance(JobConstants.JobEnum.LARA_4.getJobId());
+                chr.addSpToJobByCurrentJob(5);
+                break;
+        }
     }
 
     @Override

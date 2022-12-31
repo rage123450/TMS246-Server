@@ -61,6 +61,8 @@ public class AffectedArea extends Life {
     private int duration;
     private boolean removeSkill, followOwner;
     private ScheduledFuture aaTimer;
+    private int mobOwnerID;
+    private boolean hitMob;
 
     public AffectedArea(int templateId) {
         super(templateId);
@@ -84,6 +86,10 @@ public class AffectedArea extends Life {
 
     public int getCharID() {
         return owner == null ? 0 : owner.getId();
+    }
+
+    public int getOwnerID() {
+        return owner == null ? mobOwnerID : owner.getId();
     }
 
     public void setOwner(Char owner) {
@@ -180,6 +186,14 @@ public class AffectedArea extends Life {
 
     public void setFollowOwner(boolean followOwner) {
         this.followOwner = followOwner;
+    }
+
+    public boolean hasHitMob() {
+        return hitMob;
+    }
+
+    public void setHitMob(boolean hasHitMob) {
+        this.hitMob = hasHitMob;
     }
 
     public static AffectedArea getAffectedArea(Char chr, AttackInfo attackInfo) {

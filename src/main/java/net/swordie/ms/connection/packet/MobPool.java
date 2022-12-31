@@ -93,9 +93,49 @@ public class MobPool {
         OutPacket outPacket = new OutPacket(OutHeader.MOB_HP_INDICATOR);
 
         outPacket.encodeInt(objectId);
+
         outPacket.encodeInt(percDamage);
         outPacket.encodeByte(false);
+        return outPacket;
+    }
 
+    public static OutPacket catchEffect(int mobid, byte success) {
+        OutPacket outPacket = new OutPacket(OutHeader.MOB_CATCH_EFFECT);
+
+        outPacket.encodeInt(mobid);
+
+        outPacket.encodeByte(success);
+        outPacket.encodeByte(success);
+        return outPacket;
+    }
+
+    public static OutPacket stealEffect(int mobid, boolean success) {
+        OutPacket outPacket = new OutPacket(OutHeader.MOB_STEAL_EFFECT);
+
+        outPacket.encodeInt(mobid);
+
+        outPacket.encodeByte(success ? 1 : 0);
+        outPacket.encodeByte(0);
+        return outPacket;
+    }
+
+    public static OutPacket effectByItem(int mobid, int itemid) {
+        OutPacket outPacket = new OutPacket(OutHeader.MOB_EFFECT_BY_ITEM);
+
+        outPacket.encodeInt(mobid);
+
+        outPacket.encodeInt(itemid);// unk
+        outPacket.encodeByte(0);// unk
+        return outPacket;
+    }
+
+    public static OutPacket SpeakingMonster(Mob mob,int type, int unk) {
+        OutPacket outPacket = new OutPacket(OutHeader.MOB_SPEAKING);
+
+        outPacket.encodeInt(mob.getObjectId());
+
+        outPacket.encodeInt(type);// unk 0,1,2,3,4
+        outPacket.encodeInt(unk);// unk 幾乎都是0
         return outPacket;
     }
 
@@ -450,12 +490,11 @@ public class MobPool {
         OutPacket outPacket = new OutPacket(OutHeader.MOB_SKILL_DELAY);
 
         outPacket.encodeInt(mobID);
+
         outPacket.encodeInt(skillAfter);
         outPacket.encodeInt(skillID);
         outPacket.encodeInt(slv);
-
-
-        outPacket.encodeInt(sequenceDelay);
+        outPacket.encodeInt((skillID == 230) ? 900 : sequenceDelay);
         if (rect != null) {
             outPacket.encodeRectInt(rect);
         } else {
@@ -469,6 +508,7 @@ public class MobPool {
         OutPacket outPacket = new OutPacket(OutHeader.ESCORT_FULL_PATH);
 
         outPacket.encodeInt(mob.getObjectId());
+
         outPacket.encodeInt(mob.getEscortDest().size());
         outPacket.encodeShort(mob.getPosition().getX());
         outPacket.encodeShort(oldAttr);

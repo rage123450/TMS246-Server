@@ -7,10 +7,10 @@ import java.util.Arrays;
  * Created on 8/2/2018.
  */
 public enum DimensionalPortalType {
-    AriantColiseum(0, 980010000, "Ariant Coliseum"),
-    Dojo(1, 925020000, "Mu Lung Dojo"),
+    AriantColiseum(0, 980010000, "納希競技大會：競技場等待室"),
+    Dojo(1, 925020000, "武陵道場：武陵道場"),
     GonzoGallery(2, 956000000, "Gonzo Gallery"),
-    MonsterCarnival(3, 980000000, "Monster Carnival"),
+    MonsterCarnival(3, 980000000, "怪物擂台賽：休菲凱曼的辦公室"),
     GhostShipSea(4, 0, "Ghost Ship Party Quest"),
     NettsPyramid(5, 926010000, "Nett's Pyramid"),
     DustyPlatform(6, 0, "Dusty Platform"),

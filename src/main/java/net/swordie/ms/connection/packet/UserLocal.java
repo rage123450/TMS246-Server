@@ -15,6 +15,7 @@ import net.swordie.ms.life.mob.Mob;
 import net.swordie.ms.life.movement.MovementInfo;
 import net.swordie.ms.life.pet.Pet;
 import net.swordie.ms.util.Position;
+import net.swordie.ms.util.Rect;
 import net.swordie.ms.util.Util;
 
 import java.util.*;
@@ -996,6 +997,22 @@ public class UserLocal {
         for (Map.Entry<Integer, Integer> entry : bonusAttackDelayMap.entrySet()) {
             outPacket.encodeInt(entry.getKey());    // skill Id
             outPacket.encodeInt(entry.getValue());  // delay
+        }
+
+        return outPacket;
+    }
+
+    public static OutPacket adeleShardBreakerResult(int skillId, List<Rect> shardRects) {
+        OutPacket outPacket = new OutPacket(OutHeader.AREA_EXPLOSION_REQUEST);
+
+        outPacket.encodeInt(skillId);
+        outPacket.encodeInt(0); // ?
+        outPacket.encodeInt(shardRects.size());
+        int itr = 1;
+        for (Rect rect : shardRects) {
+            outPacket.encodeInt(itr); // iterator (might need to sniff again, might be a new key/id everytime)
+            outPacket.encodeRectInt(rect);
+            itr++;
         }
 
         return outPacket;

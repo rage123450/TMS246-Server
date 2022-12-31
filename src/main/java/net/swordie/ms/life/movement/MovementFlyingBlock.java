@@ -32,6 +32,7 @@ public class MovementFlyingBlock extends MovementBase {
         outPacket.encodeByte(getCommand());
         outPacket.encodePosition(getPosition());
         outPacket.encodePosition(getVPosition());
+
         outPacket.encodeByte(getMoveAction());
         outPacket.encodeShort(getDuration());
         outPacket.encodeByte(getForcedStop());

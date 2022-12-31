@@ -25,6 +25,7 @@ public class MovementNew1 extends MovementBase {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(getCommand());
         outPacket.encodeInt(getIdk());
+
         outPacket.encodeByte(getMoveAction());
         outPacket.encodeShort(getDuration());
         outPacket.encodeByte(getForcedStop());

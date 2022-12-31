@@ -1894,6 +1894,8 @@ public class SkillConstants {
             case 400021010:
             case 400021011:
             case Adele.碎片:
+            case Adele.穿刺:
+            case Adele.綻放:
                 return true;
         }
         return false;
@@ -3063,6 +3065,7 @@ public class SkillConstants {
             case NightLord.EXPERT_THROWING_STAR_HANDLING:
             case 50001214: // Knight's Watch
             case 42101002: // Haku Reborn
+            case Adele.乙太:
                 stats.clear();
                 break;
 

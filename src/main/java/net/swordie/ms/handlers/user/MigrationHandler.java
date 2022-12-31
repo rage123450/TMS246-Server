@@ -24,6 +24,7 @@ import net.swordie.ms.enums.FieldOption;
 import net.swordie.ms.enums.MapTransferType;
 import net.swordie.ms.handlers.ClientSocket;
 import net.swordie.ms.handlers.Handler;
+import net.swordie.ms.handlers.LoginHandler;
 import net.swordie.ms.handlers.header.InHeader;
 import net.swordie.ms.life.npc.Npc;
 import net.swordie.ms.loaders.NpcData;

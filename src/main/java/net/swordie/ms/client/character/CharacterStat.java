@@ -381,7 +381,7 @@ public class CharacterStat {
         outPacket.encodeByte(getPortal());
         outPacket.encodeShort(getSubJob());
         if (JobConstants.isDemon(getJob()) || JobConstants.isXenon(getJob()) || JobConstants.isBeastTamer(getJob())
-                || JobConstants.isArk(getJob())) {
+                || JobConstants.isArk(getJob()) || JobConstants.isHayato(getJob())) {
             outPacket.encodeInt(getDefFaceAcc());
         }
         outPacket.encodeByte(0);

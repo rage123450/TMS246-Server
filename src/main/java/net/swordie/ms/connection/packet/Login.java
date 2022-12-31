@@ -171,7 +171,7 @@ public class Login {
         outPacket.encodeByte(world.getWorldId().getVal());
         outPacket.encodeString(world.getName());
         outPacket.encodeInt(0);
-        outPacket.encodeInt(0);
+        outPacket.encodeInt(1);
         outPacket.encodeByte(0);
         outPacket.encodeByte(0);
         outPacket.encodeByte(world.getWorldState());

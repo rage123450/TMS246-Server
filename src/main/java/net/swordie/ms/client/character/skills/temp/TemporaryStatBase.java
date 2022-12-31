@@ -105,4 +105,12 @@ public class TemporaryStatBase {
     public void setROption(int reason) {
         getOption().rOption = reason;
     }
+
+    public void setXOption(int i) {
+        getOption().xOption = i;
+    }
+
+    public void setYOption(int i) {
+        getOption().yOption = i;
+    }
 }

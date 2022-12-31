@@ -15,7 +15,7 @@ public class JobConstants {
 
     public static final boolean enableJobs = true;
     // UI.wz/Login.img/RaceSelect_new/order
-    public static final int jobOrder = 245;
+    public static final int jobOrder = 244;
 
     public static JobEnum getJobEnumById(short jobId) {
         return Arrays.stream(JobEnum.values()).filter(job -> job.getJobId() == jobId)

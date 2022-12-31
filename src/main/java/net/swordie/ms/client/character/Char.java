@@ -30,6 +30,7 @@ import net.swordie.ms.client.character.quest.QuestManager;
 import net.swordie.ms.client.character.runestones.RuneStone;
 import net.swordie.ms.client.character.skills.*;
 import net.swordie.ms.client.character.skills.info.ForceAtomInfo;
+import net.swordie.ms.client.character.skills.info.SkillCustomInfo;
 import net.swordie.ms.client.character.skills.info.SkillInfo;
 import net.swordie.ms.client.character.skills.info.SkillUseInfo;
 import net.swordie.ms.client.character.skills.temp.CharacterTemporaryStat;
@@ -486,6 +487,9 @@ public class Char {
     @Transient
     private ScheduledFuture keyDownTimer;
 
+    @Transient
+    private Map<Integer, SkillCustomInfo> customInfo;
+
     public ScheduledFuture getKeyDownTimer() {
         return keyDownTimer;
     }
@@ -591,6 +595,7 @@ public class Char {
 //        monsterBattleMobInfos = new ArrayList<>();
 //        monsterBattleLadder = new MonsterBattleLadder();
 //        monsterBattleRankInfo = new MonsterBattleRankInfo();
+        customInfo = new LinkedHashMap<Integer, SkillCustomInfo>();
     }
 
     public static Char getFromDBById(int userId) {
@@ -3440,6 +3445,7 @@ public class Char {
 
         toField.addChar(this);//生出NPC
         showProperUI(currentField != null ? currentField.getId() : -1, toField.getId());
+        write(ClientSocket.ChannelChangeEnable());
 
         if (isHide()) {
             write(FieldPacket.setHideEffect(true));
@@ -6993,5 +6999,51 @@ public class Char {
         write(FieldPacket.petAutoHP(0));
         write(FieldPacket.petAutoMP(0));
         write(FieldPacket.petAutoUNK(0));
+    }
+
+    public Long getSkillCustomValue(final int skillid) {
+        if (!this.customInfo.containsKey(skillid)) {
+            return null;
+        }
+        if (skillid == 63111009 && this.customInfo.get(skillid).getValue() <= 0L) {
+            return null;
+        }
+        if (this.customInfo.get(skillid).getValue() < 0L) {
+            return null;
+        }
+        return this.customInfo.get(skillid).getValue();
+    }
+
+    public Integer getSkillCustomTime(final int skillid) {
+        if (this.customInfo.containsKey(skillid)) {
+            return (int) (this.customInfo.get(skillid).getEndTime() - System.currentTimeMillis());
+        }
+        return null;
+    }
+
+    public long getSkillCustomValue0(final int skillid) {
+        if (this.customInfo.containsKey(skillid)) {
+            return this.customInfo.get(skillid).getValue();
+        }
+        return 0L;
+    }
+
+    public void removeSkillCustomInfo(int skillid) {
+        this.customInfo.remove(Integer.valueOf(skillid));
+    }
+
+    public void setSkillCustomInfo(final int skillid, final long value, final long time) {
+        if (this.getSkillCustomValue(skillid) != null) {
+            this.removeSkillCustomInfo(skillid);
+        }
+        this.customInfo.put(skillid, new SkillCustomInfo(value, time));
+    }
+
+    public void addSkillCustomInfo(final int skillid, final long value) {
+        this.customInfo.put(skillid, new SkillCustomInfo(this.getSkillCustomValue0(skillid) + value, 0L));
+    }
+
+    public Map<Integer, SkillCustomInfo> getSkillCustomValues() {
+        return this.customInfo;
     }
 }

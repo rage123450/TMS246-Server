@@ -6,6 +6,7 @@ import net.swordie.ms.client.character.info.ZeroInfo;
 import net.swordie.ms.client.character.quest.Quest;
 import net.swordie.ms.client.character.quest.QuestManager;
 import net.swordie.ms.client.character.skills.*;
+import net.swordie.ms.client.character.skills.info.AttackInfo;
 import net.swordie.ms.client.character.skills.info.ForceAtomInfo;
 import net.swordie.ms.client.character.skills.info.SkillInfo;
 import net.swordie.ms.client.character.skills.info.SkillUseInfo;
@@ -21,6 +22,7 @@ import net.swordie.ms.client.jobs.adventurer.warrior.Paladin;
 import net.swordie.ms.client.jobs.cygnus.BlazeWizard;
 import net.swordie.ms.client.jobs.cygnus.NightWalker;
 import net.swordie.ms.client.jobs.cygnus.WindArcher;
+import net.swordie.ms.client.jobs.flora.Adele;
 import net.swordie.ms.client.jobs.flora.Illium;
 import net.swordie.ms.client.jobs.legend.Aran;
 import net.swordie.ms.client.jobs.legend.Luminous;
@@ -838,6 +840,16 @@ public class JobSkillHandler {
     @Handler(op = InHeader.碎片)
     public static void handleCreateSubObtacle(Char chr, InPacket inPacket) {
         int count = inPacket.decodeInt();
-        chr.write(CFamiliar.removeSecondAtom(chr, count));
+        chr.write(SkillPacket.removeSecondAtom(chr, count));
+    }
+
+    @Handler(op = InHeader.穿刺)
+    public static void handle(Char chr, InPacket inPacket) {
+        int skillid = inPacket.decodeInt();
+        int level = inPacket.decodeInt();
+        AttackInfo ret = new AttackInfo();
+        ret.skillId = skillid;
+        ret.slv = level;
+        chr.write(SkillPacket.穿刺(chr, skillid, level));
     }
 }

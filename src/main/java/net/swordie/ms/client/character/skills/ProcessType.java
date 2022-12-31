@@ -2,6 +2,10 @@ package net.swordie.ms.client.character.skills;
 
 import net.swordie.ms.client.character.skills.info.SkillUseInfo;
 import net.swordie.ms.connection.InPacket;
+import net.swordie.ms.util.Position;
+import net.swordie.ms.util.container.Tuple;
+
+import java.util.HashSet;
 
 /**
  * Created on 11-4-2019.
@@ -20,7 +24,7 @@ public class ProcessType {
         if (bool) {
             int processType = inPacket.decodeInt();
             while (processType != -1) {
-                if (processType >= 1 && processType <= 16 || processType >= 19 && processType <= 21) {
+                if (processType >= 1 && processType <= 16 || processType >= 19 && processType <= 22) {
                     bool = inPacket.decodeByte() != 0;
                     if (bool) {
                         switch (processType) {
@@ -32,8 +36,9 @@ public class ProcessType {
                             case 2:
                                 inPacket.decodeByte();
                                 inPacket.decodeByte();
+                                skillUseInfo.skillId = inPacket.decodeInt();
                                 inPacket.decodeInt();
-                                inPacket.decodeInt();
+                                inPacket.decodeArr(25);//??
                                 break;
                             case 3:
                                 inPacket.decodeByte();
@@ -45,10 +50,7 @@ public class ProcessType {
                                 inPacket.decodeByte();
                                 break;
                             case 8:
-                                inPacket.decodeInt();
-                                inPacket.decodeInt();
-                                inPacket.decodeInt();
-                                inPacket.decodeInt();
+                                skillUseInfo.rect = inPacket.decodeIntRect();
                                 break;
                             case 9:
                                 inPacket.decodeInt();
@@ -71,6 +73,15 @@ public class ProcessType {
                                     inPacket.decodeInt();
                                     inPacket.decodeInt();
                                     inPacket.decodeInt();
+                                }
+                                break;
+                            case 22:
+                                skillUseInfo.shardsPositions = new HashSet<>();
+                                int shardsSize = inPacket.decodeInt();
+                                for (int i = 0; i < shardsSize; i++) {
+                                    int mobObjectId = inPacket.decodeInt();
+                                    Position position = inPacket.decodePositionInt();
+                                    skillUseInfo.shardsPositions.add(new Tuple<>(mobObjectId, position));
                                 }
                                 break;
                         }

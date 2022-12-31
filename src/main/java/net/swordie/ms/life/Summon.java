@@ -20,6 +20,7 @@ import net.swordie.ms.client.jobs.adventurer.warrior.DarkKnight;
 import net.swordie.ms.client.jobs.cygnus.BlazeWizard;
 import net.swordie.ms.client.jobs.cygnus.NightWalker;
 import net.swordie.ms.client.jobs.cygnus.WindArcher;
+import net.swordie.ms.client.jobs.flora.Adele;
 import net.swordie.ms.client.jobs.flora.Illium;
 import net.swordie.ms.client.jobs.legend.Shade;
 import net.swordie.ms.client.jobs.resistance.BattleMage;
@@ -482,6 +483,9 @@ public class Summon extends Life {
                 if (aa != null) {
                     getField().removeLife(aa);
                 }
+                break;
+            case Adele.乙太結晶:
+                getField().removeSummon(Adele.乙太結晶, chr.getId());
                 break;
         }
     }

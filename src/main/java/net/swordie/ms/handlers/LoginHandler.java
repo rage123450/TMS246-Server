@@ -122,7 +122,10 @@ public class LoginHandler {
             String dbPassword = user.getPassword();
             String dbSecpwd = user.getPic();
             boolean hashed = Util.isStringBCrypt(dbPassword);
-            boolean hashedsec = Util.isStringBCrypt(dbSecpwd);
+            boolean hashedsec = false;
+            if (dbSecpwd != null) {
+                hashedsec = Util.isStringBCrypt(dbSecpwd);
+            }
             if (hashed) {
                 try {
                     success = BCrypt.checkpw(password, dbPassword);
