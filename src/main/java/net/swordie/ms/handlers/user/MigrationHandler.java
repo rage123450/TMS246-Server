@@ -27,6 +27,7 @@ import net.swordie.ms.handlers.Handler;
 import net.swordie.ms.handlers.LoginHandler;
 import net.swordie.ms.handlers.header.InHeader;
 import net.swordie.ms.life.npc.Npc;
+import net.swordie.ms.loaders.ChatEmoticonData;
 import net.swordie.ms.loaders.NpcData;
 import net.swordie.ms.scripts.ScriptType;
 import net.swordie.ms.util.container.Tuple;
@@ -108,6 +109,8 @@ public class MigrationHandler {
         chr.initBlessingSkillNames();
         chr.setOnline(true); // v195+: respect 'invisible login' setting
 
+
+
         if (chr.getPartyID() != 0) {
             Party party = c.getWorld().getPartybyId(chr.getPartyID());
             if (party == null) {
@@ -141,6 +144,9 @@ public class MigrationHandler {
         c.write(UserLocal.damageSkinSaveResult(DamageSkinType.Req_SendInfo, null, chr));
         //c.write(CUIHandler.unionAssignResult(chr));
         //c.write(WvsContext.mapTransferResult(MapTransferType.RegisterListSend, (byte) 5, chr.getHyperRockFields()));//??
+        chr.gainEmoticon(1008);
+        chr.gainEmoticon(1009);
+        chr.gainEmoticon(1010);
         acc.getMonsterCollection().init(chr);
         chr.checkAndRemoveExpiredItems();
         chr.updatePartyHP();
@@ -152,6 +158,7 @@ public class MigrationHandler {
         if (chr.getField().isBuffedField()) {
             chr.chatScriptMessage(ServerConfig.BUFFED_CH_MSG);
         }
+        ChatEmoticonData.LoadChatEmoticons(chr, chr.getEmoticonTabs());
         /*
         if (GameConstants.HIDE_ON_LOGIN && chr.isGM()) {
             chr.setHide(true);
@@ -193,13 +200,15 @@ public class MigrationHandler {
             }
         } else if (chr.getHP() <= 0) {
             // Character is dead, respawn request
-            inPacket.decodeByte(); // always 0
-            byte tarfield = inPacket.decodeByte(); // ?
-            byte reviveType = inPacket.decodeByte();
+            //inPacket.decodeByte(); // always 0
+            //byte tarfield = inPacket.decodeByte(); // ?
+            //byte reviveType = inPacket.decodeByte();
             int returnMap = chr.getField().getReturnMap();
-            switch (reviveType) {
+            //System.err.println("回程地圖:"+returnMap);
+            /*switch (reviveType) {
                 // so far only got 0?
             }
+             */
             if (!chr.hasBuffProtector()) {
                 chr.getTemporaryStatManager().removeAllStats();
             }
@@ -211,6 +220,14 @@ public class MigrationHandler {
                     chr.write(UserLocal.deathCountInfo(deathcount));
                 }
                 chr.warp(chr.getOrCreateFieldByCurrentInstanceType(returnMap));
+                if (deathcount < 0) {
+                    chr.setQuestRecordEx(210416, "TotalDeadTime", 1800);
+                    chr.setQuestRecordEx(210416, "NowDeadTime", 1800);
+                    chr.setQuestRecordEx(210416, "ExpDrop", 80);
+
+                    //chr.write();
+                }
+
             } else {
                 if (chr.getParty() != null) {
                     chr.getInstance().removeChar(chr);
@@ -288,8 +305,8 @@ public class MigrationHandler {
         chr.enterNewStageField();
         c.write(Stage.setCashShop(chr, cs));
         c.write(Stage.setCashShopInfo(chr, cs));
-        c.write(CCashShop.loadLockerDone(chr.getAccount()));
-        c.write(CCashShop.queryCashResult(chr));
+        c.write(CCashShop.loadLockerDone(chr.getAccount())); // v248
+        c.write(CCashShop.queryCashResult(chr)); // v248
         c.write(CCashShop.bannerInfo(cs));
         c.write(CCashShop.cartInfo(cs));
         c.write(CCashShop.featuredItemInfo(cs));
@@ -410,7 +427,11 @@ public class MigrationHandler {
 
     @Handler(op = InHeader.USER_MIGRATE_AUCTION_REQUEST)
     public static void handleUserMigrateAuctionRequest(Char chr, InPacket inPacket) {
-        if (chr.getField().isTown()) {
+        if ((chr.getField().getFieldLimit() & FieldOption.MigrateLimit.getVal()) > 0 || !chr.isInValidState() || chr.getInstance() != null) {
+            chr.dispose();
+            return;
+        }
+        if (chr.getField().isTown() && !chr.isDead()) {
             chr.enterNewStageField();
             chr.write(Stage.setAuctionField(chr));
             chr.write(FieldPacket.auctionResult(AuctionResult.initialize()));

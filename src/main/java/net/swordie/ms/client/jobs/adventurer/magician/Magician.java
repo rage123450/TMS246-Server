@@ -7,6 +7,7 @@ import net.swordie.ms.client.character.items.Item;
 import net.swordie.ms.client.character.quest.QuestManager;
 import net.swordie.ms.client.character.skills.Option;
 import net.swordie.ms.client.character.skills.Skill;
+import net.swordie.ms.client.character.skills.SkillStat;
 import net.swordie.ms.client.character.skills.info.AttackInfo;
 import net.swordie.ms.client.character.skills.info.MobAttackInfo;
 import net.swordie.ms.client.character.skills.info.SkillInfo;
@@ -44,7 +45,11 @@ import static net.swordie.ms.client.character.skills.temp.CharacterTemporaryStat
 public class Magician extends Beginner {
     //Common
     public static final int TELEPORT = 2001009;
-    public static final int MAGIC_GUARD = 2001002;
+    public static final int 魔心防禦 = 2001002;
+    public static final int 魔力波動 = 2001011;
+    public static final int 魔力波動_1 = 2001012;
+
+
 
 
     // V skills
@@ -199,6 +204,13 @@ public class Magician extends Beginner {
                     createChillStepAA();
                 }
                 break;
+            case 魔力波動:
+            case 魔力波動_1:
+                o1.nReason = skillID;
+                o1.nValue = 50;
+                o1.tTerm = si.getValue(SkillStat.time, slv); // 1900/1000
+                tsm.putCharacterStatValue(IndieFloating, o1);
+                break;
             case FirePoison.HEROS_WILL_FP:
             case IceLightning.HEROS_WILL_IL:
             case Bishop.HEROS_WILL_BISH:
@@ -216,7 +228,7 @@ public class Magician extends Beginner {
                         JobConstants.isBishop(chr.getJob()) ? Bishop.unreliableMemBishop :
                             Collections.singleton(1))));
                 break;
-            case MAGIC_GUARD:
+            case 魔心防禦:
                 o1.nOption = si.getValue(x, slv);
                 o1.rOption = skillID;
                 tsm.putCharacterStatValue(MagicGuard, o1);
@@ -257,9 +269,9 @@ public class Magician extends Beginner {
                     tsm.putCharacterStatValue(masteryStat, o1);
                 }
                 break;
-            case FirePoison.INFINITY_FP:
-            case IceLightning.INFINITY_IL:
-            case Bishop.INFINITY_BISH:
+            case FirePoison.魔力無限:
+            case IceLightning.魔力無限:
+            case Bishop.魔力無限:
                 o1.nOption = 1;
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
@@ -433,8 +445,8 @@ public class Magician extends Beginner {
         }
 
         // Divine Protection - Bishop
-        if (chr.hasSkill(Bishop.DIVINE_PROTECTION) && tsm.getOptByCTSAndSkill(AntiMagicShell, Bishop.DIVINE_PROTECTION) != null) {
-            tsm.removeStatsBySkill(Bishop.DIVINE_PROTECTION);
+        if (chr.hasSkill(Bishop.聖靈守護) && tsm.getOptByCTSAndSkill(AntiMagicShell, Bishop.聖靈守護) != null) {
+            tsm.removeStatsBySkill(Bishop.聖靈守護);
             tsm.sendResetStatPacket();
             tsm.removeAllDebuffs();
         }

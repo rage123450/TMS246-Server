@@ -194,10 +194,16 @@ public class EtcData {
             int ItemID = 0;
             int PriceID = 0;
             int CountID = 0;
+            int PeriodID = 0;
+            int GenderID = 0;
+            boolean OnSaleID = false;
             Node SN = XMLApi.getFirstChildByNameBF(mainNode, "SN");
             Node Item = XMLApi.getFirstChildByNameBF(mainNode, "ItemId");
             Node Count = XMLApi.getFirstChildByNameBF(mainNode, "Count");
             Node Price = XMLApi.getFirstChildByNameBF(mainNode, "Price");
+            Node Period = XMLApi.getFirstChildByNameBF(mainNode, "Period");
+            Node Gender = XMLApi.getFirstChildByNameBF(mainNode, "Gender");
+            Node OnSale = XMLApi.getFirstChildByNameBF(mainNode, "OnSale");
             if (SN != null) {
                 SNID = Integer.parseInt(XMLApi.getNamedAttribute(SN, "value"));
             }
@@ -210,7 +216,16 @@ public class EtcData {
             if (Price != null) {
                 PriceID = Integer.parseInt(XMLApi.getNamedAttribute(Price, "value"));
             }
-            CashItemInfo cii = new CashItemInfo(SNID, ItemID, CountID, PriceID);
+            if (Period != null) {
+                PeriodID = Integer.parseInt(XMLApi.getNamedAttribute(Period, "value"));
+            }
+            if (Gender != null) {
+                GenderID = Integer.parseInt(XMLApi.getNamedAttribute(Gender, "value"));
+            }
+            if (OnSale != null) {
+                OnSaleID = Boolean.parseBoolean(XMLApi.getNamedAttribute(OnSale, "value"));
+            }
+            CashItemInfo cii = new CashItemInfo(SNID, ItemID, CountID, PriceID, PeriodID, GenderID, OnSaleID);
             Commodity.put(cii.getSn(), cii);
         }
     }
@@ -225,14 +240,19 @@ public class EtcData {
                 dataOutputStream.writeInt(commodityEntry.getValue().getItemId());
                 dataOutputStream.writeInt(commodityEntry.getValue().getCount());
                 dataOutputStream.writeInt(commodityEntry.getValue().getPrice());
+                dataOutputStream.writeInt(commodityEntry.getValue().getPeriod());
+                dataOutputStream.writeInt(commodityEntry.getValue().getGender());
+                dataOutputStream.writeBoolean(commodityEntry.getValue().getOnsale());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void loadCommodityFromFile(String dir) {
+    public static CashItemInfo loadCommodityFromFile(String dir) {
         Util.makeDirIfAbsent(dir);
+        CashItemInfo cii = null;
+
         try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(new File(dir + "/" + "Commodity" + ".dat")))) {
             int size = dataInputStream.readInt();
             for (int i = 0; i < size; i++) {
@@ -240,7 +260,32 @@ public class EtcData {
                 int itemid = dataInputStream.readInt();
                 int count = dataInputStream.readInt();
                 int price = dataInputStream.readInt();
-                Commodity.put(sn, new CashItemInfo(sn, itemid, count, price));
+                int period = dataInputStream.readInt();
+                int gender = dataInputStream.readInt();
+                boolean onsale = dataInputStream.readBoolean();
+                cii = new CashItemInfo(sn, itemid, count, price, period, gender, onsale);
+                Commodity.put(sn, cii);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return cii;
+    }
+
+    public static void loadCommodity() {
+        String dir = ServerConstants.DAT_DIR;
+        File file = new File(String.format("%s/etc/cash/Commodity.dat", dir));
+        try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file))) {
+            int size = dataInputStream.readInt();
+            for (int i = 0; i < size; i++) {
+                int sn = dataInputStream.readInt();
+                int itemid = dataInputStream.readInt();
+                int count = dataInputStream.readInt();
+                int price = dataInputStream.readInt();
+                int period = dataInputStream.readInt();
+                int gender = dataInputStream.readInt();
+                boolean onsale = dataInputStream.readBoolean();
+                Commodity.put(sn, new CashItemInfo(sn, itemid, count, price, period, gender, onsale));
             }
         } catch (IOException e) {
             e.printStackTrace();

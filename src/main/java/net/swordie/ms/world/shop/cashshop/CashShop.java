@@ -287,4 +287,22 @@ public class CashShop {
         }
         return null;
     }
+
+    public CashShopItem getItemBySN(int SN) {
+//        int Accum=0;
+        for (Map.Entry<CashShopCategory, List<CashShopItem>> entry : getItems().entrySet()) {
+            List<CashShopItem> items = entry.getValue();
+            for (CashShopItem item :items)
+            {
+//                if (item.getItemID()==1342069)
+//                {
+//                    System.out.println(Accum+=items.indexOf((item)));
+//                }
+                if (item.getSN() == SN) return item;
+            }
+//            Accum+=items.size();
+        }
+        return null;
+    }
+
 }

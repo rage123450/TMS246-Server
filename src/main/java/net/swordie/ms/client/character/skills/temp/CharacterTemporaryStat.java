@@ -49,9 +49,9 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     IndieCr(31),
     IndiePDDR(32),
     IndieCrDmg(33),
-    IndieBDR(34),
+    IndieBDR(34), // 增加B傷
     IndieStatR(35),
-    IndieStance(36),//格檔機率
+    IndieStance(36), // 格檔機率
     IndieIgnoreMobpdpR(37),
     IndieEmpty(38),
     IndiePADR(39),
@@ -128,12 +128,12 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     Morph(113),
     Regen(114),
     BasicStatUp(115),
-    Stance(116),
+    Stance(116), // *
     SharpEyes(117),
     ManaReflection(118),
     Attract(119),
     NoBulletConsume(120),
-    Infinity(121),
+    Infinity(121), // *
     AdvancedBless(122),
     IllusionStep(123),
     Blind(124),
@@ -238,7 +238,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     PvPInvincible(210),
     PvPRaceEffect(211),
     WeaknessMdamage(212),
-    Frozen2(213), // *
+    Frozen2(213), //
     PVPDamageSkill(214),
     AmplifyDamage(215),
     Shock(216),
@@ -281,7 +281,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     PyramidEffect(243),
     KillingPoint(-1/*244*/),
     HollowPointBullet(245),
-    KeyDownMoving(253), // *
+    KeyDownMoving(253), //
     IgnoreTargetDEF(254),
     ReviveOnce(248),
 
@@ -296,7 +296,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
 
     GuidedArrow(257),
     SpiritFlow(258),
-    LucentBrand(266), // *
+    LucentBrand(266), //
     ExtraSkillCTS(267),
     Unk199_256(261),
     TideOfBattle(262),
@@ -308,7 +308,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     Larkness(277),
     StackBuff(278),
     BlessOfDarkness(279),
-    AntiMagicShell(280),
+    AntiMagicShell(280), // *
     AntiMagicShellEx(280),
     LifeTidal(281),
     HitCriDamR(282),
@@ -339,7 +339,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     Unk188_283(306),
 
     FireAura(307),
-    VengeanceOfAngel(308),
+    VengeanceOfAngel(312), // * 308 -> 312
     HeavensDoor(309),
 
     Preparation(303),
@@ -511,12 +511,12 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
     MichaelStanceLink(484),
     TriflingWhimOnOff(455),
     AddRangeOnOff(456),
-    KinesisPsychicPoint(457),
-    KinesisPsychicShield(459),
+    KinesisPsychicPoint(486), // * 457 -> 486
+    KinesisPsychicShield(489), // *
     KinesisIncMastery(460),
-    KinesisMind_Break(486),// * done 心靈突破 永恆壞滅也發?
-    KinesisPsychicOver(487),// * done 458 -> 487? 486?
-    KinesisPsychicEnergeShield(489),// *done 心靈本能 //461 -> 489
+    KinesisMind_Break(486),//
+    KinesisPsychicOver(487),// *
+    KinesisPsychicEnergeShield(489),// *
     BladeStance(491),
     DebuffActiveSkillHPCon(463),
     DebuffIncHP(464),
@@ -526,7 +526,7 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
 
     IgnisRore(468),
     //    RpSiksin(459), somewhere between 436 and 459 one is removed
-    TeleportMasteryRange(469),
+    TeleportMasteryRange(497), // 469 -> 497
     FixCoolTime(470),
     IncMobRateDummy(471),
     AdrenalinBoost(501), // *
@@ -720,7 +720,17 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
 
 
 
-
+    TalismanEnergy(659),
+    ScrollEnergy(660),
+    TalismanClone(661),
+    CloneRampage(662),
+    ButterflyDream(663),
+    MiracleTonic(664), //361 sniffer ok
+    SageWrathOfGods(665),
+    EmpiricalKnowledge(666),
+    UnkBuffStat52(667),
+    UnkBuffStat53(668),
+    Graffiti(669),
     DreamDowon(670),//按壓型 根據剩餘時間長短返還技能冷卻
     意志之劍_重磅出擊(671),//凱薩5轉新技能
     乙太(672),
@@ -897,7 +907,8 @@ public enum CharacterTemporaryStat implements Comparator<CharacterTemporaryStat>
             HayatoCr,HakuBlessing,HayatoBoss, BattoujutsuAdvance, Unk176_483, Unk176_484,BlackHeartedCurse, EyeForEye,
             BeastMode,TeamRoar, Unk176_488, Unk176_489, Unk176_493, WaterSplashEventMarking, WaterSplashEventMarking2, WaterSplashEventCombo, WaterSplashEventWaterDripping,
             Unk188_539, YukiMusumeShoukan, IaijutsuBlade, Unk199_595,Unk199_596,Unk199_597, BroAttack, LiberatedSpiritCircle, Unk205_640,山不敗,KinesisMind_Break,超載魔力,
-            DreamDowon,乙太,創造,奇蹟,魔劍共鳴
+            DreamDowon,乙太,創造,奇蹟,魔劍共鳴,
+            TalismanEnergy,ScrollEnergy,TalismanClone,MiracleTonic,CloneRampage
 
     );
 

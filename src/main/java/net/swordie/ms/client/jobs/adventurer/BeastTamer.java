@@ -376,7 +376,7 @@ public class BeastTamer extends Job {
         Option o2 = new Option();
         SkillInfo si = SkillData.getSkillInfoById(FRIENDS_OF_ARBY);
         int slv = si.getCurrentLevel();
-        if (tsm.getOptByCTSAndSkill(HolySymbol, Bishop.HOLY_SYMBOL) == null) { // Only apply if player doesn't have Holy Symbol
+        if (tsm.getOptByCTSAndSkill(HolySymbol, Bishop.神聖祈禱) == null) { // Only apply if player doesn't have Holy Symbol
             o1.nOption = si.getValue(x, slv);
             o1.rOption = FRIENDS_OF_ARBY;
             tsm.putCharacterStatValue(HolySymbol, o1);

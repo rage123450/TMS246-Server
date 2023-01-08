@@ -561,7 +561,7 @@ public class ItemHandler {
                     }
                     Equip oldEquip = equip.deepCopy();
 
-                    OutPacket outPacket = new OutPacket(OutHeader.UNK_690);
+                    OutPacket outPacket = new OutPacket(OutHeader.UNK_789);
                     outPacket.encodeInt(chr.getId());
                     outPacket.encodeByte(1);
                     outPacket.encodeInt(1);
@@ -726,7 +726,7 @@ public class ItemHandler {
     }
 
 
-    @Handler(op = InHeader.USER_ARCANE_SYMBOL_MERGE_REQUEST)
+    @Handler(op = InHeader.USER_ARCANE_SYMBOL_MERGE_REQUEST)//合併ARC
     public static void handleUserArcaneSymbolMergeRequest(Char chr, InPacket inPacket) {
         int type = inPacket.decodeInt();
         int fromPos = inPacket.decodeInt();

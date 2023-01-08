@@ -243,7 +243,7 @@ public class Kinesis extends Job {
                 o1.nValue = count * si.getValue(indiePMdR, slv);
                 o1.nReason = skillID;
                 o1.tTerm = si.getValue(time, slv);
-                tsm.putCharacterStatValue(KinesisMind_Break, o1);//486  IndiePMdR
+                tsm.putCharacterStatValue(IndiePMdR, o1);//
                 tsm.sendSetStatPacket();
                 break;
             case MENTAL_SHOCK:
@@ -397,8 +397,8 @@ public class Kinesis extends Job {
                     tsm.removeStatsBySkill(skillID);
                 } else {
                     o1.nOption = si.getValue(x, slv);
-                    o1.nReason = skillID;
-                    tsm.putCharacterStatValue(KinesisPsychicEnergeShield, o1);
+                    o1.rOption = skillID;
+                    tsm.putCharacterStatValue(KinesisPsychicShield, o1);//KinesisPsychicEnergeShield
                 }
                 break;
             case 心靈護盾://改為被動
@@ -476,7 +476,7 @@ public class Kinesis extends Job {
     public void handleHit(Client c, InPacket inPacket, HitInfo hitInfo) {
         TemporaryStatManager tsm = chr.getTemporaryStatManager();
         if (tsm.hasStatBySkillId(心靈本能)) {
-            hitInfo.hpDamage = (int) (hitInfo.hpDamage * (tsm.getOption(KinesisPsychicEnergeShield).nOption / 100D));
+            hitInfo.hpDamage = (int) (hitInfo.hpDamage * (tsm.getOption(KinesisPsychicShield).nOption / 100D)); //KinesisPsychicEnergeShield
             substractPP(1);
         }
         if (getPP() <= 0) {
@@ -507,18 +507,18 @@ public class Kinesis extends Job {
     public void handleLevelUp() {
         super.handleLevelUp();
 
-//        short level = chr.getLevel();
-//        switch (level) {
-//            case 30:
-//                handleJobAdvance(JobConstants.JobEnum.KINESIS_2.getJobId());
-//                break;
-//            case 60:
-//                handleJobAdvance(JobConstants.JobEnum.KINESIS_3.getJobId());
-//                break;
-//            case 100:
-//                handleJobAdvance(JobConstants.JobEnum.KINESIS_4.getJobId());
-//                break;
-//        }
+        short level = chr.getLevel();
+        switch (level) {
+            case 30:
+                handleJobAdvance(JobConstants.JobEnum.KINESIS_2.getJobId());
+                break;
+            case 60:
+                handleJobAdvance(JobConstants.JobEnum.KINESIS_3.getJobId());
+                break;
+            case 100:
+                handleJobAdvance(JobConstants.JobEnum.KINESIS_4.getJobId());
+                break;
+        }
     }
 
     @Override

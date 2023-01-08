@@ -40,6 +40,7 @@ import net.swordie.ms.world.field.fieldeffect.FieldEffect;
 import net.swordie.ms.world.field.obtacleatom.ObtacleAtomInfo;
 import net.swordie.ms.world.field.obtacleatom.ObtacleInRowInfo;
 import net.swordie.ms.world.field.obtacleatom.ObtacleRadianInfo;
+import org.hibernate.cfg.Environment;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -574,13 +575,26 @@ public class FieldPacket {
         return outPacket;
     }
 
-    public static OutPacket showItemReleaseEffect(int charID, short pos, boolean bonus) {
+    public static OutPacket showItemReleaseEffect(int charID, short pos, boolean bonus) { //潛力設定(放大鏡)
         OutPacket outPacket = new OutPacket(OutHeader.SHOW_ITEM_RELEASE_EFFECT);
 
         outPacket.encodeInt(charID);
 
         outPacket.encodeShort(pos);
         outPacket.encodeByte(bonus);
+
+        return outPacket;
+    }
+
+    public static OutPacket showItemPotentialReset(int charID, boolean success, int itemId, int equipId) { //潛力重製
+        OutPacket outPacket = new OutPacket(OutHeader.SHOW_ITEM_POTENTIAL_RESET);
+
+        outPacket.encodeInt(charID);
+
+        outPacket.encodeByte(success);
+        outPacket.encodeInt(itemId);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(equipId);
 
         return outPacket;
     }
@@ -797,6 +811,12 @@ public class FieldPacket {
     public static OutPacket environmentMove(String env, int mode) {
         OutPacket outPacket = new OutPacket(OutHeader.SET_OBJECT_STATE);
         outPacket.encodeString(env);
+        outPacket.encodeInt(mode);
+        return outPacket;
+    }
+
+    public static OutPacket getUpdateEnvironment(String env, int mode) {
+        OutPacket outPacket = new OutPacket(OutHeader.FIELD_EFFECT_UPDATE);
         outPacket.encodeInt(mode);
         return outPacket;
     }
@@ -1046,8 +1066,8 @@ public class FieldPacket {
         OutPacket outPacket = new OutPacket(OutHeader.RUNE_STONE_APPEAR);
 
         outPacket.encodeInt(0); // object id ??
-        outPacket.encodeInt(runeStone.getEventType().ordinal());
-        outPacket.encodeInt(0); // new 202, doesn't do anything visually
+        outPacket.encodeInt(runeStone.getEventType().ordinal());// 0
+        outPacket.encodeInt(2); // new 202, doesn't do anything visually
         outPacket.encodeInt(runeStone.getRuneType().getVal()); // Rune Type
 
         outPacket.encodePositionInt(runeStone.getPosition()); // Position
@@ -1082,14 +1102,14 @@ public class FieldPacket {
         return outPacket;
     }
 
-    public static OutPacket runeStoneDisappear(int charID) { //RuneStone is Used
+    public static OutPacket runeStoneDisappear(int charID , RuneType type) { //RuneStone is Used
         OutPacket outPacket = new OutPacket(OutHeader.RUNE_STONE_DISAPPEAR);
 
         outPacket.encodeInt(0); // Has to be 0
         outPacket.encodeInt(charID);
-        outPacket.encodeInt(0); // new 188
-        outPacket.encodeByte(false); // new 188
-        outPacket.encodeByte(1); // new
+        outPacket.encodeInt(100); // new 188
+        outPacket.encodeByte(0); // new 188
+        outPacket.encodeByte(type.getVal()); // new
 
         return outPacket;
     }
@@ -1113,10 +1133,11 @@ public class FieldPacket {
 
     public static OutPacket runeStoneClearAndAllRegister() {
         OutPacket outPacket = new OutPacket(OutHeader.RUNE_STONE_CLEAR_AND_ALL_REGISTER);
-        int count = 0;
-        outPacket.encodeInt(count); // count
-        outPacket.encodeInt(1); // new
-        for (int i = 0; i < count; i++) {
+
+        outPacket.encodeInt(1);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(2);
+        for (int i = 0; i < 1; i++) {
             outPacket.encodeInt(0); // not sure, but whatever
         }
 

@@ -68,6 +68,7 @@ public class Luminous extends Job {
     public static final int PHOTIC_MEDITATION = 27111006; //Buff
     public static final int LUNAR_TIDE = 27110007;
     public static final int DEATH_SCYTHE = 27111303;
+    public static final int 黑暗之眼 = 27101202;
 
     public static final int DARK_CRESCENDO = 27121005; //Buff
     public static final int ARCANE_PITCH = 27121006; //Buff

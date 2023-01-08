@@ -106,7 +106,7 @@ public class JobSkillHandler {
         if (pa == null) {
             return;
         }
-        //pa.localPsychicAreaKey = localKey;
+        pa.localPsychicAreaKey = localKey;
         pa.psychicAreaKey = localKey;
         chr.write(UserLocal.doActivePsychicArea(pa));
 
@@ -173,6 +173,7 @@ public class JobSkillHandler {
             Life life = f.getLifeByObjectID(mobID);
             plb.mob = life == null ? null : (Mob) life;
             plb.stuffID = inPacket.decodeShort();
+            plb.unk = inPacket.decodeInt();// v248++
             plb.usableCount = inPacket.decodeShort();
             plb.posRelID = inPacket.decodeByte();
             plb.start = inPacket.decodePositionInt();
@@ -841,15 +842,5 @@ public class JobSkillHandler {
     public static void handleCreateSubObtacle(Char chr, InPacket inPacket) {
         int count = inPacket.decodeInt();
         chr.write(SkillPacket.removeSecondAtom(chr, count));
-    }
-
-    @Handler(op = InHeader.穿刺)
-    public static void handle(Char chr, InPacket inPacket) {
-        int skillid = inPacket.decodeInt();
-        int level = inPacket.decodeInt();
-        AttackInfo ret = new AttackInfo();
-        ret.skillId = skillid;
-        ret.slv = level;
-        chr.write(SkillPacket.穿刺(chr, skillid, level));
     }
 }

@@ -4,6 +4,7 @@ import jnr.ffi.annotations.In;
 import net.swordie.ms.ServerConstants;
 import net.swordie.ms.client.character.Char;
 import net.swordie.ms.client.character.items.Equip;
+import net.swordie.ms.client.jobs.Job;
 import net.swordie.ms.connection.packet.QuickMoveInfo;
 import net.swordie.ms.enums.BaseStat;
 import net.swordie.ms.enums.EnchantStat;
@@ -699,7 +700,7 @@ public class GameConstants {
 
         } else if (JobConstants.isAdventurerThief(job) || JobConstants.isNightLord(job) || JobConstants.isShadower(job)
                 || JobConstants.isPhantom(job) || JobConstants.isNightWalker(job) || JobConstants.isDualBlade(job)
-                || JobConstants.isCadena(job)) {
+                || JobConstants.isCadena(job) || JobConstants.isHoYoung(job)) {
             return BaseStat.luk;
 
         } else if (JobConstants.isDemonAvenger(job)) {
@@ -1049,6 +1050,117 @@ public class GameConstants {
             return 30;
         }
         return 50;
+    }
+
+    public static boolean isBossField(int mapid) {
+        switch (mapid) {
+            case 105200100:
+            case 105200110:
+            case 105200200:
+            case 105200210:
+            case 105200300:
+            case 105200310:
+            case 105200400:
+            case 105200410:
+            case 105200500:
+            case 105200510:
+            case 105200600:
+            case 105200610:
+            case 105200700:
+            case 105200710:
+            case 105200800:
+            case 105200810:
+            case 211070100:
+            case 211070102:
+            case 211070104:
+            case 220080100:
+            case 220080200:
+            case 220080300:
+            case 221030910:
+            case 240060000:
+            case 240060001:
+            case 240060100:
+            case 240060101:
+            case 240060200:
+            case 240060201:
+            case 262030100:
+            case 262030200:
+            case 262030300:
+            case 262031100:
+            case 262031200:
+            case 262031300:
+            case 270050100:
+            case 270051100:
+            case 271040100:
+            case 271041100:
+            case 272020200:
+            case 272020210:
+            case 280030000:
+            case 280030100:
+            case 350060400:
+            case 350060500:
+            case 350060600:
+            case 350060700:
+            case 350060800:
+            case 350060900:
+            case 350160100:
+            case 350160140:
+            case 350160200:
+            case 350160220:
+            case 350160240:
+            case 350160260:
+            case 401060100:
+            case 401060200:
+            case 401060300:
+            case 410002000:
+            case 410002020:
+            case 410002040:
+            case 410002060:
+            case 410002080:
+            case 450003800:
+            case 450003840:
+            case 450003880:
+            case 450003920:
+            case 450003960:
+            case 450004100:
+            case 450004150:
+            case 450004200:
+            case 450004250:
+            case 450004300:
+            case 450004400:
+            case 450004450:
+            case 450004500:
+            case 450004550:
+            case 450004600:
+            case 450008100:
+            case 450008150:
+            case 450008200:
+            case 450008250:
+            case 450008300:
+            case 450008350:
+            case 450008700:
+            case 450008750:
+            case 450008800:
+            case 450008850:
+            case 450008900:
+            case 450008950:
+            case 450009400:
+            case 450009450:
+            case 450010400:
+            case 450010500:
+            case 450012210:
+            case 450012600:
+            case 450013100:
+            case 450013200:
+            case 450013300:
+            case 450013400:
+            case 450013500:
+            case 450013600:
+            case 450013700:
+            case 450013750:
+                return true;
+        }
+        return false;
     }
 
     public static class UnionChucMultiplier {

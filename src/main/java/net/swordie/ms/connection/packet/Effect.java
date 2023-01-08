@@ -7,6 +7,7 @@ import net.swordie.ms.client.jobs.adventurer.archer.Pathfinder;
 import net.swordie.ms.client.jobs.adventurer.thief.BladeMaster;
 import net.swordie.ms.client.jobs.adventurer.thief.Shadower;
 import net.swordie.ms.client.jobs.adventurer.warrior.DarkKnight;
+import net.swordie.ms.client.jobs.anima.HoYoung;
 import net.swordie.ms.client.jobs.cygnus.NightWalker;
 import net.swordie.ms.client.jobs.flora.Illium;
 import net.swordie.ms.client.jobs.legend.Evan;
@@ -554,6 +555,9 @@ public class Effect {
             outPacket.encodeInt(getArg5());
         } else if (skillID == Pathfinder.CARDINAL_TORRENT || skillID == Pathfinder.CARDINAL_TORRENT_ADVANCED) {
             outPacket.encodeInt(getArg5());
+        } else if (skillID == HoYoung.TALISMAN_EVIL_SEALING_GOURD_EFFECT) {
+            outPacket.encodeInt(getArg5());
+            outPacket.encodeInt(getArg6());
         } else if (skillID == 80001132) { // doesn't exist :thonk:
             outPacket.encodeByte(getArg5());
         } else if (SkillConstants.isUnregisteredSkill(skillID)) {
@@ -571,6 +575,17 @@ public class Effect {
         return effect;
     }
 
+    public static Effect showTalismanSwallowEffect(int skillId, int chrLvl, int slv, int mobId, int templateId) {
+        Effect effect = new Effect(SkillUse);
+
+        effect.setArg1(skillId);
+        effect.setArg2(chrLvl);
+        effect.setArg3(slv);
+        effect.setArg5(mobId);
+        effect.setArg6(templateId);
+
+        return effect;
+    }
 
     public static Effect createFieldTextEffect(String msg, int letterDelay, int showTime, int clientPosition,
                                                Position boxPos, int align, int lineSpace, TextEffectType type,

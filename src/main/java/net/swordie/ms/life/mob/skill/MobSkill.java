@@ -386,6 +386,10 @@ public class MobSkill {
             case Attract:
 
                 break;
+            case BanMap:
+
+                break;
+
             case AreaFire:
             case AreaPoison:
             case AreaForce:

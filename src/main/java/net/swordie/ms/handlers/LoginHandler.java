@@ -217,7 +217,7 @@ public class LoginHandler {
         Server.getInstance().addAuthToken(token, c.getUser().getId());
 
         System.out.println("token: " + token);
-        OutPacket outPacket = new OutPacket(OutHeader.SET_ACCOUNT_INFO);
+        OutPacket outPacket = new OutPacket(OutHeader.ISSUE_RELOGIN_COOKIE);
         outPacket.encodeShort(token.length);
         outPacket.encodeArr(token);
         c.write(outPacket);
@@ -383,6 +383,7 @@ public class LoginHandler {
         Char chr = new Char(name, keySettingType, eventNewCharSaleJob, job.getJobId(),
                 curSelectedSubJob, curSelectedRace, gender, skin, face, hair, items);
         chr.setUserId(acc.getUser().getId());
+
         JobManager.getJobById(job.getJobId(), chr).setCharCreationStats(chr);
         chr.initFuncKeyMaps(keySettingType, JobConstants.isBeastTamer(chr.getJob()));
         // chr.setFuncKeyMap(FuncKeyMap.getDefaultMapping());

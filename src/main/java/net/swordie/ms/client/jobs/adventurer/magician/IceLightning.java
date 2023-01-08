@@ -56,7 +56,7 @@ public class IceLightning extends Magician {
     public static final int BLIZZARD = 2221007;
     public static final int BLIZZARD_FA = 2220014;
     public static final int FROZEN_ORB = 2221012;
-    public static final int INFINITY_IL = 2221004;
+    public static final int 魔力無限 = 2221004;
     public static final int ELQUINES = 2221005;
     public static final int ARCANE_AIM_IL = 2220010;
     public static final int MAPLE_WARRIOR_IL = 2221000;

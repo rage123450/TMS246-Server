@@ -74,6 +74,17 @@ public class BroadcastMsg {
                 outPacket.encodeByte(getArg2()); // Channel
                 outPacket.encodeByte(getArg3()); // Mega Ear
                 break;
+            case BlowWeather:
+                outPacket.encodeInt(getArg1());
+                break;
+            case BalloonMessage:
+                outPacket.encodeInt(getArg1());
+                outPacket.encodeInt(getArg2()); // second
+                outPacket.encodeByte(getChr() != null);
+                if (getChr() != null) {
+                    outPacket.encodeArr(getChr().getAvatarData().getAvatarLook().getPackedCharacterLook());
+                }
+                break;
             case BlueChat_ItemInfo:
             case BlueChat_ItemInfo_2:
                 outPacket.encodeInt(getArg1()); // item Id

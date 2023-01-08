@@ -1932,6 +1932,32 @@ public class AdminCommands {
         }
     }
 
+    @Command(names = { "vpoints" }, requiredType = Admin)
+    public static class VPoints extends AdminCommand {
+        public static void execute(Char chr, String[] args) {
+            if (args.length < 4) {
+                chr.chatMessage(adminChatType, adminMsgPrefix + "Syntax: !vpoints <0 or 1> <player name> <amount>");
+                chr.chatMessage(adminChatType, adminMsgPrefix + "Type 0 to GIVE or 1 to SET an amount.");
+                return;
+            }
+            int type = Integer.parseInt(args[1]);
+            String name = args[2];
+            int amount = Integer.parseInt(args[3]);
+            Char target = chr.getWorld().getCharByName(name);
+            if (target == null) {
+                chr.chatMessage(adminChatType, adminMsgPrefix + "Could not find player '%s'.", name);
+                return;
+            }
+            if (type == 0) {
+                target.addNodeShards(amount);
+                target.chatMessage(adminChatType, adminMsgPrefix + "You have gained %d v points by %s.", amount, chr.getName());
+            } else {
+                target.setNodeShards(amount);
+                target.chatMessage(adminChatType, adminMsgPrefix + "Your v points have changed to %d by %s.", amount, chr.getName());
+            }
+        }
+    }
+
     @Command(names = {"goto"}, requiredType = Tester)
     public static class GoTo extends AdminCommand {
         public static void execute(Char chr, String[] args) {

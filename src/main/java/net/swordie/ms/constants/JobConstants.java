@@ -1106,6 +1106,14 @@ public class JobConstants {
         return jobId / 100 == 21 || jobId == 2000;
     }
 
+    public static boolean isHoYoung(short jobId) {
+        return jobId == JobEnum.HOYOUNG.getJobId()
+                || jobId == JobEnum.HOYOUNG_1.getJobId()
+                || jobId == JobEnum.HOYOUNG_2.getJobId()
+                || jobId == JobEnum.HOYOUNG_3.getJobId()
+                || jobId == JobEnum.HOYOUNG_4.getJobId();
+    }
+
     public static boolean isKinesis(short jobId) {
         return jobId == JobEnum.KINESIS_0.getJobId()
                 || jobId == JobEnum.KINESIS_1.getJobId()
@@ -1245,13 +1253,12 @@ public class JobConstants {
                 isEvan(jobID) || isLuminous(jobID) || isBattleMage(jobID) || isKanna(jobID) || isIllium(jobID) || isLara(jobID);
     }
 
-
     public static boolean isArcherEquipJob(short jobID) {
         return isAdventurerArcher(jobID) || isWindArcher(jobID) || isMercedes(jobID) || isWildHunter(jobID);
     }
 
     public static boolean isThiefEquipJob(short jobID) {
-        return isAdventurerThief(jobID) || isNightWalker(jobID) || isPhantom(jobID) || isXenon(jobID) || isCadena(jobID);
+        return isAdventurerThief(jobID) || isNightWalker(jobID) || isPhantom(jobID) || isXenon(jobID) || isCadena(jobID) || isHoYoung(jobID);
     }
 
     public static boolean isPirateEquipJob(short jobID) {

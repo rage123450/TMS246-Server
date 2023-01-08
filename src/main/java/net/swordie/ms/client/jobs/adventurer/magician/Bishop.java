@@ -39,14 +39,17 @@ import static net.swordie.ms.client.character.skills.SkillStat.*;
 import static net.swordie.ms.client.character.skills.temp.CharacterTemporaryStat.*;
 
 public class Bishop extends Magician {
-    public static final int BLESS = 2301004;
-    public static final int HEAL = 2301002;
+
+
+    public static final int 天使祝福 = 2301004;
+    public static final int 群體治癒 = 2301002;
     public static final int MP_EATER_BISHOP = 2300000;
     public static final int MAGIC_BOOSTER_BISH = 2301008;
     public static final int BLESSED_ENSEMBLE = 2300009;
 
-    public static final int HOLY_SYMBOL = 2311003; // fix for party buff is inside the wz, gotta add  <int name="massSpell" value="1"/>
-    public static final int DIVINE_PROTECTION = 2311012;
+    public static final int 瞬間移動爆發 = 2311016;
+    public static final int 神聖祈禱 = 2311003; // fix for party buff is inside the wz, gotta add  <int name="massSpell" value="1"/>
+    public static final int 聖靈守護 = 2311012;
     public static final int HOLY_MAGIC_SHELL = 2311009;
     public static final int DISPEL = 2311001;
     public static final int SHINING_RAY = 2311004;
@@ -61,12 +64,12 @@ public class Bishop extends Magician {
     public static final int HOLY_SYMBOL_PREPARATION = 2320047;
     public static final int HOLY_SYMBOL_ITEM_DROP = 2320048;
     public static final int ADV_BLESSING_FEROCITY = 2320049;
-    public static final int ADV_BLESSING_BOSS_RUSH = 2320050;
+    public static final int 進階祝福_魔王剋星 = 2320050;
     public static final int ADV_BLESSING_EXTRA_POINT = 2320051;
     public static final int RESURRECTION = 2321006;
-    public static final int ADV_BLESSING = 2321005;
+    public static final int 進階祝福 = 2321005;
     public static final int BAHAMUT = 2321003;
-    public static final int INFINITY_BISH = 2321004;
+    public static final int 魔力無限 = 2321004;
     public static final int BLESSED_HARMONY = 2320013;
     public static final int MAPLE_WARRIOR_BISH = 2321000;
     public static final int GENESIS = 2321008;
@@ -348,7 +351,7 @@ public class Bishop extends Magician {
                     tsm.sendSetStatPacket();
                 }
                 break;
-            case HEAL:
+            case 群體治癒:
                 o1.nOption = si.getValue(x, slv);
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
@@ -469,14 +472,14 @@ public class Bishop extends Magician {
                 townPortal.spawnTownPortal();*/
                 chr.dispose();
                 break;
-            case DIVINE_PROTECTION:
+            case 聖靈守護:
                 o1.nOption = 1;
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
                 o1.bOption = 1;
                 tsm.putCharacterStatValue(AntiMagicShell, o1);
                 break;
-            case HEAL:
+            case 群體治癒:
                 Rect rect = chr.getRectAround(si.getFirstRect());
                 if (!chr.isLeft()) {
                     rect.horizontalFlipAround(chr.getPosition().getX());
@@ -491,7 +494,7 @@ public class Bishop extends Magician {
                     chr.reduceSkillCoolTime(skillID, si.getValue(y, slv) * 1000);
                 }
                 break;
-            case BLESS:
+            case 天使祝福:
                 o1.nOption = si.getValue(u, slv);
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
@@ -507,7 +510,7 @@ public class Bishop extends Magician {
                 tsm.putCharacterStatValue(PAD, o3);
                 tsm.putCharacterStatValue(MAD, o3);
                 break;
-            case ADV_BLESSING:
+            case 進階祝福:
                 o1.nOption = si.getValue(u, slv);
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
@@ -527,14 +530,14 @@ public class Bishop extends Magician {
                 o4.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndieMHP, o4);
                 tsm.putCharacterStatValue(IndieMMP, o4);
-                if (chr.hasSkill(ADV_BLESSING_BOSS_RUSH)) {
-                    o5.nValue = 10;
+                if (chr.hasSkill(進階祝福_魔王剋星)) {
+                    o5.nValue = 10; // B傷
                     o5.nReason = skillID;
                     o5.tTerm = si.getValue(time, slv);
                     tsm.putCharacterStatValue(IndieBDR, o5);
                 }
                 break;
-            case HOLY_SYMBOL: // fix for party buff is inside the wz, gotta add  <int name="massSpell" value="1"/>
+            case 神聖祈禱: // fix for party buff is inside the wz, gotta add  <int name="massSpell" value="1"/>
                 o1.nOption = si.getValue(x, slv) + (chr.hasSkill(HOLY_SYMBOL_EXPERIENCE) ? 20 : 0);
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);

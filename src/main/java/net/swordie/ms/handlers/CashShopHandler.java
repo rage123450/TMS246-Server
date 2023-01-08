@@ -45,6 +45,7 @@ public class CashShopHandler {
         byte type = inPacket.decodeByte();
         CashItemType cit = CashItemType.getRequestTypeByVal(type);
         CashShop cs = Server.getInstance().getCashShop();
+        int itemID;
         if (cit == null) {
             log.error("Unhandled cash shop cash item request " + type);
             c.write(CCashShop.error());
@@ -52,12 +53,16 @@ public class CashShopHandler {
         }
         switch (cit) {
             case Req_Buy:
-                byte idk1 = inPacket.decodeByte();
-                int paymentMethod = inPacket.decodeByte() +1;
+                //byte idk1 = inPacket.decodeByte();
+                int paymentMethod = inPacket.decodeByte() + 1;
+                inPacket.decodeByte();
+                boolean useAllMileage = inPacket.decodeByte() == 1;
                 int sn = inPacket.decodeInt();
                 int itemPos = inPacket.decodeInt();
-                int cost = inPacket.decodeInt();
+                //int cost = inPacket.decodeInt();
                 CashShopItem csi = cs.getItemByPosition(itemPos - 1); // client's pos starts at 1
+                //CashShopItem csi = cs.getItembySN(sn);
+                int cost = csi.getNewPrice();
                 if (csi == null || csi.getNewPrice() != cost) {
                     c.write(CCashShop.error());
                     log.error("Requested item's cost did not match client's cost");
@@ -122,6 +127,7 @@ public class CashShopHandler {
                 break;
             case Req_MoveStoL:
                 itemSn = inPacket.decodeLong();
+                itemID = inPacket.decodeInt();
                 item = chr.getItemBySn(itemSn);
                 if (item == null || trunk.isFull()) {
                     c.write(CCashShop.fullInventoryMsg());

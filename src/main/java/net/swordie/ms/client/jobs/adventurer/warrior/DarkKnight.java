@@ -427,7 +427,7 @@ public class DarkKnight extends Warrior {
             if (chr.getField().getSummons().stream().anyMatch(s -> s.getChr() == chr && s.getSkillID() == EVIL_EYE)
                     && !chr.hasSkillOnCooldown(REVENGE_OF_THE_EVIL_EYE)
                     && Util.succeedProp(proc)) {
-                chr.getField().broadcastPacket(Summoned.summonBeholderRevengeAttack(evilEye, hitInfo.templateID));
+                chr.getField().broadcastPacket(Summoned.summonBeholderRevengeAttack(evilEye, hitInfo.SkillId)); //templateID
                 chr.heal((int) (chr.getMaxHP() / ((double) 100 / heal)));
                 chr.addSkillCoolTime(REVENGE_OF_THE_EVIL_EYE, si.getValue(cooltime, slv) * 1000);
             }

@@ -101,6 +101,8 @@ public class Field {
     private int averageMobLevel;
     private boolean hasVrInfo;
     private int highestFhYValue;
+    private Position reviveCurFieldOfNoTransferPoint;
+    private boolean reviveCurField, reviveCurFieldOfNoTransfer;
     private boolean changeToChannelOnLeave;
     private Map<String, Object> properties;
     private int barrier;
@@ -146,6 +148,30 @@ public class Field {
 
     public void setRect(Rect rect) {
         this.rect = rect;
+    }
+
+    public void setReviveCurFieldOfNoTransferPoint(Position reviveCurFieldOfNoTransferPoint) {
+        this.reviveCurFieldOfNoTransferPoint = reviveCurFieldOfNoTransferPoint;
+    }
+
+    public void setReviveCurField(boolean reviveCurField) {
+        this.reviveCurField = reviveCurField;
+    }
+
+    public boolean isReviveCurField() {
+        return reviveCurField;
+    }
+
+    public void setReviveCurFieldOfNoTransfer(boolean reviveCurFieldOfNoTransfer) {
+        this.reviveCurFieldOfNoTransfer = reviveCurFieldOfNoTransfer;
+    }
+
+    public boolean isReviveCurFieldOfNoTransfer() {
+        return reviveCurFieldOfNoTransfer;
+    }
+
+    public Position getReviveCurFieldOfNoTransferPoint() {
+        return reviveCurFieldOfNoTransferPoint;
     }
 
     public int getVrTop() {
@@ -1057,10 +1083,6 @@ public class Field {
         return getSummonsInRect(rect).stream().filter(s -> s.getSkillID() == skillId && s.getChr() == chr).findFirst().orElse(null);
     }
 
-    public Summon getSummonByMobTemplateId(int mobTemplateId) {
-        return getSummons().stream().filter(s -> s.getMobTemplateId() == mobTemplateId).findFirst().orElse(null);
-    }
-
     public synchronized void removeLife(int id, boolean fromSchedule) {
         Life life = getLifeByObjectID(id);
         if (life == null) {
@@ -1416,7 +1438,7 @@ public class Field {
     public void useRuneStone(Client c, RuneStone runeStone) {
         Char chr = c.getChr();
         broadcastPacket(FieldPacket.completeRune(chr));
-        broadcastPacket(FieldPacket.runeStoneDisappear(chr.getId()));
+        broadcastPacket(FieldPacket.runeStoneDisappear(chr.getId(), runeStone.getRuneType()));
         chr.write(FieldPacket.runeStoneSkillAck(runeStone.getRuneType()));
 
         setRuneStone(null);

@@ -24,7 +24,7 @@ public class ProcessType {
         if (bool) {
             int processType = inPacket.decodeInt();
             while (processType != -1) {
-                if (processType >= 1 && processType <= 16 || processType >= 19 && processType <= 22) {
+                if (processType >= 1 && processType <= 16 || processType >= 19 && processType <= 24) {
                     bool = inPacket.decodeByte() != 0;
                     if (bool) {
                         switch (processType) {
@@ -75,13 +75,23 @@ public class ProcessType {
                                     inPacket.decodeInt();
                                 }
                                 break;
-                            case 22:
+                            case 24:
                                 skillUseInfo.shardsPositions = new HashSet<>();
                                 int shardsSize = inPacket.decodeInt();
                                 for (int i = 0; i < shardsSize; i++) {
                                     int mobObjectId = inPacket.decodeInt();
                                     Position position = inPacket.decodePositionInt();
                                     skillUseInfo.shardsPositions.add(new Tuple<>(mobObjectId, position));
+                                }
+                                break;
+                            case 28:
+                                inPacket.decodeInt();
+                                break;
+                            case 33:
+                                int size1 = inPacket.decodeInt();
+                                for (int i = 0; i < size1; i++) {
+                                    inPacket.decodeInt();
+                                    inPacket.decodeInt();
                                 }
                                 break;
                         }

@@ -25,6 +25,7 @@ import net.swordie.ms.client.jobs.adventurer.warrior.DarkKnight;
 import net.swordie.ms.client.jobs.adventurer.warrior.Hero;
 import net.swordie.ms.client.jobs.adventurer.warrior.Paladin;
 import net.swordie.ms.client.jobs.adventurer.warrior.Warrior;
+import net.swordie.ms.client.jobs.anima.HoYoung;
 import net.swordie.ms.client.jobs.anima.Lara;
 import net.swordie.ms.client.jobs.cygnus.*;
 import net.swordie.ms.client.jobs.flora.Adele;
@@ -273,7 +274,8 @@ public class SkillConstants {
                 skillId == 400051041 || skillId == 41121001 || skillId == 155121341 || skillId == 400011072 ||
                 skillId == 24121005 || skillId == 112001008 || skillId == 112110003 || skillId == 112111016 ||
                 skillId == 400021072 || skillId == 400021061 || skillId == 3321036 || skillId == 3321035 ||
-                skillId == 3321040 || skillId == 3321038|| skillId == 400051334 || skillId == 64101002 || skillId == 64101008 || skillId == 151001004;
+                skillId == 3321040 || skillId == 3321038|| skillId == 400051334 || skillId == 64101002 || skillId == 64101008 ||
+                skillId == 164121042 || skillId == 151001004;
     }
 
     public static boolean isEvanForceSkill(int skillId) {
@@ -452,13 +454,14 @@ public class SkillConstants {
     public static boolean isScreenCenterAttackSkill(int skillID) {
         switch (skillID) {
             case 80001431:
-            case 80011562:
-            case 100001283:
-            case 21121057:
             case 13121052:
-            case 14121050:
             case 14121052:
             case 15121052:
+            case 21121057:
+            case 80003084:
+            case 80011562:
+            case 100001283:
+            //case 14121050:
                 return true;
         }
         return false;
@@ -952,63 +955,16 @@ public class SkillConstants {
 
     public static int getAdvancedAttackCountHyperSkill(int skillId) {
         switch(skillId) {
-            case 25121005:
-                return 25120148;
-            case 31121001:
-                return 31120050;
-            case 31111005:
-                return 31120044;
-            case 22140023:
-                return 22170086;
-            case 21120022:
-            case 21121015:
-            case 21121016:
-            case 21121017:
-                return 21120066;
-            case 21120006:
-                return 21120049;
-            case 21110020:
-            case 21111021:
-                return 21120047;
-            case 15121002:
-                return 15120048;
-            case 14121002:
-                return 14120045;
-            case 15111022:
-            case 15120003:
-                return 15120045;
-            case 51121008:
-                return 51120048;
-            case 32111003:
-                return 32120047;
-            case 35121016:
-                return 35120051;
-            case 37110002:
-                return 37120045;
-            case 51120057:
-                return 51120058;
-            case 51121007:
-                return 51120051;
-            case 65121007:
-            case 65121008:
-            case 65121101:
-                return 65120051;
-            case 61121201:
-            case 61121100:
-                return 61120045;
-            case 51121009:
-                return 51120058;
-            case 13121002:
-                return 13120048;
-            case 5121016:
-            case 5121017:
-                return 5120051;
-            case 3121015:
-                return 3120048;
+            case 4331011:
+                return 4340045;
+            case 3121020:
+                return 3120051;
             case 2121006:
                 return 2120048;
             case 2221006:
                 return 2220048;
+            case 3121015:
+                return 3120048;
             case 1221011:
                 return 1220050;
             case 1120017:
@@ -1016,29 +972,113 @@ public class SkillConstants {
                 return 1120051;
             case 1221009:
                 return 1220048;
-            case 4331000:
-                return 4340045;
-            case 3121020:
-                return 3120051;
-            case 3221017:
-                return 3220048;
-            case 4221007:
+            case 4221017:
                 return 4220048;
+            case 3221023:
+            case 3221024:
+            case 3201011:
+            case 3211017:
+                return 3220048;
             case 4341009:
                 return 4340048;
             case 5121007:
                 return 5120048;
+            case 5221016:
+                return 5220047;
+            case 5321000:
+                return 5320048;
             case 5321004:
                 return 5320043;
-            // if ( nSkillID != &loc_A9B1CF ) nothing done with line 172?
-            case 12110028:
-            case 12000026:
-            case 12100028:
-                return 12120045;
-            case 12120010:
-                return 12120045;
             case 12120011:
                 return 12120046;
+            case 12000026:
+            case 12100028:
+            case 12110028:
+            case 12120010:
+                return 12120045;
+            case 13121002:
+                return 13120048;
+            case 14121002:
+                return 14120045;
+            case 152001001:
+            case 152110004:
+            case 152120001:
+                return 152120032;
+            case 152121004:
+                return 152120035;
+            case 400010070:
+                return 21120066;
+            case 112000003:
+                return 112120044;
+            case 112101009:
+                return 112120048;
+            case 112111004:
+                return 112120050;
+            case 65121101:
+                return 65120051;
+            case 51121008:
+                return 51120048;
+            case 51121009:
+                return 51120058;
+            case 51121007:
+                return 51120051;
+            case 37110002:
+            case 37120001:
+                return 37120045;
+            case 41121001:
+                return 41120044;
+            case 41121002:
+                return 41120050;
+            case 41121021:
+                return 41120048;
+            case 42121000:
+                return 42120043;
+            case 35121016:
+                return 35120051;
+            case 15121002:
+                return 15120048;
+            case 21110020:
+            case 21111021:
+                return 21120047;
+            case 21120006:
+                return 21120049;
+            case 22140023:
+                return 22170086;
+            case 31121001:
+                return 31120050;
+
+            //下面都是goto LABEL_31後的
+            case 25121005:
+                return 25120148;
+            case 31111005:
+                return 31120044;
+            case 21120022:
+            case 21121015:
+            case 21121016:
+            case 21121017:
+                return 21120066;
+            case 15111022:
+            case 15120003:
+                return 15120045;
+            case 32111003:
+                return 32120047;
+            case 51120057:
+                return 51120058;
+            case 65121007:
+            case 65121008:
+                return 65120051;
+            case 61121201:
+            case 61121100:
+                return 61120045;
+            case 5121016:
+            case 5121017:
+                return 5120051;
+            case 4331000:
+                return 4340045;
+            case 3221017:
+                return 3220048;
+            case 4221007:
+                return 4220048;
             default:
                 return isDelugeSkill(skillId)
                         || isBurstAttackingSkill(skillId)
@@ -1740,9 +1780,11 @@ public class SkillConstants {
             case AngelicBuster.DAY_DREAMER:
             case Cadena.BACK_TO_HQ:
 
-                // Lef
-            case Illium.SHELTER_RETURN:
+                // flora
             case Adele.再訪:
+            //case Ark.回家技能:
+            case Illium.SHELTER_RETURN:
+
 
                 // Others
             case BeastTamer.HOMEWARD_BOUND:
@@ -1750,6 +1792,7 @@ public class SkillConstants {
             case Zero.TEMPLE_RECALL:
 
                 //anima
+            case HoYoung.青雲回歸:
             case Lara.前往納林:
 
                 return true;
@@ -1894,7 +1937,12 @@ public class SkillConstants {
             case 400021010:
             case 400021011:
             case Adele.碎片:
-            case Adele.穿刺:
+            case Adele.追蹤:
+            case Adele.回歸:
+            case Adele.無限:
+            case Adele.創造_1:
+            case Adele.創造_2:
+            case Adele.創造_3:
             case Adele.綻放:
                 return true;
         }
@@ -1905,6 +1953,8 @@ public class SkillConstants {
         switch (skillID) {
             case Job.LAST_RESORT:
             case Mihile.SHIELD_OF_LIGHT:
+            case HoYoung.CLONE_1:
+            case HoYoung.CLONE_RAMPAGE_ATOM:
                 return true;
         }
         return false;
@@ -2267,9 +2317,9 @@ public class SkillConstants {
 
     public static boolean isWingedJavelinOrAbyssalCast(int skillID) {
         switch (skillID) {
-            case 152110004:
-            case 152120016:
-            case 155121003:
+            case 152110004: //榮耀之翼：強化暗器
+            case 152120016: //榮耀之翼：強化暗器
+            case 155121003: //深淵技能
                 return true;
         }
         return false;
@@ -2277,10 +2327,10 @@ public class SkillConstants {
 
     public static boolean isRandomAttackSkill(int skillID) {
         switch (skillID) {
-            case 80011561: // Support Skill: Skuas Catapults
-            case 80002463: // Alliance Support: Bombardment Support
-            case 80001762: // Liberate the Rune of Thunder
-            case 80002212: // Lure of Storms
+            case 80001762: // 解放雷之輪
+            case 80002212: // 雷鳴誘餌
+            case 80002463: // 聯盟的支援：砲擊支援
+            case 80011561: // 支援技能：史庫亞斯的投石
                 return true;
         }
         return false;
@@ -2469,7 +2519,7 @@ public class SkillConstants {
     }
 
     public static boolean isBurstSkill(int skillID) {
-        return skillID == 3301004 || skillID == 3311013 || skillID == 3321005;
+        return skillID == 3301004 || skillID == 3310001 || skillID == 3321004;
     }
 
     public static int getCorrectCooltimeSkillID(int skillID) {
@@ -2812,7 +2862,7 @@ public class SkillConstants {
                 break;
             case FirePoison.ELEMENTAL_ADAPTATION_FP:
             case IceLightning.ELEMENTAL_ADAPTATION_IL:
-            case Bishop.DIVINE_PROTECTION:
+            case Bishop.聖靈守護:
                 stats.put(BaseStat.ter, si.getValue(SkillStat.asrR, slv));
                 break;
             case 61000003: // Scale Skin

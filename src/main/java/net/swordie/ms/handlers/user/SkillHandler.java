@@ -22,6 +22,7 @@ import net.swordie.ms.client.jobs.adventurer.magician.FirePoison;
 import net.swordie.ms.client.jobs.cygnus.DawnWarrior;
 import net.swordie.ms.client.jobs.flora.Adele;
 import net.swordie.ms.client.jobs.legend.Evan;
+import net.swordie.ms.client.jobs.legend.Luminous;
 import net.swordie.ms.client.party.PartyMember;
 import net.swordie.ms.connection.InPacket;
 import net.swordie.ms.connection.packet.*;
@@ -514,10 +515,21 @@ public class SkillHandler {
 
             TemporaryStatManager tsm = chr.getTemporaryStatManager();
             Option o1 = new Option();
-            o1.nValue = 1;
-            o1.nReason = chr.getJob();
-            tsm.putCharacterStatValue(IndieKeyDownTime, o1);
-            tsm.sendSetStatPacket();
+            Option o2 = new Option();
+            if (skillId == Luminous.黑暗之眼) {
+                // only gets sent once.
+                if (chr.hasSkill(Luminous.黑暗之眼) && tsm.getOptByCTSAndSkill(CharacterTemporaryStat.KeyDownAreaMoving, Luminous.黑暗之眼) == null) {
+                    o1.nOption = 16;
+                    o1.rOption = Luminous.黑暗之眼;
+                    tsm.putCharacterStatValue(CharacterTemporaryStat.KeyDownAreaMoving, o1);
+                    tsm.sendSetStatPacket();
+                }
+            } else {
+                o1.nValue = 1;
+                o1.nReason = chr.getJob();
+                tsm.putCharacterStatValue(IndieKeyDownTime, o1);
+                tsm.sendSetStatPacket();
+            }
 
             chr.getJobHandler().handleKeyDownSkill(chr, skillId, inPacket);
             chr.getField().broadcastPacket(UserRemote.skillPrepare(chr, skillId, chr.getSkillLevel(skillId)));
@@ -677,6 +689,7 @@ public class SkillHandler {
                 break;
             case CraftNode:
                 int iconID = inPacket.decodeInt();
+                int nCount = inPacket.decodeInt();
                 int shardCost = GameConstants.getNodeCreateShardCost(iconID);
                 List<VCoreInfo> infos = new ArrayList<>(VCoreData.getPossibilitiesByJob(chr.getJob()));
                 VCoreInfo vci = Util.findWithPred(infos, v -> v.getIconID() == iconID);
@@ -689,29 +702,57 @@ public class SkillHandler {
                     chr.chatMessage("You don't have enough node shards.");
                     return;
                 }
-                mr = new MatrixRecord();
-                mr.setIconID(vci.getIconID());
-                mr.setMaxLevel(vci.getMaxLevel());
-                mr.setSkillID1(vci.getSkillID());
-                mr.setSlv(1);
-                if (vci.isEnforce()) {
-                    for (int i = 0; i < 2; i++) {
-                        VCoreInfo randVci = Util.getRandomFromCollection(infos.stream().filter(VCoreInfo::isEnforce).collect(Collectors.toList()));
-                        infos.remove(randVci);
-                        switch (i) {
-                            case 0:
-                                mr.setSkillID2(randVci.getSkillID());
-                                break;
-                            case 1:
-                                mr.setSkillID3(randVci.getSkillID());
-                                break;
+                if (nCount == 1) {
+                    mr = new MatrixRecord();
+                    mr.setIconID(vci.getIconID());
+                    mr.setMaxLevel(vci.getMaxLevel());
+                    mr.setSkillID1(vci.getSkillID());
+                    mr.setSlv(1);
+                    if (vci.isEnforce()) {
+                        for (int i = 0; i < 2; i++) {
+                            VCoreInfo randVci = Util.getRandomFromCollection(infos.stream().filter(VCoreInfo::isEnforce).collect(Collectors.toList()));
+                            infos.remove(randVci);
+                            switch (i) {
+                                case 0:
+                                    mr.setSkillID2(randVci.getSkillID());
+                                    break;
+                                case 1:
+                                    mr.setSkillID3(randVci.getSkillID());
+                                    break;
+                            }
                         }
                     }
+                    chr.addNodeShards(-shardCost);
+                    chr.getMatrixRecords().add(mr);
+                    chr.write(WvsContext.nodeCraftResult(mr, nCount));
+                    chr.write(WvsContext.matrixUpdate(chr.getSortedMatrixRecords(), true, typeVal, 0));
+                } else {
+                    for (int i = 0; i < nCount; ++i) {
+                        mr = new MatrixRecord();
+                        mr.setIconID(vci.getIconID());
+                        mr.setMaxLevel(vci.getMaxLevel());
+                        mr.setSkillID1(vci.getSkillID());
+                        mr.setSlv(1);
+                        if (vci.isEnforce()) {
+                            for (int j = 0; j < 2; j++) {
+                                VCoreInfo randVci = Util.getRandomFromCollection(infos.stream().filter(VCoreInfo::isEnforce).collect(Collectors.toList()));
+                                infos.remove(randVci);
+                                switch (j) {
+                                    case 0:
+                                        mr.setSkillID2(randVci.getSkillID());
+                                        break;
+                                    case 1:
+                                        mr.setSkillID3(randVci.getSkillID());
+                                        break;
+                                }
+                            }
+                        }
+                        chr.addNodeShards(-shardCost);
+                        chr.getMatrixRecords().add(mr);
+                        chr.write(WvsContext.nodeCraftResult(mr, nCount));
+                        chr.write(WvsContext.matrixUpdate(chr.getSortedMatrixRecords(), true, typeVal, 0));
+                    }
                 }
-                chr.addNodeShards(-shardCost);
-                chr.getMatrixRecords().add(mr);
-                chr.write(WvsContext.nodeCraftResult(mr));
-                chr.write(WvsContext.matrixUpdate(chr.getSortedMatrixRecords(), true, typeVal, 0));
                 break;
             case CraftNodestone:
                 Npc npc = (Npc) chr.getField().getLifeByTemplateId(1540945); // Archelle
@@ -802,6 +843,15 @@ public class SkillHandler {
 
         Position position = inPacket.decodePosition();
         inPacket.decodeByte(); // unk
+
+        if (skillId == Adele.穿刺) {
+            inPacket.decodeArr(8);
+            inPacket.decodeArr(8);
+            inPacket.decodeArr(5);
+        }
+        if (skillId == 64111004) {
+            inPacket.decodeArr(22);
+        }
 
         int loopSize = inPacket.decodeInt();
         for (int i = 0; i < loopSize; i++) {
@@ -981,14 +1031,20 @@ public class SkillHandler {
 
     @Handler(op = InHeader.USER_CREATE_AREA_DOT_REQUEST)
     public static void handleUserCreateAreaDoTRequest(Char chr, InPacket inPacket) {
-        inPacket.decodeInt(); // unk
+        SkillUseInfo skillUseInfo = new SkillUseInfo();
         int skillId = inPacket.decodeInt();
         int unk = inPacket.decodeInt(); // unk
-
-        short loopSize = inPacket.decodeShort();
-        for (int i = 0; i < loopSize; i++) {
+        int size = inPacket.decodeInt();
+        for (int i = 0; i < size; i++) {
+            int count = inPacket.decodeInt();
+            short loopSize = inPacket.decodeShort();//總是1?
             Rect rect = inPacket.decodeIntRect();
         }
+        if (skillId == Adele.魔力爆裂)
+        {
+            skillUseInfo.spawnCrystals = true;
+        }
+
         chr.getJobHandler().handleSkill(chr, chr.getTemporaryStatManager(), skillId, chr.getSkillLevel(skillId), inPacket, new SkillUseInfo());
     }
 }

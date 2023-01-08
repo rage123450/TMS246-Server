@@ -14,7 +14,7 @@ public class ServerConfig {
     // World
     public static final WorldId WORLD_ID = WorldId.殺人鯨;
     public static final String SERVER_NAME = "殺人鯨";
-    public static final String[] WolrdSelect_bgs = new String[]{"ingition_warming"}; //18thBF,2022superHaste,ingition_warming
+    public static final String[] WolrdSelect_bgs = new String[]{"ignition_warming"}; //18thBF,2022superHaste,ignition_warming
 
     // Message
     public static String SLIDE_MSG = ""; // Message that is shown at the top of in-game screen.

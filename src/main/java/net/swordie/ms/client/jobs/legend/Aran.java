@@ -97,6 +97,7 @@ public class Aran extends Job {
     public static final int BEYOND_BLADE_1 = 21120022;
     public static final int BEYOND_BLADE_2 = 21121016;
     public static final int BEYOND_BLADE_3 = 21121017;
+    public static final int 極速巔峰_目標鎖定 = 21120026;
 
 
     // V skill

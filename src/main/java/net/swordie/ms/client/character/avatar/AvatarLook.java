@@ -389,6 +389,125 @@ public class AvatarLook {
         }
     }
 
+    public byte[] getPackedCharacterLook() {
+        int[] hairEquips = new int[12];
+        for (Map.Entry<Byte, Integer> entry : getHairEquips().entrySet()) {
+            if (entry.getKey() > 0 && entry.getKey() < 12) {
+                hairEquips[entry.getKey()] = entry.getValue();
+            }
+        }
+        for (int i = 0; i < hairEquips.length; i++) {
+            if (hairEquips[i] == 0) {
+                hairEquips[i] = -1;
+            }
+        }
+        byte[] data = new byte[120];
+        byte wt = (byte) (hairEquips[11] / 10000 % 100); // 36 types btw
+        wt = (byte) Math.max(ItemConstants.WEAPON_TYPES.indexOf(wt), 0);
+        int weaponID;
+        if (getWeaponStickerId() / 10000 != 170) {
+            if (JobConstants.isArk((short) getJob())) {
+                weaponID = 1482227;
+            } else {
+                weaponID = hairEquips[11];
+            }
+        } else {
+            weaponID = getWeaponStickerId();
+        }
+        int faceAcc = hairEquips[2];
+        if (getDemonSlayerDefFaceAcc() != 0) {
+            faceAcc = !isDrawElfEar() ? getDemonSlayerDefFaceAcc() : -1;
+        } else if (getXenonDefFaceAcc() != 0) {
+            faceAcc = !isDrawElfEar() ? getXenonDefFaceAcc() : -1;
+        } else if (getBeastTamerDefFaceAcc() != 0) {
+            faceAcc = getBeastTamerDefFaceAcc();
+        }/* else if (getArkDefFaceAcc() != 0) {
+            faceAcc = !isDrawElfEar() ? getArkDefFaceAcc() : -1;
+        }*/
+        data[0] |= getGender() & 1;
+        data[0] |= (getSkin() & 0x3FF) << 1;
+        int faceTemp = (getFace() % 1000 & 0x3FF) << 3;
+        data[1] |= faceTemp & 0xFF;
+        data[2] |= faceTemp >> 8;
+        faceTemp = (getFace() / 1000 % 10 & 0xF) << 5;
+        data[2] |= faceTemp & 0xFF;
+        data[3] |= faceTemp >> 8;
+        data[3] |= getHair() / 10000 == 4 ? 2 : 0;
+        int hairTemp = (getHair() % 1000 & 0x3FF) << 2;
+        data[3] |= hairTemp & 0xFF;
+        data[4] |= hairTemp >> 8;
+        data[4] |= (getHair() / 1000 % 10 & 0xF) << 4;
+        int capTemp = (hairEquips[1] % 1000 & 0x3FF);
+        data[5] |= capTemp & 0xFF;
+        data[6] |= capTemp >> 8;
+        data[6] |= (hairEquips[1] / 1000 % 10 & 7) << 2;
+        int faceAccTemp = (faceAcc % 1000 & 0x3FF) << 5;
+        data[6] |= faceAccTemp & 0xFF;
+        data[7] |= faceAccTemp >> 8;
+        faceAccTemp = (faceAcc / 1000 % 10 & 3) << 7;
+        data[7] |= faceAccTemp & 0xFF;
+        data[8] |= faceAccTemp >> 8;
+        int eyeAccTemp = (hairEquips[3] % 1000 & 0x3FF) << 1;
+        data[8] |= eyeAccTemp & 0xFF;
+        data[9] |= eyeAccTemp >> 8;
+        data[9] |= (hairEquips[3] / 1000 % 10 & 3) << 3;
+        int earAccTemp = (hairEquips[4] % 1000 & 0x3FF) << 5;
+        data[9] |= earAccTemp & 0xFF;
+        data[10] |= earAccTemp >> 8;
+        earAccTemp = (hairEquips[4] / 1000 % 10 & 3) << 7;
+        data[10] |= earAccTemp & 0xFF;
+        data[11] |= earAccTemp >> 8;
+        data[11] |= hairEquips[5] / 10000 == 105 ? 2 : 0;
+        int coatTemp = ((hairEquips[5] % 1000) & 0x3FF) << 2;
+        data[11] |= coatTemp & 0xFF;
+        data[12] |= coatTemp >> 8;
+        data[12] |= (hairEquips[5] / 1000 % 10 & 0xF) << 4;
+        int bottomTemp = hairEquips[6] % 1000 & 0x3FF;
+        data[13] |= bottomTemp & 0xFF;
+        data[14] |= bottomTemp >> 8;
+        data[14] |= (hairEquips[6] / 1000 % 10 & 3) << 2;
+        int shoesTemp = (hairEquips[7] % 1000 & 0x3FF) << 4;
+        data[14] |= shoesTemp & 0xFF;
+        data[15] |= shoesTemp >> 8;
+        data[15] |= (hairEquips[7] / 1000 % 10 & 3) << 6;
+        int gloveTemp = (hairEquips[8] % 1000 & 0x3FF);
+        data[16] |= gloveTemp & 0xFF;
+        data[17] |= gloveTemp >> 8;
+        data[17] |= (hairEquips[8] / 1000 % 10 & 3) << 2;
+        int capeTemp = (hairEquips[9] % 1000 & 0x3FF) << 4;
+        data[17] |= capeTemp & 0xFF;
+        data[18] |= capeTemp >> 8;
+        data[18] |= (hairEquips[9] / 1000 % 10 & 3) << 6;
+        int val = hairEquips[10];
+        if (val <= 0) {
+            val = 0;
+        } else if (val / 10000 == 109) {
+            val = 1;
+        } else {
+            val = 3 - (val / 10000 == 134 ? 1 : 0);
+        }
+        data[19] |= val;
+        int subTemp = (hairEquips[10] % 1000 & 0x3FF) << 2;
+        data[19] |= subTemp & 0xFF;
+        data[20] |= subTemp >> 8;
+        data[20] |= (hairEquips[10] / 1000 % 10 & 0xF) << 4;
+        data[21] |= getWeaponStickerId() / 10000 == 170 ? 1 : 0;
+        int weaponTemp = (weaponID % 1000 & 0x3FF) << 1;
+        data[21] |= weaponTemp & 0xFF;
+        data[22] |= weaponTemp >> 8;
+        data[22] |= (weaponID / 1000 % 10 & 3) << 3;
+        int wtTemp = wt << 5;
+        data[22] |= wtTemp & 0xFF;
+        data[23] |= wtTemp >> 8;
+//        data[23] |= (getEarType() & 0xF) << 5; // x < 4
+        data[24] |= (getMixedHairColor() & 0xF) << 2;
+        int mixHairPercentTemp = (getMixHairPercent() & 0xFF) << 5;
+        data[24] |= mixHairPercentTemp & 0xFF;
+        data[25] |= mixHairPercentTemp >> 8;
+        data[119] = 16;
+        return data;
+    }
+
     public void decode(InPacket inPacket) {
         setGender(inPacket.decodeByte());
         setSkin(inPacket.decodeByte());

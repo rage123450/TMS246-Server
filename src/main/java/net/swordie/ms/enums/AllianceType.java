@@ -17,30 +17,30 @@ public enum AllianceType {
     Req_ChangeGrade(9),
     Req_SetNotice(10),
     Req_Destroy(11),
-    Req_ChangeName(12),
+    Req_ChangeName(11), //?
 
-    Res_LoadDone(13),
-    Res_LoadGuildDone(14),
-    Res_NotifyLoginOrLogout(15),
-    Res_CreateDone(16),
-    Res_Withdraw_Done(17),
-    Res_Withdraw_Failed(18),
-    Res_Invite_Done(19),
-    Res_Invite_Failed(20),
-    Res_InviteGuild_BlockedByOpt(21),
-    Res_InviteGuild_AlreadyInvited(22),
-    Res_InviteGuild_Rejected(23),
-    Res_UpdateAllianceInfo(24),
-    Res_ChangeLevelOrJob(25),
-    Res_ChangeMaster_Done(26),
-    Res_SetGradeName_Done(27),
-    Res_ChangeGrade_Done(28),
-    Res_ChangeGrade_Fail(29),
-    Res_SetNotice_Done(30),
-    Res_Destroy_Done(31),
-    Res_UpdateGuildInfo(32),
-    Res_ChangeName_Done(33),
-    Res_ChangeName_Failed(34),
+    Res_LoadDone(12), // v248
+    Res_LoadGuildDone(13), // v248
+    Res_NotifyLoginOrLogout(14), // v248
+    Res_CreateDone(15), // v248
+    Res_Withdraw_Done(16), // v248
+    Res_Withdraw_Failed(17), // v248
+    Res_Invite_Done(18), // v248
+    Res_Invite_Failed(19), // v248
+    Res_InviteGuild_BlockedByOpt(20),
+    Res_InviteGuild_AlreadyInvited(21),
+    Res_InviteGuild_Rejected(22),
+    Res_UpdateAllianceInfo(23),
+    Res_ChangeLevelOrJob(24),
+    Res_ChangeMaster_Done(25),
+    Res_SetGradeName_Done(26),
+    Res_ChangeGrade_Done(27),
+    Res_ChangeGrade_Fail(28),
+    Res_SetNotice_Done(29),
+    Res_Destroy_Done(30),
+    Res_UpdateGuildInfo(31),
+    Res_ChangeName_Done(32),
+    Res_ChangeName_Failed(33),
     ;
 
     private final int val;

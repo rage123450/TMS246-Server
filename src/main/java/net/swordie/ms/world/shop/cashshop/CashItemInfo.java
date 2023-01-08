@@ -37,15 +37,15 @@ public class CashItemInfo implements Encodable {
     @JoinColumn(name = "itemid")
     private Item item;
 
-    public void encode(OutPacket outPacket) {
-        // size 102
+    public void encode(OutPacket outPacket) { // v248 done
+        // GW_CashItemInfoSUB::Decode
         outPacket.encodeLong(item.getId());
         outPacket.encodeInt(getAccountID());
         outPacket.encodeInt(getCharacterID());
         outPacket.encodeInt(item.getItemId());
-        outPacket.encodeInt(getCommodityID());
+        outPacket.encodeInt(getCommodityID()); //SN
         outPacket.encodeShort(item.getQuantity());
-        outPacket.encodeString(getBuyCharacterID(), 13); // gifter
+        outPacket.encodeString(getBuyCharacterID(), 15); // gifter
         outPacket.encodeFT(item.getDateExpire());
         outPacket.encodeInt(getPaybackRate());
         outPacket.encodeLong((long) getDiscount());
@@ -55,6 +55,9 @@ public class CashItemInfo implements Encodable {
         outPacket.encodeByte(getSourceFlag());
         outPacket.encodeByte(isStoreBank());
         // GW_CashItemOption::Decode
+        outPacket.encodeByte(true);
+        item.encode(outPacket);
+        /*
         outPacket.encodeLong(item.isCash() ? 0 : item.getId());
         outPacket.encodeFT(FileTime.fromType(FileTime.Type.MAX_TIME));
         if (item instanceof Equip) {
@@ -75,6 +78,7 @@ public class CashItemInfo implements Encodable {
                 outPacket.encodeInt(0);
             }
         }
+         */
     }
 
     public int getAccountID() {

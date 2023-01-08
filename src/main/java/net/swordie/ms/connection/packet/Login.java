@@ -453,7 +453,7 @@ public class Login {
 
     public static OutPacket RequestSpw() {
         OutPacket outPacket = new OutPacket(OutHeader.REQUEST_SPW);
-        outPacket.encodeByte(1);
+        outPacket.encodeByte(0);
         return outPacket;
     }
 

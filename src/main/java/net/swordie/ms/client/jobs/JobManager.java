@@ -23,6 +23,7 @@ import net.swordie.ms.client.jobs.adventurer.warrior.DarkKnight;
 import net.swordie.ms.client.jobs.adventurer.warrior.Hero;
 import net.swordie.ms.client.jobs.adventurer.warrior.Paladin;
 import net.swordie.ms.client.jobs.adventurer.warrior.Warrior;
+import net.swordie.ms.client.jobs.anima.HoYoung;
 import net.swordie.ms.client.jobs.cygnus.*;
 import net.swordie.ms.client.jobs.flora.Adele;
 import net.swordie.ms.client.jobs.flora.Ark;
@@ -117,6 +118,7 @@ public class JobManager {
             Adele.class,
 
             Lara.class,
+            HoYoung.class,
 
             Zero.class
     };

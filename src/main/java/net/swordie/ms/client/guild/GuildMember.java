@@ -112,7 +112,7 @@ public class GuildMember implements Encodable {
     }
 
     public void encode(OutPacket outPacket) {
-        outPacket.encodeString(getName(), 13);
+        outPacket.encodeString(getName(), 15);
         outPacket.encodeInt(getJob());
         outPacket.encodeInt(getLevel());
         outPacket.encodeInt(getGrade());

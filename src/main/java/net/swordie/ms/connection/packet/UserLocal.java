@@ -7,6 +7,7 @@ import net.swordie.ms.client.character.damage.DamageSkinType;
 import net.swordie.ms.client.character.skills.*;
 import net.swordie.ms.client.jobs.cygnus.ThunderBreaker;
 import net.swordie.ms.connection.OutPacket;
+import net.swordie.ms.constants.GameConstants;
 import net.swordie.ms.enums.*;
 import net.swordie.ms.handlers.PsychicLock;
 import net.swordie.ms.handlers.header.OutHeader;
@@ -172,6 +173,8 @@ public class UserLocal {
         outPacket.encodeInt(duration);
         outPacket.encodeString(message);
         outPacket.encodeString(effect);
+        outPacket.encodeByte(false); // if true RemovepopupSay
+
         return outPacket;
     }
 
@@ -491,6 +494,13 @@ public class UserLocal {
         return outPacket;
     }
 
+    public static OutPacket reviveOnCurFieldAtPoint(int x, int y) {
+        OutPacket outPacket = new OutPacket(OutHeader.REVIVE_CUR_FIELD_TRANSFER_POINT);
+        outPacket.encodeInt(x);
+        outPacket.encodeInt(y);
+        return outPacket;
+    }
+
     public static OutPacket openUIOnDead(boolean onDeadRevive, boolean onDeadProtectForBuff, boolean onDeadProtectExpMaplePoint,
                                          boolean onDeadProtectBuffMaplePoint, boolean anniversary, ReviveType reviveType, int protectType) {
         OutPacket outPacket = new OutPacket(OutHeader.OPEN_UI_DEAD);
@@ -514,6 +524,21 @@ public class UserLocal {
         if (onDeadProtectForBuff || onDeadProtectExpMaplePoint) {
             outPacket.encodeInt(protectType);
         }
+
+        return outPacket;
+    }
+
+    public static OutPacket openUIOnDead(Char chr, int flag) {
+        OutPacket outPacket = new OutPacket(OutHeader.OPEN_UI_DEAD);
+
+        outPacket.encodeInt((chr.hasItemCount(5133000, 1) || GameConstants.isBossField(chr.getFieldID()) ? 3 : flag));
+        outPacket.encodeByte(0);
+        outPacket.encodeInt((GameConstants.isBossField(chr.getFieldID()) && chr.getDeathCount() <= 0 ) ? 3 : 0);
+        outPacket.encodeInt((chr.hasItemCount(5133000, 1)) ? 0 : -1);
+        outPacket.encodeByte((GameConstants.isBossField(chr.getFieldID()) && chr.getDeathCount() <= 0 ) ? 1 : 0);
+        outPacket.encodeInt((GameConstants.isBossField(chr.getFieldID()) && chr.getDeathCount() <= 0 ) ? 30 : 0);
+        outPacket.encodeInt((GameConstants.isBossField(chr.getFieldID()) && chr.getDeathCount() <= 0 ) ? 5 : 0);
+        outPacket.encodeByte((GameConstants.isBossField(chr.getFieldID()) && chr.getDeathCount() <= 0 ) ? 1 : 0);
 
         return outPacket;
     }
@@ -625,7 +650,7 @@ public class UserLocal {
 
         outPacket.encodeByte(1);
         outPacket.encodeByte(1);
-        outPacket.encodeByte(1); // unknown a boolean
+        //outPacket.encodeByte(1); // unknown a boolean
 
         return outPacket;
     }
