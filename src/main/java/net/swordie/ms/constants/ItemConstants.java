@@ -57,6 +57,8 @@ public class ItemConstants {
 
     public static final int RED_CUBE = 5062009;
     public static final int BLACK_CUBE = 5062010;
+    public static final int OCCULT_CUBE = 2711000;//可疑的方塊
+    public static final int MASTER_CRAFTSMANS_CUBE = 2711003;//工匠方塊
 
     public static final int BONUS_POT_CUBE = 5062500;
     public static final int SPECIAL_BONUS_POT_CUBE = 5062501;
@@ -73,6 +75,13 @@ public class ItemConstants {
             1122249, // Dream Horntail Necklace
             1122278, // Mystic Horntail Necklace
     };
+
+    public static final List<Byte> WEAPON_TYPES = Arrays.asList(new Byte[] {
+            0, 30, 31, 32, 33, 37, 38, 40, 41, 42, 43, 44,
+            45, 46, 47, 48, 49, 39, 34, 52, 53, 35, 36,
+            21, 22, 54, 55, 23, 24, 56, 57, 25, 26, 58,
+            27, 28, 59, 29
+    });
 
     public static final int EXP_2X_COUPON[] = {
             5680484,

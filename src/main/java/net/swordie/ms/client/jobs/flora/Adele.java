@@ -203,15 +203,18 @@ public class Adele extends Job {
         }
         if ((chr.getSkillCustomValue(乙太結晶) == null)) {
             if (!nocooltime) {
-                chr.setSkillCustomInfo(乙太結晶, 0L, 4000L);
+                chr.setSkillCustomInfo(乙太結晶, 0L, 0L);
             }
+        }
+        if (!nocooltime) {
+            chr.setSkillCustomInfo(乙太結晶, 0L, 4000L);
         }
         if (chr.getSkillCustomValues().get(乙太結晶).canCancel(System.currentTimeMillis()) || nocooltime && spawn) {
             for (Summon summon : new ArrayList<Summon>(chr.getSummons())) {
                 if (summon.getSkillID() == 乙太結晶) {
                     ++size;
                 }
-                if (size > 6) {
+                if (size > 7) {
                     chr.getField().removeLife(summon);
                     //summon.broadcastLeavePacket();
                     //chr.getField().broadcastPacket(Summoned.summonedRemoved(summon, LeaveType.ANIMATION));
@@ -229,6 +232,7 @@ public class Adele extends Job {
             summon.setAttackActive(true);
             summon.setSummonTerm(30);
             summonList.add(summon);
+
             if (summonList.size() > 7) {
                 chr.getField().removeLife(summonList.get(0));
                 summonList.remove(0);
@@ -559,6 +563,7 @@ public class Adele extends Job {
                 tsm.sendSetStatPacket();
                 break;
             case 魔力爆裂://inpacket 264 outpacket 1449*7
+                if (skillUseInfo.spawnCrystals) break;
                 List<Rect> shardRects = new ArrayList<>();
                 for (Tuple<Integer, Position> shard : skillUseInfo.shardsPositions) {
                     Position shardPosition = shard.getRight();
@@ -578,6 +583,25 @@ public class Adele extends Job {
         }
         if (tsm.hasStat(CharacterTemporaryStat.創造)){
             乙太處理器(chr, 0, 0, true);
+        }
+    }
+
+    public void handleKeyDownSkill(Char chr, int skillID, InPacket inPacket) {
+        super.handleKeyDownSkill(chr, skillID, inPacket);
+
+        TemporaryStatManager tsm = chr.getTemporaryStatManager();
+        Option o1 = new Option();
+        Option o2 = new Option();
+        if (skillID == 護堤) { // TODO 還有3個Mask要發未完成
+            o1.nOption = 1;
+            o1.rOption = 護堤;
+            o1.tOption = 8;
+            tsm.putCharacterStatValue(DreamDowon, o1);
+            o2.nValue = 40;
+            o2.nReason = chr.getJob();
+            o2.tOption = 8;
+            tsm.putCharacterStatValue(IndieDamReduceR, o2);
+            tsm.sendSetStatPacket();
         }
     }
 

@@ -12,6 +12,8 @@ import net.swordie.ms.client.character.avatar.AvatarLook;
 import net.swordie.ms.client.character.avatar.BeautyAlbum;
 import net.swordie.ms.client.character.cards.CharacterCard;
 import net.swordie.ms.client.character.cards.MonsterBookInfo;
+import net.swordie.ms.client.character.chatemotion.ChatEmoticon;
+import net.swordie.ms.client.character.chatemotion.ChatEmoticonSaved;
 import net.swordie.ms.client.character.damage.DamageSkinSaveData;
 import net.swordie.ms.client.character.items.*;
 import net.swordie.ms.client.character.keys.FuncKeyMap;
@@ -137,7 +139,9 @@ public class DatabaseManager {
                 EventCoolDown.class,
                 BeautyAlbum.class,
                 HotTimeReward.class,
-                BossReward.class,
+                //BossReward.class,
+                ChatEmoticon.class,
+                ChatEmoticonSaved.class,
         };
         for (Class clazz : dbClasses) {
             configuration.addAnnotatedClass(clazz);

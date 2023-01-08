@@ -48,7 +48,8 @@ public class Pathfinder extends Archer {
 
     public static final int CARDINAL_DELUGE = 3011004; // Cardinal Force
     public static final int ANCIENT_BOW_BOOSTER = 3301010;
-    public static final int CARDINAL_BURST = 3301004;
+    public static final int CARDINAL_BURST = 3301003;
+    public static final int CARDINAL_BURST_1 = 3301004;
     public static final int SWARM_SHOT = 3301008;
     public static final int SWARM_SHOT_ATOM = 3301009;
     public static final int BOUNTIFUL_DELUGE = 3300005;

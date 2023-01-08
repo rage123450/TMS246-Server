@@ -89,6 +89,7 @@ public class AllianceResult implements Encodable {
                 break;
             case Res_SetGradeName_Done:
                 outPacket.encodeInt(alliance.getId());
+                outPacket.encodeInt(0);// unk
                 for (String gradeName : alliance.getGradeNames()) {
                     outPacket.encodeString(gradeName);
                 }

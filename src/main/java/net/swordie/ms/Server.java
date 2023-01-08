@@ -101,12 +101,8 @@ public class Server extends Properties {
 		DressingRoom.load();
 		StyleRoom.load();
 		ServerSetting.settingGoldApple();
-		//ShutDownTask shutDownTask = new ShutDownTask();
-		//shutDownTask.start();
+		ChatEmoticonData.LoadEmotionFromWz();
 
-		//ChannelHandler.initHandlers(false);
-		//MapleCrypto.initialize(ServerConstants.VERSION);
-		//new Thread(new LoginAcceptor()).start();
 		new Thread(new ApiAcceptor()).start();
 		new Thread(new ChatAcceptor()).start();
 		worldList.add(new World(ServerConfig.WORLD_ID, ServerConfig.SERVER_NAME, GameConstants.CHANNELS_PER_WORLD, ServerConfig.EVENT_MSG));

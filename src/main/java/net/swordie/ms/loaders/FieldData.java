@@ -72,6 +72,16 @@ public class FieldData {
                 dataOutputStream.writeInt(field.getVrRight());
                 dataOutputStream.writeInt(field.getBarrier());
                 dataOutputStream.writeInt(field.getBarrierArc());
+
+                dataOutputStream.writeBoolean(field.isReviveCurField());
+                dataOutputStream.writeBoolean(field.isReviveCurFieldOfNoTransfer());
+                Position revivePoint = field.getReviveCurFieldOfNoTransferPoint();
+                dataOutputStream.writeBoolean(revivePoint != null);
+                if (revivePoint != null) {
+                    dataOutputStream.writeShort(revivePoint.getX());
+                    dataOutputStream.writeShort(revivePoint.getY());
+                }
+
                 dataOutputStream.writeShort(field.getFootholds().size());
                 for (Foothold fh : field.getFootholds()) {
                     dataOutputStream.writeInt(fh.getId());
@@ -293,6 +303,17 @@ public class FieldData {
                             break;
                         case "barrierArc":
                             field.setBarrierArc(Integer.parseInt(value));
+                            break;
+                        case "reviveCurField":
+                            field.setReviveCurField(Integer.parseInt(value) != 0);
+                            break;
+                        case "ReviveCurFieldOfNoTransfer":
+                            field.setReviveCurFieldOfNoTransfer(Integer.parseInt(value) != 0);
+                            break;
+                        case "ReviveCurFieldOfNoTransferPoint":
+                            field.setReviveCurFieldOfNoTransferPoint(new Position(
+                                    Integer.parseInt(XMLApi.getNamedAttribute(n, "x")),
+                                    Integer.parseInt(XMLApi.getNamedAttribute(n, "y"))));
                             break;
                     }
                 }
@@ -614,6 +635,14 @@ public class FieldData {
             field.setVrRight(dataInputStream.readInt());
             field.setBarrier(dataInputStream.readInt());
             field.setBarrierArc(dataInputStream.readInt());
+
+            field.setReviveCurField(dataInputStream.readBoolean());
+            field.setReviveCurFieldOfNoTransfer(dataInputStream.readBoolean());
+            if (dataInputStream.readBoolean()) {
+                field.setReviveCurFieldOfNoTransferPoint(
+                        new Position(dataInputStream.readShort(), dataInputStream.readShort()));
+            }
+
             short fhSize = dataInputStream.readShort();
             for (int j = 0; j < fhSize; j++) {
                 Foothold fh = new Foothold(
@@ -815,6 +844,11 @@ public class FieldData {
         copy.setVrRight(field.getVrRight());
         copy.setBarrier(field.getBarrier());
         copy.setBarrierArc(field.getBarrierArc());
+
+        copy.setReviveCurField(field.isReviveCurField());
+        copy.setReviveCurFieldOfNoTransfer(field.isReviveCurFieldOfNoTransfer());
+        copy.setReviveCurFieldOfNoTransferPoint(field.getReviveCurFieldOfNoTransferPoint());
+
         copy.startBurningFieldTimer();
         int mobGens = field.getMobGens().size();
         copy.setFixedMobCapacity((int) (mobGens * GameConstants.DEFAULT_FIELD_MOB_RATE_BY_MOBGEN_COUNT));

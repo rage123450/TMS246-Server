@@ -100,16 +100,6 @@ public class SkillPacket {
         return outPacket;
     }
 
-    public static OutPacket 穿刺(Char chr, int skillId, int level) {
-        OutPacket outPacket = new OutPacket(OutHeader.穿刺);
-        outPacket.encodeByte(1);
-        outPacket.encodeInt(skillId);
-        outPacket.encodeInt(level);
-        outPacket.encodeInt(1);
-        outPacket.encodeInt(1);
-        return outPacket;
-    }
-
     public static OutPacket RemoveSubObtacle(Char chr,final int id) {
         OutPacket outPacket = new OutPacket(OutHeader.FAMILIAR_TRANSFER_FIELD);
         outPacket.encodeByte(chr.getId());

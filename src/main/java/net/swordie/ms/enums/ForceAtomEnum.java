@@ -182,6 +182,18 @@ public enum ForceAtomEnum {
 
     YOSUZUME_1(59, 1), // From Kanna
     YOSUZUME_2(59, 2), // From Kanna
+
+    CLONE_ATOM(60, 1),
+
+    BUTTERYFLY_1(61, 1),// HoYoung Butteryfly summon
+    BUTTERYFLY_2(61, 2),// HoYoung Butteryfly summon
+    BUTTERYFLY_3(61, 3), // HoYoung Butteryfly summon
+    BUTTERYFLY_4(61, 4), // HoYoung Butteryfly summon
+    BUTTERYFLY_5(61, 5), // HoYoung Butteryfly summon
+
+    SWALLOW_MOB(63, 1), // HoYoung - Evil-Sealing Gourd
+
+    CLONE_R_ATOM(65, 1), // HoYoung - Evil-Sealing Gourd
     ;
 
     private int forceAtomType;

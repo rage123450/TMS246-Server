@@ -10,19 +10,19 @@ public enum CashItemType {
     Req_WebShopOrderGetList(0),
     Req_LoadLocker(1),
     //    Req_LoadWish(2),
-    Req_Buy(2),
-    Req_Gift(3),
+    Req_Buy(3), // v248
+    Req_Gift(4),
     Req_SetWish(4),
-    Req_IncSlotCount(6),
-    Req_IncTrunkCount(7),
-    Req_IncCharSlotCount(8),
-    Req_IncBuyCharCount(9),
-    Req_EnableEquipSlotExt(10),
-    Req_CancelPurchase(11),
-    Req_ConfirmPurchase(12),
-    Req_Destroy(13),
-    Req_MoveLtoS(15),
-    Req_MoveStoL(16),
+    Req_IncSlotCount(5),
+    Req_IncTrunkCount(6),
+    Req_IncCharSlotCount(7),
+    Req_IncBuyCharCount(8),
+    Req_EnableEquipSlotExt(9),
+    Req_CancelPurchase(10),
+    Req_ConfirmPurchase(11),
+    Req_Destroy(12),
+    Req_MoveLtoS(13),
+    Req_MoveStoL(14),
     Req_Expire(17),
     Req_Use(18),
     Req_StatChange(19),
@@ -87,22 +87,22 @@ public enum CashItemType {
     Req_NexonStarCouponUse(78),
 
 
-    Res_CharacterSaleSuccess(0),
-    Res_CharacterSaleFail(1),
-    Res_LimitGoodsCount_Changed(-1),
+    Res_CharacterSaleSuccess(-1),
+    Res_CharacterSaleFail(-1),
+    Res_LimitGoodsCount_Changed(2), // v248
     Res_WebShopOrderGetList_Done(-1),
     Res_WebShopOrderGetList_Failed(-1),
-    Res_WebShopReceive_Done(5),
-    Res_LoadLocker_Done(2), // correct
-    Res_LoadLocker_Failed(3), // correct
-    Res_LoadGift_Done(8),
-    Res_LoadGift_Failed(9),
-    Res_LoadWish_Done(10),
-    Res_LoadWish_Failed(11),// ^----- maybe incorrect
-    Res_SetWish_Done(11),
-    Res_SetWish_Failed(12),
-    Res_Buy_Done(13),
-    Res_Buy_Failed(14),
+    Res_WebShopReceive_Done(-1),
+    Res_LoadLocker_Done(6), // v248
+    Res_LoadLocker_Failed(-1),
+    Res_LoadGift_Done(9), // v248
+    Res_LoadGift_Failed(-1),
+    Res_LoadWish_Done(11), // v248
+    Res_LoadWish_Failed(-1),
+    Res_SetWish_Done(13), // v248
+    Res_SetWish_Failed(-1),
+    Res_Buy_Done(15), // v248
+    Res_Buy_Failed(16),
     Res_UseCoupon_Done(15),
     Res_NexonStarCouponUse_Done(16),
     Res_NexonStarCoupon_Failed(17),
@@ -120,12 +120,12 @@ public enum CashItemType {
     Res_IncCharSlotCount_Failed(29),
     Res_IncBuyCharCount_Done(30),
     Res_IncBuyCharCount_Failed(31),
-    Res_EnableEquipSlotExt_Done(36),
-    Res_EnableEquipSlotExt_Failed(37),
-    Res_MoveLtoS_Done(38),
-    Res_MoveLtoS_Failed(39),
-    Res_MoveStoL_Done(40),
-    Res_MoveStoL_Failed(41),
+    Res_EnableEquipSlotExt_Done(-1),
+    Res_EnableEquipSlotExt_Failed(-1),
+    Res_MoveLtoS_Done(34), // v248
+    Res_MoveLtoS_Failed(35), // v248
+    Res_MoveStoL_Done(36), // v248
+    Res_MoveStoL_Failed(37), // v248
     Res_Destroy_Done(42),
     Res_Destroy_Failed(43),
     Res_Expire_Done(44),

@@ -39,10 +39,13 @@ import net.swordie.ms.loaders.ItemData;
 import net.swordie.ms.loaders.MobData;
 import net.swordie.ms.loaders.MonsterCollectionData;
 import net.swordie.ms.loaders.containerclasses.ItemInfo;
+import net.swordie.ms.scripts.ScriptManager;
+import net.swordie.ms.scripts.ScriptManagerImpl;
 import net.swordie.ms.util.Position;
 import net.swordie.ms.util.Util;
 import net.swordie.ms.util.container.Tuple;
 import net.swordie.ms.world.field.Field;
+import net.swordie.ms.world.field.Instance;
 import net.swordie.ms.world.field.Portal;
 import org.apache.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
@@ -265,6 +268,48 @@ public class UserHandler {
         chr.dispose();
     }
 
+    @Handler(op = InHeader.USER_REVIVE_REQUEST)
+    public static void handleUserReviveRequest(Char chr, InPacket inPacket) {
+        byte type = inPacket.decodeByte(); // 0: normal, 7: forced by revive timer
+
+        Instance instance = chr.getInstance();
+        Field field = chr.getField();
+        if (!field.isReviveCurFieldOfNoTransfer() || chr.getHP() > 0) {
+            if (instance != null) {
+                instance.clear();
+            }
+            return;
+        }
+        int x, y;
+        if (field.getReviveCurFieldOfNoTransferPoint() != null) {
+            x = field.getReviveCurFieldOfNoTransferPoint().getX();
+            y = field.getReviveCurFieldOfNoTransferPoint().getY();
+        } else {
+            Portal sp = chr.getField().getPortalByName("sp");
+            if (sp == null) {
+                return;
+            }
+            x = sp.getX();
+            y = sp.getY();
+        }
+        // need to correct
+        int returnMap = chr.getField().getReturnMap();
+        int deathCount = chr.getDeathCount();
+        if (deathCount > 0) {
+            deathCount--;
+            chr.setDeathCount(deathCount);
+            chr.write(UserLocal.deathCountInfo(deathCount));
+            chr.write(UserLocal.reviveOnCurFieldAtPoint(x, y));
+            chr.heal(chr.getMaxHP());
+            chr.setBuffProtector(false);
+        } else {
+            if (instance != null) {
+                instance.removeChar(chr);
+            }
+            chr.heal(50);
+            chr.warp(chr.getOrCreateFieldByCurrentInstanceType(returnMap));
+        }
+    }
 
     @Handler(op = InHeader.USER_RENAME_SPW_CHECK)
     public static void handleUserRenameSpwCheck(Char chr, InPacket inPacket) {
@@ -671,7 +716,8 @@ public class UserHandler {
             }
 
         } else {
-            requestorChr.write(UserPacket.followCharacter(chr.getId(), true, new Position()));
+            //requestorChr.write(UserPacket.followCharacter(chr.getId(), true, new Position()));
+            requestorChr.write(UserPacket.followCharacter(chr.getId(), requestorChrId, new Position()));
 
         }
     }
@@ -690,5 +736,26 @@ public class UserHandler {
     public static void handleUserCatchDebuffCollision(Char chr, InPacket inPacket) {
         int hpR = inPacket.decodeInt();
         chr.damage(chr.getHPPerc(hpR), true);
+    }
+
+    @Handler(op = InHeader.CHECK_CORE_SECONDPW)
+    public static void handleCheckCoreSecondPW(Char chr, InPacket inPacket) {
+        int type = inPacket.decodeInt();
+        User user = chr.getUser();
+        if (type == 1) {
+            String secondpw = inPacket.decodeString();
+            if (BCrypt.checkpw(secondpw, user.getPic())) {
+                chr.write(WvsContext.openCore(true));
+            } else {
+                chr.write(WvsContext.openCore(false));
+            }
+        }
+    }
+
+    @Handler(op = InHeader.CREATE_CORE)
+    public static void handleCreateCore(Char chr, InPacket inPacket) {
+        chr.write(WvsContext.createCore(1));
+        chr.getScriptManager().dispose();
+        chr.getScriptManager().openNpc(2007, "Create_Core");
     }
 }

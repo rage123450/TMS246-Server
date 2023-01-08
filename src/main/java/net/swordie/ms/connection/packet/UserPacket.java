@@ -33,18 +33,24 @@ public class UserPacket {
     public static OutPacket chat(Char chr, String tag, ChatUserType type, String msg, int onlyBalloon, int idk, int worldID, boolean remote) {
         OutPacket outPacket = new OutPacket(remote ? OutHeader.REMOTE_CHAT : OutHeader.CHAT);
 
+        int emoticon = 0;
+        if (onlyBalloon == 11) {
+            emoticon = Integer.parseInt(msg.replace(":", ""));
+            msg = "";
+        }
         outPacket.encodeInt(chr.getId());
         outPacket.encodeByte(type.getVal());
         outPacket.encodeString(msg);
         chr.encodeChatInfo(outPacket, msg);
-        outPacket.encodeByte(onlyBalloon); // v7
+        outPacket.encodeByte(onlyBalloon);
         outPacket.encodeByte(idk);
         outPacket.encodeByte(worldID);
-        //  if ( (v7 & 8) != 0 )
-        //    CInPacket::DecodeBuffer(a2, (__int64)&v20, 4);
+        if (onlyBalloon == 11) {
+            outPacket.encodeInt(emoticon);
+        }
         if (remote) {
             outPacket.encodeString(tag + " " + chr.getName());
-        }else {
+        } else {
             outPacket.encodeInt(0); //idk?
         }
         return outPacket;
@@ -89,7 +95,7 @@ public class UserPacket {
         OutPacket outPacket = new OutPacket(OutHeader.SET_PREMIUM_DAMAGE_SKIN);
 
         outPacket.encodeInt(chr.getId());
-        outPacket.encodeInt(chr.getPremiumDamageSkin().getDamageSkinID());
+        //outPacket.encodeInt(chr.getPremiumDamageSkin().getDamageSkinID());
         outPacket.encodeString("");
         outPacket.encodeString("");
 
@@ -151,6 +157,25 @@ public class UserPacket {
         return outPacket;
     }
 
+    public static OutPacket scriptProgressItemMessage(String string, int itemid) {
+        OutPacket outPacket = new OutPacket(OutHeader.SCRIPT_PROGRESS_ITEM_MESSAGE);
+
+        outPacket.encodeInt(itemid);
+        outPacket.encodeString(string);
+
+        return outPacket;
+    }
+
+    public static OutPacket scriptScreenMessage(String string) {
+        OutPacket outPacket = new OutPacket(OutHeader.SCRIPT_PROGRESS_MESSAGE);
+
+        outPacket.encodeByte(1);
+        outPacket.encodeString(string);
+        outPacket.encodeByte(1); // 0 = Lock 1 = Clear
+
+        return outPacket;
+    }
+
     public static OutPacket progressMessageFont(ProgressMessageFontType fontNameType, int fontSize, ProgressMessageColourType fontColorType, int fadeOutDelay, String message) {
         OutPacket outPacket = new OutPacket(OutHeader.PROGRESS_MESSAGE_FONT);
         
@@ -199,10 +224,25 @@ public class UserPacket {
         OutPacket outPacket = new OutPacket(OutHeader.FOLLOW_CHARACTER);
 
         outPacket.encodeInt(driverChrId);
+        outPacket.encodeInt(0);
         if (driverChrId < 0) {
             outPacket.encodeByte(transferField);
                 outPacket.encodePositionInt(position);
+        }
+        return outPacket;
+    }
+
+    public static OutPacket followCharacter(int driverChrId, int repiler, Position position) {
+        OutPacket outPacket = new OutPacket(OutHeader.FOLLOW_CHARACTER);
+
+        outPacket.encodeInt(driverChrId);
+        outPacket.encodeInt(repiler);
+        if (repiler == 0) {
+            outPacket.encodeByte((position == null) ? 0 : 1);
+            if (position != null) {
+                outPacket.encodePositionInt(position);
             }
+        }
         return outPacket;
     }
 
@@ -251,4 +291,42 @@ public class UserPacket {
 
         return outPacket;
     }
+
+    public static OutPacket shapeShiftResult(int charId, boolean bEnable) {
+        OutPacket outPacket = new OutPacket(OutHeader.SHAPESHIFT_RESULT);
+        outPacket.encodeInt(charId);
+        outPacket.encodeByte(bEnable);
+        return outPacket;
+    }
+/*
+    public static OutPacket createSpecialPortal(int cid, List<SpecialPortal> lists) {
+        OutPacket outPacket = new OutPacket(OutHeader.CREATE_SPECIAL_PORTAL);
+
+        outPacket.encodeInt(cid);
+        outPacket.encodeInt(lists.size());
+        for (SpecialPortal list : lists) {
+            outPacket.encodeInt(list.getOwnerId());
+            outPacket.encodeInt(list.getObjectId());
+            outPacket.encodeInt(list.getSkillType());
+            outPacket.encodeInt(list.getSkillId());
+            outPacket.encodeInt(list.getMapId());
+            outPacket.encodeInt(list.getPointX());
+            outPacket.encodeInt(list.getPointY());
+            outPacket.encodeInt(list.getDuration());
+        }
+        outPacket.encodeInt(0); //355
+        return outPacket;
+    }
+
+    public static OutPacket removeSpecialPortal(int cid, List<SpecialPortal> lists) {
+        OutPacket outPacket = new OutPacket(OutHeader.REMOVE_SPECIAL_PORTAL);
+
+        outPacket.encodeInt(cid);
+        outPacket.encodeInt(lists.size());
+        for (SpecialPortal list : lists) {
+            outPacket.encodeInt(list.getObjectId());
+        }
+        return outPacket;
+    }
+    */
 }

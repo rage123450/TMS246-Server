@@ -19,6 +19,7 @@ public class PsychicLockBall {
     public Position start;
     public Position rel;
     public int time;
+    public int unk;//v248++
 
     public void encode(OutPacket outPacket) {
         boolean hasMob = mob != null;
@@ -30,7 +31,8 @@ public class PsychicLockBall {
         outPacket.encodeInt(hasMob ? Util.maxInt(mob.getMaxHp()) : 0);
         outPacket.encodeInt(hasMob ? Util.maxInt(mob.getHp()) : 0);
         outPacket.encodeInt(0);
-        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);//hp?
+        outPacket.encodeInt(unk); // v248++
         outPacket.encodeByte(posRelID);
         outPacket.encodePositionInt(start);
         outPacket.encodePositionInt(rel);

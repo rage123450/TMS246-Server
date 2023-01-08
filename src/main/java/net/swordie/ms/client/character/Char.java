@@ -13,6 +13,8 @@ import net.swordie.ms.client.character.avatar.AvatarData;
 import net.swordie.ms.client.character.avatar.AvatarLook;
 import net.swordie.ms.client.character.avatar.BeautyAlbum;
 import net.swordie.ms.client.character.cards.MonsterBookInfo;
+import net.swordie.ms.client.character.chatemotion.ChatEmoticon;
+import net.swordie.ms.client.character.chatemotion.ChatEmoticonSaved;
 import net.swordie.ms.client.character.commands.AdminCommands;
 import net.swordie.ms.client.character.damage.DamageCalc;
 import net.swordie.ms.client.character.damage.DamageSkinSaveData;
@@ -79,6 +81,7 @@ import net.swordie.ms.scripts.ScriptInfo;
 import net.swordie.ms.scripts.ScriptManagerImpl;
 import net.swordie.ms.scripts.ScriptType;
 import net.swordie.ms.util.*;
+import net.swordie.ms.util.container.Triple;
 import net.swordie.ms.util.container.Tuple;
 import net.swordie.ms.world.Channel;
 import net.swordie.ms.world.World;
@@ -92,11 +95,14 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import jakarta.persistence.*;
+import org.python.antlr.ast.Str;
+
 import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
@@ -483,12 +489,19 @@ public class Char {
     private Map<BaseStat, Integer> setBaseStats = new HashMap<>();
     @Transient
     private Map<BaseStat, Set<Integer>> setNonAddBaseStats = new HashMap<>();
-
     @Transient
     private ScheduledFuture keyDownTimer;
-
     @Transient
     private Map<Integer, SkillCustomInfo> customInfo;
+    @Transient
+    private List<ChatEmoticonSaved> savedEmoticon;
+    @Transient
+    private List<ChatEmoticon> emoticonTabs;
+    @Transient
+    private List<Triple<Long, Integer, Short>> emoticons;
+    @Transient
+    private List<Tuple<Integer, Short>> emoticonBookMarks;
+
 
     public ScheduledFuture getKeyDownTimer() {
         return keyDownTimer;
@@ -596,6 +609,10 @@ public class Char {
 //        monsterBattleLadder = new MonsterBattleLadder();
 //        monsterBattleRankInfo = new MonsterBattleRankInfo();
         customInfo = new LinkedHashMap<Integer, SkillCustomInfo>();
+        savedEmoticon = new CopyOnWriteArrayList<ChatEmoticonSaved>();
+        emoticonTabs = new CopyOnWriteArrayList<ChatEmoticon>();
+        emoticons = new CopyOnWriteArrayList<Triple<Long, Integer, Short>>();
+        emoticonBookMarks = new CopyOnWriteArrayList<Tuple<Integer, Short>>();
     }
 
     public static Char getFromDBById(int userId) {
@@ -1885,13 +1902,35 @@ public class Char {
             }
         }
 
-        outPacket.encodeInt(0);
-        outPacket.encodeInt(0);
+        outPacket.encodeInt(getEmoticons().size());
+        for (Triple<Long, Integer, Short> em : getEmoticons()) {
+            outPacket.encodeInt(em.getMiddle().intValue());
+            outPacket.encodeInt(em.getMiddle().intValue());
+            outPacket.encodeLong(em.getLeft().longValue());
+            outPacket.encodeShort(em.getRight().shortValue());
+        }
+        int count = 0;
+        outPacket.encodeInt(getEmoticons().size());
+        for (ChatEmoticon em : getEmoticonTabs()) {
+            outPacket.encodeShort(++count);
+            outPacket.encodeInt(em.getEmoticonid());
+        }
         outPacket.encodeShort(8);
-        outPacket.encodeInt(0);
-        outPacket.encodeInt(0);
+        count = 0;
+        outPacket.encodeInt(getSavedEmoticon().size());
+        for (ChatEmoticonSaved em : getSavedEmoticon()) {
+            outPacket.encodeShort(++count);
+            outPacket.encodeInt(em.getEmoticonid());
+            outPacket.encodeString(em.getChat(), 21);
+        }
+        outPacket.encodeInt(getSavedEmoticon().size());
+        for (ChatEmoticonSaved em : getSavedEmoticon()) {
+            outPacket.encodeString(em.getChat());
+            outPacket.encodeInt(em.getEmoticonid());
+            outPacket.encodeString(em.getChat(), 21);
+        }
 
-        outPacket.encodeInt(0);
+        outPacket.encodeInt(0); // int -> (long+(int -> int)) 0x2000000000000000
 
         if (mask.isInMask(DBChar.Unk8000000000000000)) {
             boolean bool = true;
@@ -3445,7 +3484,7 @@ public class Char {
 
         toField.addChar(this);//生出NPC
         showProperUI(currentField != null ? currentField.getId() : -1, toField.getId());
-        write(ClientSocket.ChannelChangeEnable());
+        write(ClientSocket.ChannelChangeEnable());//可以更換頻道
 
         if (isHide()) {
             write(FieldPacket.setHideEffect(true));
@@ -3504,6 +3543,7 @@ public class Char {
             fa = getForceAtomByKey(getTemporaryStatManager().getOptByCTSAndSkill(GuidedArrow, Job.GUIDED_ARROW).xOption);
         }
         clearForceAtomMap();
+
         if (fa != null) {
             ForceAtomInfo fai = fa.getFaiList().get(0);
             fai.setKey(getNewForceAtomKey());
@@ -3546,8 +3586,18 @@ public class Char {
         if (getDeathCount() > 0) {
             write(UserLocal.deathCountInfo(getDeathCount()));
         }
+        // TODO 不確定
+        /*
+        if (getQuestEx(210416, "TotalDeadTime") > 0L) {
+            write(WvsContext.penaltyMsg("減少80%經驗值和效果掉落率！\r\n 自衛護身符可以用來瞬間驅散.", 338, 10000, 180));
+        }
+*/
         if (field.getEliteState() == EliteState.EliteBoss) {
             write(FieldPacket.eliteState(EliteState.EliteBoss, true, GameConstants.ELITE_BOSS_BGM, null, null));
+        }
+
+        if (field.getId() != 993190000) { //TODO 不知道發的地方對不對
+            write(CUIHandler.OnSetMirrorDungeonInfo(false));
         }
 
         if (getField() != null) {
@@ -3586,6 +3636,9 @@ public class Char {
             write(FieldPacket.clock(ClockPacket.secondsClock(getInstance().getRemainingTime())));
         }
         showSkillOnOffEffect();
+        //
+
+
         getClient().getChannelInstance().broadcastPacket(WvsContext.broadcastMessage(4, getClient().getChannel(), ServerConfig.SLIDE_MSG, false));
     }
 
@@ -5746,7 +5799,8 @@ public class Char {
 
     public void die() {
         setStatAndSendPacket(Stat.hp, 0);
-        write(UserLocal.openUIOnDead(true, getBuffProtectorItem() != null, false, false, false, ReviveType.NORMAL, 0));
+        //write(UserLocal.openUIOnDead(true, getBuffProtectorItem() != null, false, false, false, ReviveType.NORMAL, 0));
+        write(UserLocal.openUIOnDead(this, 1));
     }
 
     public void changeChannel(byte channelId) {
@@ -6400,12 +6454,22 @@ public class Char {
         return false;
     }
 
-    public String getQuestEx(int questID, String key) {
+    public String getQuestExStr(int questID, String key) {
         QuestEx str = getQuestRecordEx().getOrDefault(questID, null);
         if (str != null) {
             return str.getValue(key);
         }
         return null;
+    }
+
+    public long getQuestEx(int questID, String key) {
+        QuestEx str = getQuestRecordEx().getOrDefault(questID, null);
+        System.err.println("自訂任務:"+questID);
+        System.err.println("自訂任務內容:"+str.getValue(key));
+        if (str != null) {
+            return Long.valueOf(str.getValue(key));
+        }
+        return -1L;
     }
 
     public QuestEx getQuestEx(int questID) {
@@ -7045,5 +7109,70 @@ public class Char {
 
     public Map<Integer, SkillCustomInfo> getSkillCustomValues() {
         return this.customInfo;
+    }
+
+    public List<ChatEmoticonSaved> getSavedEmoticon() {
+        return this.savedEmoticon;
+    }
+
+    public void setSavedEmoticon(final List<ChatEmoticonSaved> savedEmoticon) {
+        this.savedEmoticon = savedEmoticon;
+    }
+
+    public List<ChatEmoticon> getEmoticonTabs() {
+        return this.emoticonTabs;
+    }
+
+    public void setEmoticonTabs(final List<ChatEmoticon> emoticons) {
+        this.emoticonTabs = emoticons;
+    }
+
+    public List<Triple<Long, Integer, Short>> getEmoticons() {
+        return this.emoticons;
+    }
+
+    public void setEmoticons(final List<Triple<Long, Integer, Short>> emoticons) {
+        this.emoticons = emoticons;
+    }
+
+    public void gainEmoticon(final int tab) {
+        if (!this.hasEmoticon(tab)) {
+            final short slot = (short) (getEmoticonTabs().size() + 1);
+            final ChatEmoticon em = new ChatEmoticon(getId(), tab, FileTime.fromType(FileTime.Type.ZERO_TIME).toLong(), null);
+            getEmoticonTabs().add(em);
+            write(WvsContext.getChatEmoticon((byte) 0, slot, (short) 0, tab, ""));
+            getEmoticons().clear();
+            ChatEmoticonData.LoadChatEmoticons(this, getEmoticonTabs());
+        }
+    }
+
+    public boolean hasEmoticon(final int tab) {
+        for (final ChatEmoticon em : getEmoticonTabs()) {
+            if (em.getEmoticonid() == tab) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Tuple<Integer, Short>> getEmoticonBookMarks() {
+        return this.emoticonBookMarks;
+    }
+
+    public void setEmoticonBookMarks(final List<Tuple<Integer, Short>> emoticonBookMarks) {
+        this.emoticonBookMarks = emoticonBookMarks;
+    }
+
+    public short getEmoticonFreeSlot() {
+        final List<Short> slots = new ArrayList<Short>();
+        for (final Triple<Long, Integer, Short> a : this.getEmoticons()) {
+            slots.add(a.getRight());
+        }
+        for (short i = 1; i <= this.getEmoticons().size(); ++i) {
+            if (!slots.contains(i)) {
+                return i;
+            }
+        }
+        return 1;
     }
 }

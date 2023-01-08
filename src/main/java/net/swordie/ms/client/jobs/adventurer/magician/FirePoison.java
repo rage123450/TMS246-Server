@@ -47,7 +47,7 @@ public class FirePoison extends Magician {
     public static final int VIRAL_SLIME = 2111010;
     public static final int ELEMENTAL_ADAPTATION_FP = 2111011;
     public static final int BURNING_MAGIC = 2110000;
-    public static final int POISON_MIST = 2111003;
+    public static final int POISON_MIST = 2111003;// 地獄爆發
     public static final int TELEPORT_MASTERY_FP = 2111007;
     public static final int ELEMENTAL_DECREASE_FP = 2111008;
 
@@ -55,7 +55,7 @@ public class FirePoison extends Magician {
     public static final int PARALYZE = 2121006;
     public static final int MIST_ERUPTION = 2121003;
     public static final int FLAME_HAZE = 2121011;
-    public static final int INFINITY_FP = 2121004;
+    public static final int 魔力無限 = 2121004;
     public static final int IFRIT = 2121005;
     public static final int MAPLE_WARRIOR_FP = 2121000;
     public static final int ELEMENTAL_DRAIN = 2100009;

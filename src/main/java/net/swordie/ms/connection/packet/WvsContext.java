@@ -31,10 +31,12 @@ import net.swordie.ms.connection.OutPacket;
 import net.swordie.ms.constants.ItemConstants;
 import net.swordie.ms.enums.*;
 import net.swordie.ms.handlers.header.OutHeader;
+import net.swordie.ms.loaders.ChatEmoticonData;
 import net.swordie.ms.loaders.ItemData;
 import net.swordie.ms.util.AntiMacro;
 import net.swordie.ms.util.FileTime;
 import net.swordie.ms.util.Position;
+import net.swordie.ms.world.auction.AuctionItem;
 import org.apache.log4j.LogManager;
 import org.python.antlr.op.Eq;
 
@@ -643,6 +645,19 @@ public class WvsContext {
         return outPacket;
     }
 
+    public static OutPacket zeroTag(Char chr, byte Gender,int nowhp, int maxhp) {
+        OutPacket outPacket = new OutPacket(OutHeader.ZERO_TAG);
+        int a = (chr.getSkillLevel(80000406) > 0) ? chr.getSkillLevel(80000406) : 0;
+        outPacket.encodeShort(199);
+        outPacket.encodeByte(Gender);
+        outPacket.encodeInt(nowhp);
+        outPacket.encodeLong(chr.getSkillCustomValue0(101000201));
+        outPacket.encodeInt(maxhp);
+        outPacket.encodeInt(((Gender == 1) ? 100 : 100) + a * 10 + ((Gender == 1 && chr.getSkillLevel(101100203) > 0) ? 30 : 0));
+
+        return outPacket;
+    }
+
     public static OutPacket zeroInfo(ZeroInfo currentInfo, Char chr) {
         OutPacket outPacket = new OutPacket(OutHeader.ZERO_INFO);
 
@@ -651,10 +666,30 @@ public class WvsContext {
         return outPacket;
     }
 
+    public static OutPacket useSkillBook(Char chr, int skillid, int maxlevel, boolean canuse, boolean success) {
+        OutPacket outPacket = new OutPacket(OutHeader.SKILL_LEARN_ITEM_RESULT);
+        outPacket.encodeByte(0);
+        outPacket.encodeInt(chr.getId());
+        outPacket.encodeByte(1);
+        outPacket.encodeInt(skillid);
+        outPacket.encodeInt(maxlevel);
+        outPacket.encodeBoolean(canuse);
+        outPacket.encodeBoolean(success);
+        return outPacket;
+    }
+
+    public static OutPacket useAPSPReset(boolean reset, int cid) {
+        OutPacket outPacket = new OutPacket(reset ? OutHeader.SKILL_RESET_ITEM_RESULT : OutHeader.ABILITY_RESET_ITEM_RESULT);
+        outPacket.encodeByte(1);
+        outPacket.encodeInt(cid);
+        outPacket.encodeByte(1);
+        return outPacket;
+    }
+
     public static OutPacket gatherItemResult(byte type) {
         OutPacket outPacket = new OutPacket(OutHeader.GATHER_ITEM_RESULT);
 
-        outPacket.encodeByte(0); // doesn't get used
+        outPacket.encodeByte(true); // doesn't get used
         outPacket.encodeByte(type);
 
         return outPacket;
@@ -663,14 +698,10 @@ public class WvsContext {
     public static OutPacket sortItemResult(byte type) {
         OutPacket outPacket = new OutPacket(OutHeader.SORT_ITEM_RESULT);
 
-        outPacket.encodeByte(0); // doesn't get used
+        outPacket.encodeByte(true); // doesn't get used
         outPacket.encodeByte(type);
 
         return outPacket;
-    }
-
-    public static OutPacket clearAnnouncedQuest() {
-        return new OutPacket(OutHeader.CLEAR_ANNOUNCED_QUEST);
     }
 
     public static OutPacket partyResult(PartyResult pri) {
@@ -734,14 +765,29 @@ public class WvsContext {
     public static OutPacket guildSearchResult(Collection<Guild> guilds) {
         OutPacket outPacket = new OutPacket(OutHeader.GUILD_SEARCH_RESULT);
 
+        outPacket.encodeShort(0);// mode
+        outPacket.encodeString("");// text
+        outPacket.encodeByte(0);// option
+        outPacket.encodeBoolean(false);
+        outPacket.encodeByte(1);
+        outPacket.encodeBoolean(false);
+        outPacket.encodeInt(0); //
         outPacket.encodeInt(guilds.size());
         for (Guild g : guilds) {
             outPacket.encodeInt(g.getId());
-            outPacket.encodeInt(g.getLevel());
+            outPacket.encodeByte(g.getLevel());
             outPacket.encodeString(g.getName());
             outPacket.encodeString(g.getGuildLeader().getName());
-            outPacket.encodeInt(g.getMembers().size());
-            outPacket.encodeInt(g.getAverageMemberLevel());
+            outPacket.encodeShort(g.getMembers().size());
+            outPacket.encodeShort(g.getAverageMemberLevel());
+            outPacket.encodeByte((g.getRequestors() != null) ? 0 : 1);
+            outPacket.encodeLong(0L);
+            outPacket.encodeByte(1);
+            outPacket.encodeString(g.getNotice());
+            outPacket.encodeInt(135);
+            outPacket.encodeInt(55);
+            outPacket.encodeInt(14);
+            outPacket.encodeByte(0);
         }
 
         return outPacket;
@@ -1113,6 +1159,18 @@ public class WvsContext {
         return outPacket;
     }
 
+    public static OutPacket penaltyMsg(String msg, int type, int time, int type2) {
+        OutPacket outPacket = new OutPacket(OutHeader.PENALTY_MSG.getValue());
+
+        outPacket.encodeString(msg);
+        outPacket.encodeInt(type);
+        outPacket.encodeInt(time);
+        outPacket.encodeByte(1);
+        outPacket.encodeInt(type2);
+
+        return outPacket;
+    }
+
     public static OutPacket resultInstanceTable(String name, int type, int subType, boolean rightResult, int value) {
         OutPacket outPacket = new OutPacket(OutHeader.RESULT_INSTANCE_TABLE.getValue());
 
@@ -1252,7 +1310,7 @@ public class WvsContext {
         OutPacket outPacket = new OutPacket(OutHeader.NODE_STONE_OPEN_RESULT);
 
         outPacket.encodeInt(mr.getIconID());
-        outPacket.encodeInt(1); // core level 原本發1
+        outPacket.encodeInt(mr.getSlv()); // core level 原本發1
         outPacket.encodeInt(mr.getSkillID1());
         outPacket.encodeInt(mr.getSkillID2());
         outPacket.encodeInt(mr.getSkillID3());
@@ -1280,14 +1338,71 @@ public class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket nodeCraftResult(MatrixRecord mr) {
+    public static OutPacket nodeCraftResult(MatrixRecord mr, int count) {
         OutPacket outPacket = new OutPacket(OutHeader.NODE_CRAFT_RESULT);
 
         outPacket.encodeInt(mr.getIconID());
-        outPacket.encodeInt(1); // ?
+        outPacket.encodeInt(mr.getSlv());
         outPacket.encodeInt(mr.getSkillID1());
         outPacket.encodeInt(mr.getSkillID2());
         outPacket.encodeInt(mr.getSkillID3());
+        outPacket.encodeInt(count);
+        return outPacket;
+    }
+
+    public static OutPacket openCore(boolean success) {
+        OutPacket outPacket = new OutPacket(OutHeader.MATRIX_OPEN);
+
+        outPacket.encodeInt(3);
+        outPacket.encodeByte(success);
+
+        return outPacket;
+    }
+
+    public static OutPacket ArcaneCatalyst(Equip equip, int slot) {
+        OutPacket outPacket = new OutPacket(OutHeader.ARCANE_CATALYST);
+
+        outPacket.encode(equip);
+        outPacket.encodeInt(slot);
+
+        return outPacket;
+    }
+
+    public static OutPacket ArcaneCatalyst2(Equip equip) {
+        OutPacket outPacket = new OutPacket(OutHeader.ARCANE_CATALYST2);
+
+        outPacket.encode(equip);
+
+        return outPacket;
+    }
+
+    public static OutPacket createCore(int type) {
+        OutPacket outPacket = new OutPacket(OutHeader.CREATE_CORE);
+
+        outPacket.encodeByte(type);
+
+        return outPacket;
+    }
+
+    public static OutPacket AlarmAuction(int type, AuctionItem auctionItem) {
+        OutPacket outPacket = new OutPacket(OutHeader.ALARM_AUCTION);
+        outPacket.encodeByte(type);
+        if (auctionItem == null) {
+            outPacket.encodeArr(new byte[10000]);
+            return outPacket;
+        }
+        auctionItem.encodeHistory(outPacket);
+
+        return outPacket;
+    }
+
+    public static OutPacket OnBomb(int skillid, int slv, Position position) {
+        OutPacket outPacket = new OutPacket(OutHeader.ON_BOMB);
+
+        outPacket.encodeInt(skillid);
+        outPacket.encodeInt(slv);
+        outPacket.encodePositionInt(position);
+        outPacket.encodeByte(0);
 
         return outPacket;
     }
@@ -1449,7 +1564,7 @@ public class WvsContext {
 
     public static OutPacket setBossReward(Char chr) {
         OutPacket outPacket = new OutPacket(OutHeader.BOSS_REWARD);
-        /*
+
         Iterator<Item> ite = chr.getEtcInventory().getItems().iterator();
         List<Item> items = new ArrayList<>();
         while (ite.hasNext()) {
@@ -1470,7 +1585,7 @@ public class WvsContext {
             //long time =items.get(i).getDateExpire() - FileTime.fromLong(7 * 24 * 60 * 60 * 1000);
             outPacket.encodeLong(FileTime.currentTime().toLong());
         }
-        */
+
         return outPacket;
     }
 
@@ -1485,6 +1600,35 @@ public class WvsContext {
         } else {
             item.encode(outPacket);
         }
+        return outPacket;
+    }
+
+    public static OutPacket setNpcNameInvisible(int npcid, boolean show) {
+        OutPacket outPacket = new OutPacket(OutHeader.NPC_NAME_INVISIBLE);
+
+        outPacket.encodeInt(npcid);
+        outPacket.encodeByte(show);
+
+        return outPacket;
+    }
+
+    public static OutPacket mixLense(int itemId, int baseFace, int newFace, boolean isDreeUp, boolean isBeta, boolean isAlphaBeta, Char chr) {
+        OutPacket outPacket = new OutPacket(OutHeader.MIX_LENSE);
+
+        outPacket.encodeInt(itemId);
+        outPacket.encodeByte(true);
+        outPacket.encodeByte(isDreeUp || isBeta);
+        outPacket.encodeByte(isAlphaBeta);
+        outPacket.encodeByte(false);
+        outPacket.encodeInt(1);
+        outPacket.encodeInt(1);
+        outPacket.encodeByte(2);
+        outPacket.encodeInt(newFace);
+        outPacket.encodeInt(baseFace);
+        outPacket.encodeShort(0);
+        outPacket.encodeShort(-1);
+        outPacket.encodeArr(new byte[5]);
+
         return outPacket;
     }
 
@@ -1625,6 +1769,18 @@ public class WvsContext {
         return outPacket;
     }
 
+    public static OutPacket UseMakeUpCoupon(Char chr, int itemid, int... make) {
+        OutPacket outPacket = new OutPacket(OutHeader.USE_MAKEUP_COUPON);
+
+        outPacket.encodeByte(1);
+        outPacket.encodeInt(1);
+        outPacket.encodeInt(4);
+        outPacket.encodeInt(itemid);
+        outPacket.encodeByte(1);//chr.getdressup 1 or 0
+
+        return outPacket;
+    }
+
     public static OutPacket unkZero() {
         OutPacket outPacket = new OutPacket(OutHeader.EGOEQUIP_CREATE_UPGRADE_ITEM_COST_INFO);
 
@@ -1650,6 +1806,112 @@ public class WvsContext {
     public static OutPacket EquipGaugeComplete() {
         OutPacket outPacket = new OutPacket(OutHeader.EGOEQUIP_GAUGE_COMPLETE);
 
+        return outPacket;
+    }
+
+    public static OutPacket mannequinRes(byte type, byte result, int type2) {
+        OutPacket outPacket = new OutPacket(OutHeader.MANNEQUIN_RESULT.getValue());
+
+        outPacket.encodeByte(type);
+        outPacket.encodeByte(result);
+        outPacket.encodeByte(type2);
+
+        return outPacket;
+    }
+
+    public static OutPacket mannequin(byte type, byte result, int type2, byte slot, Mannequin mannequin) {
+        OutPacket outPacket = new OutPacket(OutHeader.MANNEQUIN.getValue());
+
+        outPacket.encodeByte(type);
+        outPacket.encodeByte(result);
+        outPacket.encodeByte(type2);
+        switch(type2) {
+            case 0:
+                break;
+            case 1:
+                outPacket.encodeByte(9);
+                outPacket.encodeByte(9);
+                break;
+            case 2:
+                outPacket.encodeByte(slot);
+                outPacket.encodeByte(0);
+                outPacket.encodeByte(0);
+                outPacket.encodeInt(mannequin.getValue());
+                outPacket.encodeByte(mannequin.getBaseColor());
+                outPacket.encodeByte(mannequin.getAddColor());
+                outPacket.encodeByte(mannequin.getBaseProb());
+                break;
+            case 3:
+                outPacket.encodeByte(8);
+                outPacket.encodeByte(slot);
+                outPacket.encodeByte(slot -1);
+                outPacket.encodeByte(0);
+                outPacket.encodeByte(0);
+                outPacket.encodeInt(0);
+                outPacket.encodeByte(-1);
+                outPacket.encodeByte((type == 1 || type == 2) ? -1 : 0);
+                outPacket.encodeByte(0);
+                break;
+            case 5:
+                outPacket.encodeInt(0);
+                break;
+        }
+
+        return outPacket;
+    }
+
+    public static OutPacket getChatEmoticon(byte type, short slot, short slot2, int emoticon, String a) {
+        OutPacket outPacket = new OutPacket(OutHeader.CHAT_EMOTICON);
+        Iterator<Integer> iterator;
+        int size;
+        outPacket.encodeByte(type);
+        switch (type) {
+            case 0:
+                size = ((List) ChatEmoticonData.getEmoticons().get(Integer.valueOf(emoticon))).size();
+                outPacket.encodeShort(slot);
+                outPacket.encodeInt(emoticon);
+                outPacket.encodeInt(size);
+                for (iterator = ((List) ChatEmoticonData.getEmoticons().get(Integer.valueOf(emoticon))).iterator(); iterator.hasNext();) {
+                    int em = ((Integer) iterator.next()).intValue();
+                    outPacket.encodeInt(em);
+                    outPacket.encodeFT(FileTime.fromType(FileTime.Type.ZERO_TIME));
+                    outPacket.encodeShort(0);
+                }
+                break;
+            case 1:
+            case 7:
+            case 9:
+                outPacket.encodeShort(slot);
+                outPacket.encodeShort(slot2);
+                break;
+            case 2:
+            case 3:
+                outPacket.encodeShort(slot);
+                break;
+            case 4:
+                outPacket.encodeShort(slot);
+                outPacket.encodeArr(new byte[14]);
+                break;
+            case 5:
+                outPacket.encodeInt(emoticon);
+                outPacket.encodeShort(slot);
+                break;
+            case 6:
+                outPacket.encodeInt(emoticon);
+                break;
+            case 8:
+                outPacket.encodeShort(slot);
+                outPacket.encodeInt(emoticon);
+                outPacket.encodeString(a, 25);
+                break;
+            case 10:
+                outPacket.encodeShort(slot);
+                break;
+            case 11:
+                outPacket.encodeInt(emoticon);
+                outPacket.encodeString(a);
+                break;
+        }
         return outPacket;
     }
 }

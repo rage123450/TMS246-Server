@@ -18,6 +18,7 @@ public enum WeaponType {
     PsyLimiter(26),
     Chain(27), // Cadena
     Gauntlet(28), // Illium
+    RitualFan(29), // HoYoung
     OneHandedSword(30),
     OneHandedAxe(31),
     OneHandedMace(32),

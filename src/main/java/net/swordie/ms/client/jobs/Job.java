@@ -49,6 +49,7 @@ import net.swordie.ms.util.Rect;
 import net.swordie.ms.util.Util;
 import net.swordie.ms.world.field.Field;
 import org.apache.log4j.Logger;
+import org.python.modules._imp;
 
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
@@ -1081,8 +1082,9 @@ public abstract class Job {
         // cryto.username
         inPacket.decodeInt(); // Unknown
         hitInfo.damagedTime = inPacket.decodeInt();
-        hitInfo.attackIdx = inPacket.decodeByte(); // -1 attack idx = body (touch) attack
+        //hitInfo.attackIdx = inPacket.decodeByte(); // -1 attack idx = body (touch) attack
         hitInfo.type = inPacket.decodeByte();
+        inPacket.decodeByte();
         hitInfo.elemAttr = inPacket.decodeByte();
         hitInfo.hpDamage = inPacket.decodeInt();
         inPacket.decodeByte(); // Hardcoded 0 crit
@@ -1090,34 +1092,41 @@ public abstract class Job {
         boolean knockBack;
         if (hitInfo.type <= AttackIndex.Counter.getVal()) {
             hitInfo.obstacle = inPacket.decodeShort();
-        } else {
-            hitInfo.templateID = inPacket.decodeInt();
+        } else if (hitInfo.type > AttackIndex.Counter.getVal()) {
+            //hitInfo.templateID = inPacket.decodeInt();
+            inPacket.decodeArr(36);
             hitInfo.mobID = inPacket.decodeInt();
+            inPacket.decodeByte();
+            inPacket.decodeInt();
             hitInfo.mobIdForMissCheck = inPacket.decodeInt();
             hitInfo.isLeft = inPacket.decodeByte() != 0;
-            hitInfo.blockSkillId = inPacket.decodeInt();
-            hitInfo.reducedDamage = inPacket.decodeInt();
-            hitInfo.reflect = inPacket.decodeByte();
+            hitInfo.SkillId = inPacket.decodeInt();
+            hitInfo.reducedDamage = inPacket.decodeInt(); // pdmg
+            hitInfo.reflect = inPacket.decodeByte();// deftype
             hitInfo.guard = inPacket.decodeByte();
             if (hitInfo.guard == 2) {
                 knockBack = true;
             }
-            if (hitInfo.guard == 2 || hitInfo.reducedDamage > 0) {
-                hitInfo.powerGuard = inPacket.decodeByte() != 0; // && nReflect > 0
-                hitInfo.reflectMobID = inPacket.decodeInt();
-                hitInfo.hitAction = inPacket.decodeByte();
+            if (hitInfo.guard == 2 || hitInfo.SkillId != 0) {
+                hitInfo.isGuard = inPacket.decodeByte() != 0; //pPhysical
+                hitInfo.reflectMobID = inPacket.decodeInt(); //pID
+                hitInfo.hitAction = inPacket.decodeByte(); //pType
                 hitInfo.hitPos = inPacket.decodePosition();
                 hitInfo.userHitPos = inPacket.decodePosition();
-                if (hitInfo.powerGuard) {
+                if (hitInfo.isGuard) {
                     hitInfo.reflectDamage = inPacket.decodeInt();
                 }
             }
-            hitInfo.stance = inPacket.decodeByte();
-            hitInfo.stanceSkillID = inPacket.decodeInt();
-            hitInfo.cancelSkillID = inPacket.decodeInt();
-            hitInfo.reductionSkillID = inPacket.decodeInt();
+            if (inPacket.getUnreadAmount() == 1L) {
+                hitInfo.stance = inPacket.decodeByte();
+                if ((hitInfo.stance == 1) && (inPacket.getUnreadAmount() >= 4L)) {
+                    hitInfo.stanceSkillID = inPacket.decodeInt();
+                }
+                if ((hitInfo.stance < 0) || (hitInfo.stance > 2)) {
+                    hitInfo.stance = 0;
+                }
+            }
         }
-        inPacket.decodeByte(); // Hardcoded 0
 
         handleHit(c, inPacket, hitInfo);
         handleHit(c, hitInfo);
@@ -1392,13 +1401,17 @@ public abstract class Job {
         }
         if (curHP <= 0) {
             // TODO Add more items for protecting exp and whatnot
+            /*
             c.write(UserLocal.openUIOnDead(true, chr.getBuffProtectorItem() != null,
                     false, false, false,
                     ReviveType.NORMAL, 0));
+
+             */
+            c.write(UserLocal.openUIOnDead(chr, 1));
         } else if (hitInfo.mobID != 0 && (hitInfo.hpDamage > 0 || hitInfo.mpDamage > 0)) {
             Life life = chr.getField().getLifeByObjectID(hitInfo.mobID);
             if (life instanceof Mob) {
-                ((Mob) life).applyHitDiseaseToPlayer(chr, hitInfo.attackIdx);
+                ((Mob) life).applyHitDiseaseToPlayer(chr, hitInfo.type);
             }
         }
     }

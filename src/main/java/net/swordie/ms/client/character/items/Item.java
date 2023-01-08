@@ -50,7 +50,8 @@ public class Item implements Serializable, Encodable {
     protected int quantity;
     private String owner = "";
 
-    //private BossReward bossReward;
+    @Transient
+    private BossReward bossReward;
 
     public boolean isTradable() {
         return !ItemData.getItemInfoByID(getItemId()).isTradeBlock();
@@ -229,7 +230,7 @@ public class Item implements Serializable, Encodable {
         this.quantity = quantity;
     }
 
-    /*
+
     public BossReward getBossReward() {
         return this.bossReward;
     }
@@ -237,7 +238,7 @@ public class Item implements Serializable, Encodable {
     public void setBossReward(BossReward bossReward) {
         this.bossReward = bossReward;
     }
-    */
+
 
     @Override
     public String toString() {

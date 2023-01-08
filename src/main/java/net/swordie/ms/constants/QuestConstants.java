@@ -18,6 +18,8 @@ public class QuestConstants {
     public static final int DAMAGE_SKIN = 7291;
     public static final int TOWER_CHAIR = 7266;
 
+    public static final int SHAPESHIFT_QR = 7786;
+
     public static final int UNION_START_QUEST = 16013;
     public static final int UNION_MAP = 16014;
     public static final int UNION_COIN = 18098; // lastTime=YYMMDDHHMMSS;coin=x

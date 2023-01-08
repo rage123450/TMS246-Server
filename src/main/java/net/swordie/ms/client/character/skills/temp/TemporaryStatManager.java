@@ -30,7 +30,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
 
-import static net.swordie.ms.client.character.skills.temp.CharacterTemporaryStat.Thread;
 import static net.swordie.ms.client.character.skills.temp.CharacterTemporaryStat.*;
 
 /**
@@ -709,6 +708,14 @@ public class TemporaryStatManager {
             outPacket.encodeInt(getOption(HolySymbol).wOption);
             outPacket.encodeInt(getOption(HolySymbol).bOption);
             outPacket.encodeInt(getOption(HolySymbol).cOption);
+        }
+
+        if (hasNewStat(TalismanEnergy)) {
+            outPacket.encodeInt(getOption(TalismanEnergy).xOption);
+            outPacket.encodeInt(getOption(TalismanEnergy).yOption);
+        }
+        if (hasNewStat(ScrollEnergy)) {
+            outPacket.encodeInt(getOption(ScrollEnergy).xOption); // Tallisman Gauge 35->70->100?
         }
 
         // 658 -> int*3
